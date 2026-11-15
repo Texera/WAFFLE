@@ -1,94 +1,73 @@
-# Asynchronous teammate pilot
+# One-form, one-hour teammate study
 
-**Design proposal, November 15, 2026.** Forms have not been created. This keeps the three activities, native Texera operators, balanced assignment and outcomes of the [main protocol](README.md). Pilot the delivery before freezing the main study.
+**Revised design, November 15, 2026.** The user requested one Google Form and easier tasks within one hour. This replaces the earlier three-form, 75–90-minute proposal. The form and simplified loop templates are not created yet. Keep the checked computation bodies; build and rehearse the simpler starters before the pilot.
 
-## Use three forms and an assigned checklist
+## Before the session
 
-1. **Welcome form**, once: background and setup readiness.
-2. **Task form**, six submissions: one after each activity in each tool.
-3. **Final comparison**, once: preferences and reasons.
+Complete installation, login, import and export checks beforehand. Give each participant a private Texera account/workflow copy on the hosted server, KNIME starters with working local paths, and an assigned ID/tool order/data packs. Setup is not part of the hour. Do not send reference solutions or hidden tests.
 
-Link responses to a private Google Sheet. Each participant receives an ID and one instruction document with links in the assigned order. Separate task submissions preserve unfinished work if someone stops halfway. No custom application or screen recording is needed for this pilot.
+Both tools start with working loop templates that run once, with the loop boundaries and body already connected. Clustering/scoring, file parsing and averaging are prepared. Texera keeps its native readers, Aggregate and Sort. Participants configure the repetition and stopping rule; they do not build graphs from scratch, write computation code or search for datasets. Provide a short guide to the relevant fields, equally detailed for both tools. KNIME may use its normal specialized controls, including a compatible conditional loop end from the outset; do not force an avoidable node replacement.
 
-Use the neutral title **Workflow loop study** and introduction: “We are comparing two ways to build and change workflow loops. We are testing the tools and instructions, not your ability. Unfinished tasks and difficulties are useful results.”
+## Sixty-minute schedule
 
-## What each teammate does
+| Part | Minutes |
+| --- | ---: |
+| Welcome and background | 3 |
+| First tool | 22 |
+| Break | 2 |
+| Second tool | 22 |
+| Final comparison | 6 |
+| Buffer | 5 |
+| Total | 60 |
 
-Before timing anything, install KNIME, open the hosted Texera server, and verify import, single-input execution and export in both tools. Resolve setup problems asynchronously first. Give separate workflow copies and data/trace paths to each participant.
+Each 22-minute tool block has three minutes of guided practice, seven minutes for the sweep, four for adaptation, five for files, and three for recording answers and exporting/uploading work. Practice uses an unrelated small loop and teaches only the controls needed by the tasks. Pilot it before main collection.
 
-| Step | Action |
-| --- | --- |
-| Welcome | Complete the background form and readiness check. |
-| First tool | Short tutorial and five-minute practice on an unrelated loop. |
-| Activity 1 | Create the K=2,3,4 sweep; save and submit. Up to 10 active minutes. |
-| Activity 2 | Open the change request after submitting Activity 1; adapt its saved workflow; submit a new copy. Up to 5 active minutes. |
-| Activity 3 | Use the separate file starter to process all CSVs; save and submit. Up to 10 active minutes. |
-| Break | Rest, or do the second tool in another sitting. |
-| Second tool | Repeat the same process with the other data pack. |
-| Finish | Compare the tools and describe the main difficulty. |
+| Activity | Short task | Cap |
+| --- | --- | ---: |
+| Sweep | The supplied loop runs K=2 once. Change it to try K=2,3,4. Return K and score and identify the best K. | 7 min |
+| Adapt | Change that workflow to stop when score reaches the given target, keeping the stopping row; otherwise stop after K=4. | 4 min |
+| Files | The supplied loop reads the first CSV. Change it to process all three CSVs and return each filename and average price, including when another CSV is added. | 5 min |
 
-Allow about 75–90 minutes plus setup and unusual waits. Keep Activities 1 and 2 together. Tell participants that a change request will follow, without revealing its exact condition early. Send task cards as separate links, not one document containing all answers or facilitator material.
+Use the existing tiny inputs and two answer-equivalent packs. Preserve the same requirements in both tools. Half start with KNIME and half with Texera; balance packs through KNIME/A→Texera/B, KNIME/B→Texera/A, Texera/A→KNIME/B, Texera/B→KNIME/A. Teammates receive an assignment rather than choosing their order.
 
-Assign across four sequences: KNIME/A then Texera/B; KNIME/B then Texera/A; Texera/A then KNIME/B; Texera/B then KNIME/A. Randomize within balanced groups and spread prior experience across orders. Participants do not choose their order.
+## One Google Form, one final submission
 
-## Timing and help
+The form contains the instructions, starter/reference links, task questions and feedback. Use sections so participants see one task at a time:
 
-Use the same stopwatch method in both tools. Start when opening the task card; reading, planning, configuring, debugging and interpreting results count. Pause only while completely blocked waiting for the application or for an unrelated interruption, and record these pauses separately. Keep timing if useful work continues during execution. Stop at completion, giving up or the time cap. Save and freeze the current workflow; export/upload and questionnaire time are excluded in both tools.
+1. **Welcome:** prefilled ID/assignment, voluntary participation, prior KNIME/Texera/Python experience and whether the participant helped develop WAFFLE. Include “Both tools are ready” before starting.
+2. **First tool practice and three task sections.** Each task section shows the neutral card, its time cap and the small response block below.
+3. **Break and second tool practice/three task sections.** Use the other assigned pack.
+4. **Final comparison:** which tool was easier for each activity (KNIME / Texera / Same / Cannot judge), plus one optional sentence about why.
+5. **Submit once**, including incomplete attempts.
 
-If the timer was forgotten, report missing or estimated time. Do not infer active time from form submission timestamps. Times and cap compliance are self-reported; workflow correctness is checked independently. Keep completion as the primary outcome under the main protocol, explicitly qualify the self-reported time budget, and report correctness regardless of time as a sensitivity summary. Missing timing must not silently become a within-budget success.
+At each task collect only:
 
-Use only the supplied reference and ordinary application help during tasks. Give equally complete materials to both platforms. Ask participants not to use AI solutions, other participants or online task solutions; record outside help if it occurs. Keep assisted attempts visible. Do not reveal hidden-test results between tools.
+- Outcome: Completed / Time limit / Stopped early / Technical problem.
+- Elapsed minutes/seconds, or “Not recorded.”
+- Ease: 1 = Very difficult, 7 = Very easy.
+- Saved workflow export, including unfinished work. Allow an export-failure reason instead.
+- For sweep/adaptation, best K and score, or “not obtained.” For adaptation, Own workflow / Supplied fallback.
 
-An infrastructure failure means “Blocked,” not an authoring failure. Save the attempt and pause the study for asynchronous support. Preserve the original attempt if it is later resumed or rerun. Normal workflow mistakes remain part of the task. Match the tutorials and unrelated practice before inviting the pilot; these are still preparation work.
+Collect any outside help, major waiting, interruptions or other problems once per tool, with task numbers. Do not require six written explanations, six screenshots or separate result CSV uploads. The exported workflow is the main evidence. A screenshot is optional when reporting an error.
 
-## Exact form contents
+Save a separate workflow copy after each task and attach it before clicking Next. Do not overwrite the sweep when adapting it. Reveal the adaptation request only on its later section. If the sweep is unfinished, save/attach it first, then use a clearly labeled fallback to try adaptation and mark that attempt assisted. It cannot count as independent create-and-adapt success.
 
-### Welcome
+## Simple timing and stopping rule
 
-- Participant ID, prefilled.
-- Agreement to participate voluntarily after reading the explanation; declining ends the process.
-- Experience with KNIME, Texera and Python: Never / Tried briefly / Several projects / Regular use.
-- WAFFLE involvement: None / Discussed or reviewed / Helped implement or test.
-- Operating system, for setup support.
-- “I can open, run and export the starter in both tools”: Yes / Need help. Setup help comes before timed work.
+Start a stopwatch when reading each task; stop at completion or its cap. **Elapsed task time includes execution waits.** Export/upload and form-answer time use the separate three-minute allowance per tool. This replaces the earlier active-time/pausing rule and avoids pause accounting. Record significant waiting separately when it affected the task; these times are not pure interface authoring time.
 
-Keep the ID/contact mapping private. Explain who can inspect submissions; do not promise anonymity when the organizer can identify participants.
+At a cap, save the current state and move on. At 60 minutes, stop and submit what is available. A server failure is a technical block, not evidence the participant could not use the loop controls. Do not extend the session indefinitely. Missing or estimated times stay flagged. Time is self-reported, not inferred from the form timestamp.
 
-### Task submission, reused six times
+Use the supplied reference and ordinary application help equally in both tools. No outside task solutions, AI assistance or another participant's workflow during timed work; if help occurs, record it and retain the attempt. Do not reveal correctness feedback between tools.
 
-- Prefilled participant ID, tool, pack and activity.
-- Outcome: Completed / Time limit reached / Stopped early / Technical problem.
-- Upload the saved `.knwf` or `.json`, including incomplete work. If export is impossible, allow a reason instead.
-- Output screenshot or CSV, if available. For sweep/adaptation, also enter best K and score, or “not obtained.”
-- Active minutes/seconds; timing source: Stopwatch / Estimated / Not recorded.
-- Approximate blocked-wait time and unrelated interruption time, separately.
-- Activity 2 starting point: My Activity 1 / Supplied fallback.
-- Help used: Supplied reference/application help only / Setup support / Outside task help or AI, with a short explanation.
-- “Overall, how difficult or easy was this activity?” 1 = Very difficult, 7 = Very easy.
-- Optional: main difficulty; early task viewing, wrong pack/order or other procedure problem.
+## Forms and analysis details
 
-Name exports `ID_tool_pack_activity_attempt`. Preserve Activity 1 before changing it. If Activity 1 is unfinished, submit it first, then use a correct fallback provided in a separate, clearly labeled step. Mark the adaptation as assisted; it cannot count as independent create-and-adapt completion. If a participant continues from an incorrect self-reported success, judge the saved workflow later rather than assuming the baseline was correct.
+Keep online draft saving enabled and test it with a signed-in teammate account. Next does not submit a section: the researcher receives the response only when Submit is clicked. Keep later questions optional or offer Not attempted, and provide a “Stop and submit what I have” route so someone can finish early. Do not treat draft autosave as a researcher-visible record. Save workflow exports locally as well.
 
-### Final comparison
+Use one form in My Drive with file uploads, a private linked response Sheet, no public response summary and no quiz scoring. Test actual .knwf/.json uploads and account access. Google uploads require sign-in. Prefilled assignments and section order are conveniences, not tamper-proof controls. Do not permit edits to the submitted response; record later corrections separately. No custom portal is needed.
 
-- Which tool was easier for each of creating the sweep, changing the stopping rule and processing files? KNIME / Texera / About the same / Cannot judge.
-- What made the biggest difference?
-- Which would you choose for a similar task, and why? KNIME / Texera / Depends / Cannot judge.
-- What should change in the instructions or setup?
-- If you stopped early, where and why? Allow final feedback without completing both tools.
+Independently check the saved workflows and actual iteration visits on visible/hidden fixtures. The existing harness checks prepared solutions; rehearse grading a changed participant export before calling grading automatic. Preserve incomplete, assisted, blocked and missing responses. Report paired correct independent configure+adapt completion within the **11-minute elapsed task budget**, with files separate, and report correctness regardless of time as a sensitivity summary. Do not mix these timings with the superseded 15-minute active-budget design. This measures basic loop configuration/adaptation on prepared workflows, not full workflow development or general superiority.
 
-## Form settings and verification
+Before inviting the team, create the single-iteration loop templates in both tools, update the generated cards to the configure/extend tasks and new time limits, and dry-run them. The current generator still produces the previous add-a-loop starters/cards; do not distribute those as the one-hour version. Then rehearse the form with one teammate in a strict hour, including an unfinished task and a failed upload. If form/export steps exceed their allowance, simplify those steps rather than silently extending the hour. Hosted URL, per-participant paths/copies, matched practice and form creation remain pending. No form or invitation has been sent.
 
-Use file-upload forms in the organizer's My Drive, not a Shared Drive. Uploads require a Google account. Test actual KNIME and JSON uploads with a teammate account and suitable file settings. If account policy blocks uploads, arrange a private submission folder and collect its link instead. Do not require public workflow sharing.
-
-Leave “Limit to 1 response” off for the reusable task form. Disable response editing, response summaries and quiz scoring. Corrections get new rows identified as corrections; retain the original timed attempt. Prefilled IDs are editable conveniences, so match them against the assignment list. Plain Forms/document links do not enforce stage order; ask participants to follow the checklist and report deviations.
-
-Check exported workflows offline on the visible and hidden fixtures, including actual visited K values, the stopping row and an added file. Screenshots and self-reported success are supplementary. Existing runners test prepared reference graphs, not arbitrary participant uploads: rehearse a modified submission and a deliberately incorrect submission before claiming automatic grading. Preserve original exports and document path-only rebasing; do not repair loop logic while grading.
-
-Regenerate KNIME paths for each participant's machine and Texera paths for the hosted worker. Use isolated workflow copies and trace directories. Do not send the whole generated facilitator package, hidden fixtures or solutions. Test hosted access, concurrency and export before recruitment; localhost correctness does not prove those work.
-
-## Next implementation step
-
-Create the three forms, participant checklists, matched practice materials and private starter packages once the hosted Texera address is available. Have one teammate follow the whole process without spoken help, including an unfinished task and an upload failure. Check that all six submissions retain the correct ID/tool/pack and frozen workflows. Fix the procedure before collecting main-study data. No forms or invitations have been created or sent by writing this proposal.
-
-Google product details checked November 15, 2026: [uploads and prefilled fields](https://support.google.com/a/users/answer/13138098?hl=en), [upload sign-in](https://support.google.com/docs/answer/15473134?hl=en), [response settings](https://support.google.com/docs/answer/2839588?hl=en), [linking to Sheets](https://support.google.com/docs/answer/139706?hl=en).
+Product sources checked November 15, 2026: [section routing](https://support.google.com/docs/answer/141062?hl=en), [online draft saving](https://support.google.com/docs/answer/10952360?hl=en), [uploads and prefills](https://support.google.com/a/users/answer/13138098?hl=en), [upload sign-in](https://support.google.com/docs/answer/15473134?hl=en).

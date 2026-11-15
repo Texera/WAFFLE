@@ -1,24 +1,24 @@
-# User study: creating and adapting workflow loops
+# User study: configuring and adapting workflow loops
 
 **Status: native-operator revision verified, November 15, 2026. No participant results.** Both platforms pass 18 native checks each, including the three activities and changed inputs. Texera now uses native readers, Aggregate and Sort where available. See [the revised rehearsal record](results/2026-11-15-native-operators/README.md); the [earlier record](results/2026-11-15/README.md) preserves the previous graphs. A teammate pilot remains necessary. This is the facilitator's protocol; give participants only the neutral task cards and platform reference sheets.
 
 ## Question and hypothesis
 
-Does WAFFLE's common loop interface help workflow users create loops for different inputs and adapt a loop when its stopping rule changes?
+Does WAFFLE's common loop interface help workflow users configure repetition for different inputs and adapt a loop when its stopping rule changes?
 
 The hypothesis is that WAFFLE reduces the effort of adapting the stopping rule while retaining the computation and loop structure. Keep basic authoring in the comparison too: KNIME's specialized nodes may be convenient for these tasks. This study can support a claim about the tested authoring activities and participants, not general superiority over KNIME or greater expressiveness.
 
 ## Three short activities in each tool
 
-Each participant uses local KNIME and browser-based Texera hosted on the study server. Both tools receive equivalent working single-input bodies, input tables, output viewers and help sheets. Participants configure repetition and connect the varying input; they do not implement clustering, scoring, file parsing or aggregation.
+Each participant uses local KNIME and browser-based Texera hosted on the study server. For the one-hour design, both tools receive equivalent working single-iteration loop templates, input tables, output viewers and help sheets. Participants configure repetition and its stopping rule; they do not build the graph or implement clustering, scoring, file parsing or aggregation. These simpler templates still need to replace the earlier single-input starters before recruitment.
 
 | Activity | Neutral participant card | What it measures |
 | --- | --- | --- |
-| 1. Create a K-means sweep | Add a loop to run the supplied workflow for K = 2, 3 and 4. Return each K and its score, and identify the best K. | Basic loop authoring and parameter binding |
+| 1. Configure a K-means sweep | The supplied loop runs K=2 once. Change it to run K = 2, 3 and 4. Return each K and its score, and identify the best K. | Basic loop configuration |
 | 2. Change the stopping rule | Now stop when the score first reaches the supplied target. Include that result. If the target is never reached, finish the supplied K values. Return the scores and best K among the values actually tried. | Adapting a loop to a result-dependent rule |
-| 3. Process a folder | Run the supplied file-reading workflow on every CSV in the folder. Return each filename and its average order price. | Using the loop interface for a different input type |
+| 3. Process a folder | Extend the supplied one-file loop to every CSV in the folder, including when another file is added. Return each filename and its average order price. | Configuring repetition for a different input type |
 
-Activity 2 starts from the participant's saved Activity 1 workflow. The prepared scoring body makes the current score available to loop control in both tools from the start. The participant is told that a change request will follow, but receives its exact text after submitting Activity 1. Give identical information in both platforms.
+Activity 2 starts from the participant's saved Activity 1 workflow. The prepared scoring body makes the current score available to loop control in both tools from the start. The participant is told that a change request will follow, but receives its exact text after saving and attaching Activity 1 before moving to its next form section. Give identical information in both platforms.
 
 If Activity 1 fails, record that outcome and provide a correct fallback before Activity 2. Mark the adaptation as fallback-assisted, even if no further help is needed. It cannot count as an independently completed create-and-adapt task. Keep its result visible and report it separately.
 
@@ -35,25 +35,24 @@ If Activity 1 fails, record that outcome and provide a correct fallback before A
 
 ## Assignment and session
 
-For teammates working without a live facilitator, see the [asynchronous pilot design](ASYNC.md). It proposes three short Google Forms, per-task submissions and explicitly self-reported timing. The forms and hosted delivery still need preparation and a pilot.
+Use the [single-form, one-hour asynchronous design](ASYNC.md). One Google Form contains the instructions, six task sections and final comparison, with one submission at the end. Setup happens beforehand. The form, hosted delivery and matched practice still need preparation and a pilot.
 
 Pilot with one teammate. Then aim for 16 participants if feasible, with four participants per sequence: KNIME/A then Texera/B; KNIME/B then Texera/A; Texera/A then KNIME/B; Texera/B then KNIME/A. Randomize within balanced blocks and spread prior KNIME/Texera experience across orders. Record Python experience and involvement in WAFFLE. Authors and implementers rehearse the materials; report recruitment from the team and any direct contributors included in the main study.
 
 Use the same process for everyone:
 
-1. Background and task explanation: about five minutes.
-2. Five-minute practice in the first tool on an unrelated small loop. Supply its one-page reference.
-3. Activity 1: up to ten active minutes; Activity 2: up to five; Activity 3: up to ten. Give one card at a time. Save each submission and record correctness, active time, help and failures. Ask after each activity: "How easy or difficult was this task?" on a seven-point scale from very difficult to very easy.
-4. Short break, then the same practice and activities in the second tool with the other input pack.
-5. Ask separately for creating, adapting and processing files: "Which tool was easier, or were they about the same? What made the difference?"
+1. Welcome and background: three minutes.
+2. First tool: three-minute guided practice, seven-minute sweep, four-minute adaptation, five-minute file task, and three minutes for answers and exports/uploads (22 minutes total).
+3. Two-minute break, then the same 22-minute block in the second tool with the other pack.
+4. Final comparison: six minutes, plus a five-minute buffer. Submit the single form once, including unfinished work, and stop by 60 minutes.
 
-Allow about 75 minutes plus unusual machine waits. Pause active time only when the participant is blocked waiting for execution or the interface; record that wait separately in both tools. Debugging and interpreting outputs count as active work. Use the same help policy and time limits. Track infrastructure faults separately; repair and rerun affected attempts on an equivalent fresh pack where feasible. Do not count installation or server setup as participant work.
+Setup is completed beforehand. Task timing is self-reported elapsed time, including execution waits; export/upload and questionnaire time have a separate allowance. Record major waits and technical blocks rather than treating them as inability to use the tool. At each cap, save the current state and move on. Keep help policy and reference detail equal. This one-hour procedure supersedes the earlier 75-minute active-time proposal; see ASYNC.md for form fields, early exit and offline grading.
 
 ## Outcomes fixed before main-study collection
 
-The primary comparison is **correct independent completion of the combined create-and-adapt task within its 15-minute active budget**. Its denominator includes every valid paired session, including failures and timeouts. Report four paired counts: both tools, WAFFLE only, KNIME only, neither. Show basic sweep creation and the file task separately so the adaptation result does not hide a cost elsewhere.
+The primary comparison is **correct independent completion of the combined configure-and-adapt task within its 11-minute elapsed task budget**. Its denominator includes every valid paired session, including failures and timeouts. Report four paired counts: both tools, WAFFLE only, KNIME only, neither. Show sweep configuration and the file task separately so the adaptation result does not hide a cost elsewhere. This narrower task does not measure creating a workflow from scratch.
 
-For participants who independently complete both stages in both tools, compare total active authoring time as paired observations and report the median paired difference and the number of pairs. Show adaptation time separately for the subset with independent successful base workflows in both tools, stating the denominator. Keep fallback-assisted results, failures and timeouts visible rather than treating the time of successful attempts as the whole result.
+For participants who independently complete both stages in both tools, compare self-reported total elapsed task time as paired observations and report the median paired difference and the number of pairs. These times include execution waits and are not pure editing time. Missing timing remains unknown; also report correctness regardless of time. Show adaptation time separately for the subset with independent successful base workflows in both tools, stating the denominator. Keep fallback-assisted results, failures and timeouts visible rather than treating the time of successful attempts as the whole result.
 
 Report ease ratings, preference counts including ties, and reasons given by participants. Record edits to expressions, node replacements and reconnections as descriptive evidence about where effort went; fewer edits alone do not prove greater usability. Inspect whether the second tool tends to be faster regardless of platform. The fixed activity order does not isolate a general learning-rate advantage.
 
@@ -66,6 +65,8 @@ If the measured advantage is confined to adaptation, say that participants adapt
 The next step is to have a KNIME-experienced teammate check the baseline and pilot the timing and wording before recruiting. Repeat the GUI rehearsal after moving Texera to the study server.
 
 ## Build and check the materials
+
+The generator and recorded rehearsals below still cover the earlier add-a-loop version. The one-hour loop templates, revised cards and single Google Form must be built and rehearsed before distributing this revised study. Do not treat the previous execution checks as validation of the new participant procedure.
 
 Install the root `requirements.txt`. The recorded checks use KNIME 5.5.3 with Java Snippet and the Texera prototype at `a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6`. The native runners below target Windows; they require the installed KNIME runtime or the prototype's normal build and Python dependencies. `StudyWorkflowSpec.scala` is added only to the sbt session, without editing Texera source or build files.
 
