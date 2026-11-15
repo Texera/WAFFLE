@@ -1,10 +1,11 @@
 """Verify author-run correctness evidence, not participant study outcomes."""
 import json
+import sys
 from pathlib import Path
 from model import expected,check_evidence
 from study import read_csv
 
-root=Path(__file__).with_name('results')/'2026-11-15'
+root=Path(__file__).with_name('results')/(sys.argv[1] if len(sys.argv)>1 else '2026-11-15')
 record=json.loads((root/'native-checks.json').read_text(encoding='utf-8'))
 assert record['passed'] and not record['changed_inputs']
 assert len(record['runs'])==36

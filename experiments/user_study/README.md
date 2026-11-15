@@ -1,6 +1,6 @@
 # User study: creating and adapting workflow loops
 
-**Status: native and GUI author rehearsals passed, November 15, 2026. No participant results.** Both platforms pass 18 native checks each, including the three activities and changed inputs. Pack A's two starters and three reference solutions also run in both GUIs. A teammate pilot remains necessary; see [the rehearsal record](results/2026-11-15/README.md). This is the facilitator's protocol; give participants only the neutral task cards and platform reference sheets.
+**Status: native-operator revision verified, November 15, 2026. No participant results.** Both platforms pass 18 native checks each, including the three activities and changed inputs. Texera now uses native readers, Aggregate and Sort where available. See [the revised rehearsal record](results/2026-11-15-native-operators/README.md); the [earlier record](results/2026-11-15/README.md) preserves the previous graphs. A teammate pilot remains necessary. This is the facilitator's protocol; give participants only the neutral task cards and platform reference sheets.
 
 ## Question and hypothesis
 
@@ -24,6 +24,7 @@ If Activity 1 fails, record that outcome and provide a correct fallback before A
 
 ## Baseline and preparation
 
+- Prefer ordinary Texera operators for the computation graph: native CSV File Scan, File Scan, Aggregate and Sort are used in the current starters. Keep clustering in a prepared UDF because the tested revision has no built-in K-means operator. The local file lister and audit/filename adapter are prepared helpers, not participant coding tasks. The KNIME reference remains a convenient valid loop construction with an equally prepared calculation; this is not a comparison of ML libraries or runtime speed.
 - Use the normal convenient KNIME solution. Allow specialized loop nodes, general loops, flow variables and equivalent expressions. A participant may choose a conditional loop from the outset. Do not force a node replacement or a deliberately long construction.
 - KNIME supports result-dependent stopping through Variable Condition Loop End. Its [official loop reference](https://docs.knime.com/build/loops/reference) describes the available starts and ends. Confirm the exact node compatibility and behavior in the installed study version during rehearsal; do not infer them from the paper's taxonomy alone.
 - Have someone familiar with KNIME review and run the reference solution before freezing the tasks. Apply the same review to WAFFLE. Keep valid shorter solutions accepted in either system.
@@ -86,6 +87,7 @@ To recheck the published author evidence without either application:
 ```text
 python -m unittest discover -s experiments/user_study -v
 python experiments/user_study/verify_recorded.py
+python experiments/user_study/verify_recorded.py 2026-11-15-native-operators
 ```
 
 These commands recompute expected answers from the synthetic fixtures and inspect captured native outputs. They do not rerun either engine and are not usability measurements.

@@ -1,0 +1,78 @@
+[
+  {
+    "run": "knime-A-sweep-starter-visible",
+    "engine_log_sha256": "f29737abad289912de95864a525f938a708544fbc9d9f984764cb55104370ae2"
+  },
+  {
+    "run": "knime-A-sweep-visible",
+    "engine_log_sha256": "942aeb2316f8a1c748d8e0b863d844f7a5f96330352def1cf866dbf490583db3"
+  },
+  {
+    "run": "knime-A-sweep-first",
+    "engine_log_sha256": "53f983ecd1391e81eec35af6e4c6c59f9f007ccbb7c281d2796e546b1bb4928b"
+  },
+  {
+    "run": "knime-A-adapt-visible",
+    "engine_log_sha256": "17dd1282a5e49f0b4608e66e404e92c4f4164b9d164718bdbbe4e5e0a44ad205"
+  },
+  {
+    "run": "knime-A-adapt-first",
+    "engine_log_sha256": "66d8095c5bda8cd113a84509f4561a1d1891a87bbabdb1827be0d3e6e49583f3"
+  },
+  {
+    "run": "knime-A-adapt-cap",
+    "engine_log_sha256": "7619778c0c0bd25017601b109fa77638f289a61df744fd707fd09bc6af84fde1"
+  },
+  {
+    "run": "knime-A-files-starter-visible",
+    "engine_log_sha256": "01611cb87da10852c0fa6831add6d4b4bb35880bfb89ff6f7b02a0d378dd4ce1"
+  },
+  {
+    "run": "knime-A-files-visible",
+    "engine_log_sha256": "e31c7e70ecaff4f546fcdd676e80d757d2aaef952fed5f5346a30cbaefa12fd6"
+  },
+  {
+    "run": "knime-A-files-extra",
+    "engine_log_sha256": "3e72bd661f699d26d8f9c09bfc6d36172a6aeaed62babd1fbaaa3731682e2cb2"
+  },
+  {
+    "run": "knime-B-sweep-starter-visible",
+    "engine_log_sha256": "5d2bb8a75db22a50e73b5e99d7f32fd46f2590948f4f49d1356909e0a1590321"
+  },
+  {
+    "run": "knime-B-sweep-visible",
+    "engine_log_sha256": "0343e51c90d07edbb70a08ad580fe33250441d140b2d8c6aa3f5869d70c51380"
+  },
+  {
+    "run": "knime-B-sweep-first",
+    "engine_log_sha256": "be38fbb19c1dcfc978c9b7568a567cf53a9ec833dc72d6f5ff1ddf972bc98d61"
+  },
+  {
+    "run": "knime-B-adapt-visible",
+    "engine_log_sha256": "18ae950cd24befee1ef1e7e0c4873f38c2cd5a0472f722f57ba60916a49f5d53"
+  },
+  {
+    "run": "knime-B-adapt-first",
+    "engine_log_sha256": "7a290b7c0c03c3b20f4dbd2ebd8011ced937fc11a2a8ffca8be6f7a953104167"
+  },
+  {
+    "run": "knime-B-adapt-cap",
+    "engine_log_sha256": "c9fd348fa7cbaabc278b76ae96eeff079c42fe5366db9e170d89fc718f8fa328"
+  },
+  {
+    "run": "knime-B-files-starter-visible",
+    "engine_log_sha256": "2252acf671c4babdb1db5cf6d806e741ca42bc77846227eb025ecc273c93a4ed"
+  },
+  {
+    "run": "knime-B-files-visible",
+    "engine_log_sha256": "cc34538a4bfd7a76dec75eb1a2d3c2b1cee99461a14d88b51a2d8824c5b7e469"
+  },
+  {
+    "run": "knime-B-files-extra",
+    "engine_log_sha256": "47327f5bf5bce489b6c45f5f07616a33a09d56dbb2b0ed45437f9dfe1956a9bb"
+  },
+  {
+    "engine": "waffle",
+    "engine_log_sha256": "c8eff38bb1deed14026abdf3bca9194656738d1f729f45b22b38a1e88dfad82c"
+  }
+]

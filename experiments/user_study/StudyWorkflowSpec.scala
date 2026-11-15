@@ -53,8 +53,9 @@ class StudyWorkflowSpec
       }.toList
       val byName = ops.map(o => o.operatorIdentifier.id -> o).toMap
       val links = graph.get("links").elements().asScala.map { edge =>
+        val target = if (edge.get("target").get("portID").asText == "control-variables") PortIdentity(-1) else PortIdentity()
         LogicalLink(byName(edge.get("source").get("operatorID").asText).operatorIdentifier,
-          PortIdentity(), byName(edge.get("target").get("operatorID").asText).operatorIdentifier, PortIdentity())
+          PortIdentity(), byName(edge.get("target").get("operatorID").asText).operatorIdentifier, target)
       }.toList
       val id = executionBase + index
       setUpWorkflowExecutionData(id)
@@ -69,6 +70,11 @@ class StudyWorkflowSpec
         val actual = rows.map(r =>
           (if (isFiles) r.getField[String]("filename") else r.getField[Int]("K").toString,
             r.getField[Double](if (isFiles) "mean" else "score")))
+        // Capture the real sink output, independently of the prepared body audit.
+        Files.writeString(dir.resolve("results.csv"), actual.map { case (key, value) =>
+          val escaped = key.replace("\"", "\"\"")
+          s"\"$escaped\",$value\n"
+        }.mkString)
         assert(actual.size == expected.size, s"$label: $actual != $expected")
         actual.zip(expected).foreach { case ((a, x), (b, y)) =>
           assert(a == b && math.abs(x-y) <= 1e-9 * math.max(1.0, math.abs(y)),

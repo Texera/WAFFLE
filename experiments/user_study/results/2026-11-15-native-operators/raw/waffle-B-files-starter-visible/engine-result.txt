@@ -1,0 +1,1 @@
+PASS native materialized results: List((01-jan.csv,23.0))

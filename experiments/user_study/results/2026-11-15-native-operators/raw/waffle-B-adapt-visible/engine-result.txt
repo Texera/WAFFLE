@@ -1,0 +1,1 @@
+PASS native materialized results: List((2,-434.23), (3,-164.23000000000002))
