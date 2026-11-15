@@ -1,0 +1,1 @@
+PASS native materialized results: List((01-jan.csv,23.0), (02-feb.csv,43.0), (03-mar.csv,18.0), (04-apr.csv,16.0))

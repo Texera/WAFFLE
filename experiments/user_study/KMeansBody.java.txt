@@ -1,0 +1,28 @@
+java.util.List<String> lines = Files.readAllLines(Paths.get(POINTS_PATH), StandardCharsets.UTF_8);
+double[][] points = new double[lines.size()-1][2];
+for(int r=1;r<lines.size();r++){String[] parts=lines.get(r).split(",");points[r-1][0]=Double.parseDouble(parts[0]);points[r-1][1]=Double.parseDouble(parts[1]);}
+int k=iteration+2;
+double[][] centers = new double[k][2];
+for(int c=0;c<k;c++)centers[c]=points[c].clone();
+for(int step=0;step<50;step++){
+    double[][] totals=new double[k][3];
+    for(double[] point:points){
+        int chosen=0;double best=Double.POSITIVE_INFINITY;
+        for(int c=0;c<k;c++){double dx=point[0]-centers[c][0],dy=point[1]-centers[c][1];double dist=dx*dx+dy*dy;if(dist<best){best=dist;chosen=c;}}
+        totals[chosen][0]+=point[0];totals[chosen][1]+=point[1];totals[chosen][2]++;
+    }
+    double movement=0;
+    for(int c=0;c<k;c++)if(totals[c][2]>0){
+        double x=totals[c][0]/totals[c][2],y=totals[c][1]/totals[c][2];
+        movement=Math.max(movement,Math.max(Math.abs(x-centers[c][0]),Math.abs(y-centers[c][1])));
+        centers[c][0]=x;centers[c][1]=y;
+    }
+    if(movement<1e-10)break;
+}
+double value=0;
+for(double[] point:points){
+    double best=Double.POSITIVE_INFINITY;
+    for(double[] c:centers){double dx=point[0]-c[0],dy=point[1]-c[1];best=Math.min(best,dx*dx+dy*dy);}
+    value-=best;
+}
+out_k=k;out_score=value;score=value;

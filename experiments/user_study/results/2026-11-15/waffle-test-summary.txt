@@ -1,0 +1,21 @@
+[info] - should execute waffle-A-sweep-starter-visible and preserve the expected result rows (18 seconds, 873 milliseconds)
+[info] - should execute waffle-A-sweep-visible and preserve the expected result rows (39 seconds, 700 milliseconds)
+[info] - should execute waffle-A-sweep-first and preserve the expected result rows (41 seconds, 930 milliseconds)
+[info] - should execute waffle-A-adapt-visible and preserve the expected result rows (23 seconds, 461 milliseconds)
+[info] - should execute waffle-A-adapt-first and preserve the expected result rows (12 seconds, 675 milliseconds)
+[info] - should execute waffle-A-adapt-cap and preserve the expected result rows (27 seconds, 150 milliseconds)
+[info] - should execute waffle-A-files-starter-visible and preserve the expected result rows (6 seconds, 879 milliseconds)
+[info] - should execute waffle-A-files-visible and preserve the expected result rows (27 seconds, 256 milliseconds)
+[info] - should execute waffle-A-files-extra and preserve the expected result rows (42 seconds, 848 milliseconds)
+[info] - should execute waffle-B-sweep-starter-visible and preserve the expected result rows (6 seconds, 336 milliseconds)
+[info] - should execute waffle-B-sweep-visible and preserve the expected result rows (26 seconds, 209 milliseconds)
+[info] - should execute waffle-B-sweep-first and preserve the expected result rows (25 seconds, 994 milliseconds)
+[info] - should execute waffle-B-adapt-visible and preserve the expected result rows (21 seconds, 245 milliseconds)
+[info] - should execute waffle-B-adapt-first and preserve the expected result rows (13 seconds, 940 milliseconds)
+[info] - should execute waffle-B-adapt-cap and preserve the expected result rows (31 seconds, 604 milliseconds)
+[info] - should execute waffle-B-files-starter-visible and preserve the expected result rows (9 seconds, 144 milliseconds)
+[info] - should execute waffle-B-files-visible and preserve the expected result rows (30 seconds, 186 milliseconds)
+[info] - should execute waffle-B-files-extra and preserve the expected result rows (33 seconds, 912 milliseconds)
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 18, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.

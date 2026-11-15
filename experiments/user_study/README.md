@@ -1,6 +1,6 @@
 # User study: creating and adapting workflow loops
 
-**Status: proposed protocol, November 15, 2026. No participant results.** The task cards and native starters still need a GUI rehearsal and a teammate pilot. This is the facilitator's protocol; give participants only the neutral task cards and platform reference sheets.
+**Status: native and GUI author rehearsals passed, November 15, 2026. No participant results.** Both platforms pass 18 native checks each, including the three activities and changed inputs. Pack A's two starters and three reference solutions also run in both GUIs. A teammate pilot remains necessary; see [the rehearsal record](results/2026-11-15/README.md). This is the facilitator's protocol; give participants only the neutral task cards and platform reference sheets.
 
 ## Question and hypothesis
 
@@ -60,4 +60,32 @@ Freeze task wording, accepted solutions, caps, training and analysis after the p
 
 If the measured advantage is confined to adaptation, say that participants adapted the stopping rule more successfully or faster under these conditions. If KNIME is faster for the basic sweep or file task, report that alongside the adaptation result. If outcomes are similar, report a tie rather than claiming WAFFLE is easier. A failure to finish in the allotted time does not establish that a framework cannot express the task.
 
-The next step is to build and rehearse both platforms' three activities, verify the KNIME reference solution, and pilot the timing and wording before recruiting.
+The next step is to have a KNIME-experienced teammate check the baseline and pilot the timing and wording before recruiting. Repeat the GUI rehearsal after moving Texera to the study server.
+
+## Build and check the materials
+
+Install the root `requirements.txt`. The recorded checks use KNIME 5.5.3 with Java Snippet and the Texera prototype at `a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6`. The native runners below target Windows; they require the installed KNIME runtime or the prototype's normal build and Python dependencies. `StudyWorkflowSpec.scala` is added only to the sbt session, without editing Texera source or build files.
+
+```text
+python experiments/user_study/study.py prepare C:/study/pilot-01
+python experiments/user_study/run_knime.py --runtime C:/tools/knime --package C:/study/pilot-01
+python experiments/user_study/run_waffle.py --repo C:/src/texera-prototype --package C:/study/pilot-01 --python C:/venv/Scripts/python.exe --java C:/jdk17/bin/java.exe --sbt-launch C:/tools/sbt-launch.jar
+python experiments/user_study/study.py check C:/study/pilot-01
+```
+
+The generator refuses an existing destination. Prepare a fresh package for each participant or rehearsal. `participants/<pack>/<tool>/` contains two single-input starters: the sweep and file task. Activity 2 deliberately starts from the saved Activity 1 submission, so it has no separate participant starter. `cards/<pack>/` has the three cards. Give only the relevant platform section of [REFERENCE.md](REFERENCE.md), not its facilitator notes. Keep `facilitator/`, hidden input variants, and the manifest out of the participant's materials.
+
+Import each KNIME `.knwf` separately into Local space. Import each WAFFLE `.json` into Texera. Generated workflows embed their package paths, so regenerate them after moving to a different machine or folder. Reference solutions for a facilitator rehearsal are in `facilitator/runs/<tool>-<pack>-<task>-visible/`. Run the sweep, adaptation and files solutions and inspect their result tables. The native checker independently verifies both output and actual body visits on visible and hidden inputs; it also rejects changed source inputs.
+
+Native runs and GUI copies of the same generated workflow share trace destinations. Do not run them concurrently. Save validation evidence before GUI editing, and use a separate fresh package for participant submissions. The supplied native runner tests reference workflows, not an arbitrary participant submission: score the saved submission separately with the same fixtures and exact-visit requirements.
+
+For a hosted Texera server, generate with `--waffle-runtime-root /srv/waffle-study/pilot-01` and place the package's data and trace directories at that server path, writable by the execution worker. This mapping affects only WAFFLE; KNIME still reads its local copy. Retrieve the server's traces for checking. Rehearse on the actual study server before recruitment. The preparation does not deploy or configure a server.
+
+To recheck the published author evidence without either application:
+
+```text
+python -m unittest discover -s experiments/user_study -v
+python experiments/user_study/verify_recorded.py
+```
+
+These commands recompute expected answers from the synthetic fixtures and inspect captured native outputs. They do not rerun either engine and are not usability measurements.
