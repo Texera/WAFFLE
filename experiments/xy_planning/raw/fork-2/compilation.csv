@@ -1,0 +1,7 @@
+"case","source","compile_ns","operators","links","exhaustive_cost","exhaustive_states"
+"inside-1-outside-4","inside-1-outside-4","10784608700","24","28","",""
+"inside-4-outside-1","inside-4-outside-1","16721000","24","28","",""
+"inside-2-outside-2","inside-2-outside-2","9829900","20","23","",""
+"inside-3-outside-3","inside-3-outside-3","13284100","28","33","",""
+"inside-1-outside-1","inside-1-outside-1","7699700","12","13","7.0","128"
+"inside-4-outside-4","inside-4-outside-4","16158000","36","43","",""

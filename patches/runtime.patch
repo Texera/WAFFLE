@@ -1,0 +1,2315 @@
+diff --git a/amber/src/main/protobuf/org/apache/texera/amber/engine/architecture/rpc/controlcommands.proto b/amber/src/main/protobuf/org/apache/texera/amber/engine/architecture/rpc/controlcommands.proto
+index e60b7cd74f..b5dadd05ef 100644
+--- a/amber/src/main/protobuf/org/apache/texera/amber/engine/architecture/rpc/controlcommands.proto
++++ b/amber/src/main/protobuf/org/apache/texera/amber/engine/architecture/rpc/controlcommands.proto
+@@ -262,8 +262,8 @@ message InitializeExecutorRequest {
+   // (minted at schedule time); a Loop End worker selects the entry by the
+   // loop_start_id carried on the consumed StateFrame and derives two URIs
+   // from the base:
+-  //   - state URI (VFSURIFactory.state_uri): the loop-back write address for
+-  //     the next-iteration state;
++  //   - loop-specific checkpoint URI: the next iteration's updated variables.
++  //     The producer's state URI retains the original enclosing messages;
+   //   - result URI (VFSURIFactory.result_uri): the loop's input table, read
+   //     at consume time so the table never rides inside the State content
+   //     through the loop body.
+diff --git a/amber/src/main/python/core/architecture/packaging/output_manager.py b/amber/src/main/python/core/architecture/packaging/output_manager.py
+index 5053fd01f4..dea04c8b06 100644
+--- a/amber/src/main/python/core/architecture/packaging/output_manager.py
++++ b/amber/src/main/python/core/architecture/packaging/output_manager.py
+@@ -18,6 +18,7 @@
+ import threading
+ import typing
+ from collections import OrderedDict
++from uuid import uuid4
+ from itertools import chain
+ from loguru import logger
+ from pyarrow import Table
+@@ -200,6 +201,7 @@ class OutputManager:
+         loop_counter: int = 0,
+         loop_start_id: str = "",
+         port_id=None,
++        message_id: str = "",
+     ) -> None:
+         # When port_id is omitted the same state row is fanned out to
+         # every output port's state table. This mirrors the
+@@ -208,7 +210,7 @@ class OutputManager:
+         # (and every worker reading the materialization) needs the full
+         # set.
+         element = PortStorageWriterElement(
+-            data_tuple=state.to_tuple(loop_counter, loop_start_id)
++            data_tuple=state.to_tuple(loop_counter, loop_start_id, message_id)
+         )
+         if port_id is None:
+             for writer_queue, _, _ in self._port_state_writers.values():
+@@ -221,7 +223,7 @@ class OutputManager:
+         reopen the storage writers against the empty tables.
+ 
+         Called only for the inner Loop End of a nested loop, once per outer
+-        iteration (see the ``MainLoop._process_state_frame`` call site).
++        iteration (see ``MainLoop._forward_enclosing_frames``).
+         Truncating live storage is safe because loop workflows run in
+         MATERIALIZED mode, so no reader observes the intermediate truncation.
+ 
+@@ -327,7 +329,10 @@ class OutputManager:
+         state: State,
+         loop_counter: int = 0,
+         loop_start_id: str = "",
++        message_id: typing.Optional[str] = None,
+     ) -> Iterable[typing.Tuple[ActorVirtualIdentity, DataPayload]]:
++        if message_id is None:
++            message_id = str(uuid4())
+         return chain(
+             *(
+                 (
+@@ -338,6 +343,7 @@ class OutputManager:
+                                 payload,
+                                 loop_counter=loop_counter,
+                                 loop_start_id=loop_start_id,
++                                message_id=message_id,
+                             )
+                             if isinstance(payload, State)
+                             else self.tuple_to_frame(payload)
+diff --git a/amber/src/main/python/core/models/operator.py b/amber/src/main/python/core/models/operator.py
+index a2900c31de..6a72745142 100644
+--- a/amber/src/main/python/core/models/operator.py
++++ b/amber/src/main/python/core/models/operator.py
+@@ -23,6 +23,7 @@ import pandas
+ from functools import lru_cache
+ from abc import ABC, abstractmethod
+ from collections import defaultdict
++from copy import deepcopy
+ from typing import Iterator, List, Mapping, Optional, Union, MutableMapping, Protocol
+ 
+ from . import Table, TableLike, Tuple, TupleLike, Batch, BatchLike, Schema
+@@ -448,26 +449,36 @@ def _compile_cell(code: str, filename: str):
+     return compile(module, filename, "exec"), expression
+ 
+ 
+-def _eval_loop_expr(expr: str, state: State, table: Optional[Table]):
+-    """Evaluate ``expr`` directly against the loop variables plus ``table``.
++class _LoopNamespace(dict):
++    """Read enclosing bindings on a miss; assignments stay in the inner scope."""
+ 
+-    Runs in a throwaway namespace seeded with the loop variables and ``table``
+-    so the seeded ``table`` neither leaks into nor is clobbered out of the
+-    persistent loop ``state``. Used by LoopEnd's ``condition``; LoopStart's
+-    ``output`` is a cell (see ``LoopStartOperator._run_output_cell``).
++    def __init__(self, local, enclosing):
++        super().__init__(local)
++        self.enclosing = enclosing
+ 
+-    The namespace is passed as ``eval`` globals (not a locals-only mapping):
+-    a generator expression / comprehension / lambda in the user's expression
+-    resolves its free variables against globals, so a locals-only namespace
+-    would raise ``NameError`` on otherwise-valid expressions like
+-    ``all(x > threshold for x in items)``. The namespace is discarded, so the
+-    ``__builtins__`` that ``eval`` injects into it does not matter here.
+-    """
+-    namespace = {**state, _TABLE_KEY: table, _D_KEY: table}
+-    return eval(expr, namespace)
++    def __missing__(self, name):
++        return self.enclosing[name]
++
++
++class _LoopOperator(TableOperator):
++    def __init__(self):
++        super().__init__()
++        self._enclosing_values = State()
++        self._enclosing_depths: dict[str, int] = {}
++
++    def inherit_state(self, values: State, depth: int) -> None:
++        for name, value in values.items():
++            if depth <= self._enclosing_depths.get(name, depth):
++                self._enclosing_depths[name] = depth
++                self._enclosing_values[name] = deepcopy(value)
++
++    def _namespace(self, local: State, table: Table) -> dict:
++        return _LoopNamespace(
++            {**local, _TABLE_KEY: table, _D_KEY: table}, self._enclosing_values
++        )
+ 
+ 
+-class LoopStartOperator(TableOperator):
++class LoopStartOperator(_LoopOperator):
+     """Base class for the runtime side of a Loop Start operator.
+ 
+     The generator in ``LoopStartOpDesc.scala`` emits a thin
+@@ -477,8 +488,8 @@ class LoopStartOperator(TableOperator):
+     logic lives here.
+ 
+     Once the input data D is complete, ``initialization`` seeds
+-    ``self.variables``, the values ``process_state`` merged in (the back edge)
+-    replace them, and the ``output`` cell sets this iteration's own;
++    ``self.variables``, the saved checkpoint replaces the initial values,
++    and the ``output`` cell sets this iteration's own;
+     ``produce_state_on_finish`` emits those variables to the matching LoopEnd.
+     The input table does NOT ride the state: the LoopEnd runtime reads it from
+     this operator's input-port materialization at consume time
+@@ -542,7 +553,7 @@ class LoopStartOperator(TableOperator):
+         if self._initialized:
+             return
+         self._initialized = True
+-        namespace: dict = {_TABLE_KEY: table, _D_KEY: table}
++        namespace = self._namespace(State(), table)
+         exec(self._initialization_code, namespace)
+         _check_reserved_kept(namespace, table)
+         variables = _user_variables(namespace)
+@@ -559,7 +570,7 @@ class LoopStartOperator(TableOperator):
+         # run against one namespace, passed as globals (as in _initialize) so a
+         # lambda / generator expression resolves its free names.
+         statements, expression = _compile_cell(self._output_code, "<output>")
+-        namespace: dict = {**self.variables, _TABLE_KEY: table, _D_KEY: table}
++        namespace = self._namespace(self.variables, table)
+         exec(statements, namespace)
+         # Checked before the expression runs, so a rebound D is reported as
+         # such rather than as whatever the expression then does with it...
+@@ -568,7 +579,7 @@ class LoopStartOperator(TableOperator):
+         if expression is not None:
+             # The trailing expression runs on a copy: as when Output was a
+             # single eval()ed expression, a walrus in it binds no variable.
+-            scope = dict(namespace)
++            scope = _LoopNamespace(namespace, self._enclosing_values)
+             data = eval(expression, scope)
+             # ...and after, for a `(D := ...)` in the expression itself.
+             _check_reserved_kept(scope, table)
+@@ -602,7 +613,7 @@ class LoopStartOperator(TableOperator):
+         return State(self.variables)
+ 
+ 
+-class LoopEndOperator(TableOperator):
++class LoopEndOperator(_LoopOperator):
+     """Base class for the runtime side of a Loop End operator.
+ 
+     The generator in ``LoopEndOpDesc.scala`` emits a thin
+@@ -678,7 +689,7 @@ class LoopEndOperator(TableOperator):
+         # Take it: a later iteration that never got a table must raise above
+         # rather than silently run the update against the previous one.
+         self._attached_table = None
+-        namespace = {**state, _TABLE_KEY: input_table, _D_KEY: input_table}
++        namespace = self._namespace(state, input_table)
+         # Pass the namespace as exec globals (not a locals-only mapping) so a
+         # comprehension / generator expression / lambda in the user's `update`
+         # resolves its free variables -- a locals-only namespace raises
+@@ -702,7 +713,7 @@ class LoopEndOperator(TableOperator):
+         # loop variables that don't exist yet (which would raise NameError).
+         if self._loop_table is None:
+             return False
+-        return _eval_loop_expr(condition_expr, self.variables, self._loop_table)
++        return eval(condition_expr, self._namespace(self.variables, self._loop_table))
+ 
+     @abstractmethod
+     def condition(self) -> bool:
+diff --git a/amber/src/main/python/core/models/payload.py b/amber/src/main/python/core/models/payload.py
+index 6fc3580679..b92e488b52 100644
+--- a/amber/src/main/python/core/models/payload.py
++++ b/amber/src/main/python/core/models/payload.py
+@@ -42,3 +42,5 @@ class StateFrame(DataPayload):
+     # output, consumed by the matching LoopEnd. Empty for non-loop /
+     # not-yet-stamped state.
+     loop_start_id: str = ""
++    # One identity per publication, retained by every forwarded/stored copy.
++    message_id: str = ""
+diff --git a/amber/src/main/python/core/models/state.py b/amber/src/main/python/core/models/state.py
+index 9ca064d49c..eced672ecd 100644
+--- a/amber/src/main/python/core/models/state.py
++++ b/amber/src/main/python/core/models/state.py
+@@ -34,11 +34,13 @@ class State(dict):
+     # that need these values read the corresponding columns off the tuple.
+     LOOP_COUNTER = "loop_counter"
+     LOOP_START_ID = "loop_start_id"
++    MESSAGE_ID = "message_id"
+     SCHEMA = Schema(
+         raw_schema={
+             CONTENT: "STRING",
+             LOOP_COUNTER: "LONG",
+             LOOP_START_ID: "STRING",
++            MESSAGE_ID: "STRING",
+         }
+     )
+ 
+@@ -50,6 +52,7 @@ class State(dict):
+         content_json: str,
+         loop_counter: int = 0,
+         loop_start_id: str = "",
++        message_id: str = "",
+     ) -> dict:
+         """The single column-name -> value mapping for the State wire/storage
+         format. Both ``to_tuple`` (iceberg materialization) and the network
+@@ -60,15 +63,17 @@ class State(dict):
+             State.CONTENT: content_json,
+             State.LOOP_COUNTER: int(loop_counter),
+             State.LOOP_START_ID: loop_start_id,
++            State.MESSAGE_ID: message_id,
+         }
+ 
+     def to_tuple(
+         self,
+         loop_counter: int = 0,
+         loop_start_id: str = "",
++        message_id: str = "",
+     ) -> Tuple:
+         return Tuple(
+-            State.to_columns(self.to_json(), loop_counter, loop_start_id),
++            State.to_columns(self.to_json(), loop_counter, loop_start_id, message_id),
+             schema=State.SCHEMA,
+         )
+ 
+diff --git a/amber/src/main/python/core/runnables/main_loop.py b/amber/src/main/python/core/runnables/main_loop.py
+index d04587f7ba..020249afcc 100644
+--- a/amber/src/main/python/core/runnables/main_loop.py
++++ b/amber/src/main/python/core/runnables/main_loop.py
+@@ -16,6 +16,8 @@
+ # under the License.
+ 
+ import threading
++from copy import deepcopy
++from uuid import uuid4
+ import time
+ import typing
+ from loguru import logger
+@@ -90,24 +92,15 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         # LoopEnd (loop_counter == 0) takes a state; used for the jump RPC
+         # and the setup-config URI lookup (context.loop_start_port_uris).
+         self._loop_start_id: str = ""
+-        # Whether this LoopEnd already took its loop state this execution.
+-        # A loop body may branch and converge on the Loop End, and every reader
+-        # on its input port replays that branch's states independently, so the
+-        # same iteration's state arrives once per branch. Cleared when the
+-        # deferred consume takes the stash (_consume_pending_loop_state), so
+-        # the flag is per-execution by construction -- not by the scheduler
+-        # happening to recreate workers each iteration.
++        # Registration, callbacks and forwarding share one duplicate gate.
++        self._seen_state_messages: set[str] = set()
++        self._publication_envelope = (0, "")
+         self._loop_state_consumed: bool = False
+-        # Whether this LoopEnd forwarded an UNstamped counter-0 state instead
+-        # of consuming it. Paired with _loop_start_id by
+-        # _check_loop_state_arrived: forwarding one and never capturing a stamp
+-        # means the loop's own state reached here with its stamp lost.
++        # Unstamped legacy body publications may precede the loop's own frame.
+         self._forwarded_unstamped_state: bool = False
+-        # The matching state a LoopEnd will consume, stashed when taken and
+-        # actually handed to the operator at EndChannel (see
+-        # _consume_pending_loop_state for why the table read must not overlap
+-        # this worker's own materialization reader).
+         self._pending_loop_state: Optional[State] = None
++        # LoopEnd forwards these before emitting its buffered result tuples.
++        self._enclosing_frames: list[StateFrame] = []
+ 
+         self.context = Context(worker_id, input_queue)
+         self._async_rpc_server = AsyncRPCServer(output_queue, context=self.context)
+@@ -118,16 +111,17 @@ class MainLoop(StoppableQueueBlockingRunnable):
+             target=self.data_processor.run, daemon=True, name="data_processor_thread"
+         ).start()
+ 
+-    def _loop_start_base_uri(self) -> str:
++    def _loop_start_base_uri(self, start_id: Optional[str] = None) -> str:
+         # The loop's bookkeeping base URI is setup config, keyed by the
+         # captured id (see InitializeExecutorRequest.loopStartPortUris). Fail
+         # loud on a missing entry: anything raised here is reported by the
+         # caller's guard as an operator-facing error.
+-        uri = self.context.loop_start_port_uris.get(self._loop_start_id)
++        start_id = self._loop_start_id if start_id is None else start_id
++        uri = self.context.loop_start_port_uris.get(start_id)
+         if not uri:
+             raise RuntimeError(
+                 f"no loop bookkeeping URI configured for LoopStart "
+-                f"'{self._loop_start_id}' "
++                f"'{start_id}' "
+                 f"(have: {sorted(self.context.loop_start_port_uris)})"
+             )
+         return uri
+@@ -136,11 +130,10 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         # The loop's input table is the Loop Start's input-port
+         # materialization: the output doc of whatever feeds this loop level.
+         # It is stable for the duration of the loop level that reads it -- the
+-        # back-edge rewrites only the state doc under the same base URI, never
+-        # this result doc. For an INNER loop that upstream is the outer Loop
+-        # Start, whose output doc is recreated on each OUTER iteration; that is
+-        # still stable across every inner iteration that reads it, which is the
+-        # window that matters here. Reading it means the table never has to
++        # back edge writes to a separate checkpoint. For an inner loop the
++        # upstream may be the outer LoopStart, whose output is recreated on
++        # each outer iteration and kept for every inner iteration.
++        # Reading it means the table never has to
+         # ride inside the State content through the loop body. Callers must
+         # invoke this OUTSIDE the window where this worker's own materialization
+         # reader is streaming -- see _consume_pending_loop_state.
+@@ -178,10 +171,8 @@ class MainLoop(StoppableQueueBlockingRunnable):
+             return
+         pending = self._pending_loop_state
+         self._pending_loop_state = None
+-        # Re-arm the duplicate guard here rather than relying on the scheduler
+-        # recreating workers each iteration: EndChannel is PORT_ALIGNMENT, so
+-        # nothing more can arrive on the port -- every duplicate is already in
+-        # by the time this consume runs.
++        # Input completion consumes the accumulator once. The identity set
++        # lasts for this worker's execution and is reset by a fresh worker.
+         self._loop_state_consumed = False
+         executor.attach_loop_table(self._read_loop_input_table())
+         # A Loop End has exactly one input port (port 0); the generated
+@@ -205,25 +196,59 @@ class MainLoop(StoppableQueueBlockingRunnable):
+             executor.state = pending
+             executor.process_state(pending, 0)
+ 
++    def _checkpoint_uri(self, start_id: str) -> str:
++        return VFSURIFactory.loop_checkpoint_uri(
++            self._loop_start_base_uri(start_id), start_id
++        )
++
++    def _restore_loop_checkpoint(self, executor: LoopStartOperator) -> None:
++        uri = self._checkpoint_uri(get_logical_op_id(self.context.worker_id))
++        if DocumentFactory.document_exists(uri):
++            doc, _ = DocumentFactory.open_document(uri)
++            # Only a committed checkpoint is visible; an empty table can
++            # remain if the first write failed before its Iceberg commit.
++            for row in doc.get():
++                executor.variables.update(State.from_tuple(row))
++
++    def _clear_loop_checkpoint(self) -> None:
++        if self._loop_start_id:
++            uri = self._checkpoint_uri(self._loop_start_id)
++            if DocumentFactory.document_exists(uri):
++                doc, _ = DocumentFactory.open_document(uri)
++                doc.clear()
++
++    def _forward_enclosing_frames(self) -> None:
++        if not self._enclosing_frames:
++            return
++        # By input completion we know which LoopStart owns this LoopEnd.
++        # Replayed enclosing updates must not clear earlier inner results.
++        if self._loop_start_id and not DocumentFactory.document_exists(
++            self._checkpoint_uri(self._loop_start_id)
++        ):
++            self.context.output_manager.reset_output_storage()
++        for frame in self._enclosing_frames:
++            self._emit_and_save_state(
++                frame.frame,
++                frame.loop_counter - 1,
++                frame.loop_start_id,
++                frame.message_id,
++            )
++        self._enclosing_frames.clear()
++
+     def _jump_to_loop_start(
+         self, executor: LoopEndOperator, coordinator_interface
+     ) -> None:
+-        # Resolve the write address BEFORE the jump RPC so a misconfigured
+-        # loop does not rewind the schedule without a back-edge write.
+-        # Anything raised here (a missing URI, or a failed state write after
+-        # the jump) is reported by complete()'s guard as an operator-facing
+-        # error.
+-        uri = VFSURIFactory.state_uri(self._loop_start_base_uri())
++        # The materialized input belongs to the producer. Leave its original
++        # rows and message IDs available to every fresh inner worker.
++        uri = self._checkpoint_uri(self._loop_start_id)
++        if DocumentFactory.document_exists(uri):
++            doc, _ = DocumentFactory.open_document(uri)
++        else:
++            doc = DocumentFactory.create_document(uri, State.SCHEMA)
++        doc.replace_one(executor.variables.to_tuple(0))
+         coordinator_interface.jump_to_operator_region(
+             JumpToOperatorRegionRequest(OperatorIdentity(self._loop_start_id))
+         )
+-        writer = DocumentFactory.create_document(uri, State.SCHEMA).writer("0")
+-        # The back-edge fires only after the matching LoopEnd consumed at
+-        # loop_counter == 0, so the next iteration's input starts at depth 0.
+-        # It carries the loop variables the update produced (``variables``),
+-        # not the state message registered before it ran (``state``).
+-        writer.put_one(executor.variables.to_tuple(0))
+-        writer.close()
+ 
+     def _check_loop_state_arrived(self) -> None:
+         # Keep the LOUD failure for a real loop state that lost its stamp
+@@ -267,44 +292,23 @@ class MainLoop(StoppableQueueBlockingRunnable):
+                 "stop after one iteration"
+             )
+ 
++    def _finish_loop_iteration(self, executor: LoopEndOperator) -> None:
++        with replace_print(
++            self.context.worker_id, self.context.console_message_manager.print_buf
++        ):
++            again = executor.condition()
++        if again:
++            self._jump_to_loop_start(
++                executor, self._async_rpc_client.coordinator_stub()
++            )
++        else:
++            self._clear_loop_checkpoint()
++
+     def complete(self) -> None:
+-        """
+-        Complete the DataProcessor, marking state to COMPLETED, and notify the
+-        coordinator.
+-        """
+-        # flush the buffered console prints
++        """Close the worker and notify the coordinator."""
+         self._check_and_report_console_messages(force_flush=True)
+         coordinator_interface = self._async_rpc_client.coordinator_stub()
+         executor = self.context.executor_manager.executor
+-        if isinstance(executor, LoopEndOperator):
+-            # condition() evaluates a user-supplied expression, and the
+-            # loop-back edge writes state to iceberg after the jump DCM --
+-            # both on this main loop thread, outside DataProcessor's guarded
+-            # executor session. A UDF error on the data path is caught and
+-            # reported via Context.report_exception
+-            # (DataProcessor._executor_session); reuse it here so a bad
+-            # condition (a typo, an undefined name) or a failed back-edge
+-            # write surfaces as an operator-facing error and pauses the
+-            # worker, instead of killing the thread through run()'s
+-            # @logger.catch(reraise=True).
+-            try:
+-                # condition() is user code on the main loop thread, same as the
+-                # `update` in the deferred consume: capture its prints too.
+-                with replace_print(
+-                    self.context.worker_id,
+-                    self.context.console_message_manager.print_buf,
+-                ):
+-                    should_iterate = executor.condition()
+-                if should_iterate:
+-                    self._jump_to_loop_start(executor, coordinator_interface)
+-            except Exception as err:
+-                self.context.report_exception(err)
+-                self._check_exception()
+-                return
+-            # The opening flush above happened before condition() ran, and the
+-            # worker is about to shut down, so anything it printed would never
+-            # be sent. (_check_exception flushes on the error path.)
+-            self._check_and_report_console_messages(force_flush=True)
+         executor.close()
+         # stop the data processing thread
+         self.data_processor.stop()
+@@ -395,19 +399,34 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         self,
+         output_loop_counter: int = 0,
+         output_loop_start_id: str = "",
++        input_message_id: Optional[str] = None,
++        input_snapshot: Optional[State] = None,
+     ) -> None:
+         self._switch_context()
+         output_state = self.context.state_processing_manager.get_output_state()
+         if output_state is not None:
+             executor = self.context.executor_manager.executor
++            message_id = input_message_id
+             if isinstance(executor, LoopStartOperator):
+-                # A LoopStart stamps its own logical op id; the write address
+-                # is setup config (InitializeExecutorRequest.loop_start_port_uris).
+                 output_loop_start_id = get_logical_op_id(self.context.worker_id)
++                message_id = None
++            elif input_snapshot is None and not output_loop_start_id:
++                # A publication at start/finish belongs to the nearest loop
++                # whose message reached this worker, not to a new loop.
++                output_loop_counter, output_loop_start_id = self._publication_envelope
++            elif input_snapshot is not None:
++                # Compare the wire values: Python equality conflates 2 and 2.0.
++                # Invalid publications must use the same operator-error path as
++                # failures during emission, rather than kill the main thread.
++                try:
++                    if output_state.to_json() != input_snapshot.to_json():
++                        message_id = None
++                except Exception as err:
++                    self.context.report_exception(err)
++                    self._check_exception()
++                    return
+             self._emit_and_save_state(
+-                output_state,
+-                output_loop_counter,
+-                output_loop_start_id,
++                output_state, output_loop_counter, output_loop_start_id, message_id
+             )
+ 
+     def _emit_batches(self, batches) -> None:
+@@ -427,7 +446,10 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         state: State,
+         loop_counter: int,
+         loop_start_id: str = "",
++        message_id: Optional[str] = None,
+     ) -> None:
++        if message_id is None:
++            message_id = str(uuid4())
+         # State serialization (state.to_tuple -> to_json) and the storage write
+         # run here on the main loop thread, outside DataProcessor's guarded
+         # executor session. A non-serializable loop variable (e.g. a numpy
+@@ -440,11 +462,11 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         try:
+             self._emit_batches(
+                 self.context.output_manager.emit_state(
+-                    state, loop_counter, loop_start_id
++                    state, loop_counter, loop_start_id, message_id
+                 )
+             )
+             self.context.output_manager.save_state_to_storage_if_needed(
+-                state, loop_counter, loop_start_id
++                state, loop_counter, loop_start_id, message_id=message_id
+             )
+         except Exception as err:
+             self.context.report_exception(err)
+@@ -492,118 +514,56 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         self._check_and_process_control()
+ 
+     def _process_state_frame(self, frame: StateFrame) -> None:
+-        # The runtime owns loop_counter; loop operators never see or mutate it.
+-        # The LoopStart/LoopEnd nested pass-through branches are handled here --
+-        # forwarding the state and skipping the operator -- so the operator's
+-        # process_state only ever runs the first-entry / consume path.
++        # Empty identifiers are legacy/unissued frames. New publications always
++        # receive an identifier before either network or storage fan-out.
++        if frame.message_id:
++            if frame.message_id in self._seen_state_messages:
++                self._check_and_process_control()
++                return
++            self._seen_state_messages.add(frame.message_id)
+         state = frame.frame
+         in_counter = frame.loop_counter
+         executor = self.context.executor_manager.executor
+ 
+         if isinstance(executor, LoopEndOperator) and in_counter > 0:
+-            # An inner Loop End receiving the enclosing (outer) loop's boundary
+-            # state (loop_counter > 0): the signal that the outer loop has
+-            # advanced. Reset this Loop End's output now, before forwarding, so
+-            # the new outer iteration's inner results accumulate from empty
+-            # instead of concatenating across outer iterations. The input reader
+-            # replays all states before any data each region execution, so the
+-            # result/state tables still hold the PREVIOUS outer iteration's rows
+-            # at this point. This fires exactly once per outer iteration: the
+-            # inner LoopStart's output (and thus this pass-through) is recreated
+-            # on every inner back-edge, so the outer state only reaches here on
+-            # the first inner iteration of each outer iteration. A single /
+-            # outermost Loop End never reaches this branch (no enclosing loop,
+-            # so never loop_counter > 0) and so never resets -- it accumulates
+-            # all of its own iterations.
+-            self.context.output_manager.reset_output_storage()
+-            # State belongs to an outer loop: step one level out and forward,
+-            # carrying the outer loop's id unchanged.
+-            self._emit_and_save_state(state, in_counter - 1, frame.loop_start_id)
++            executor.inherit_state(state, in_counter)
++            self._enclosing_frames.append(frame)
+             self._check_and_process_control()
+             return
+         if isinstance(executor, LoopStartOperator) and frame.loop_start_id:
+-            # Outer loop's state flowing through an inner LoopStart -- detected
+-            # by the outer LoopStart's id stamped on the envelope (a first-entry
+-            # state has no stamp): step one level deeper and forward, keeping
+-            # the outer loop's id.
+-            self._emit_and_save_state(state, in_counter + 1, frame.loop_start_id)
++            executor.inherit_state(state, in_counter + 1)
++            self._emit_and_save_state(
++                state, in_counter + 1, frame.loop_start_id, frame.message_id
++            )
+             self._check_and_process_control()
+             return
+ 
+-        # A LoopStart handles only the STAMPED case above. An UNstamped
+-        # counter-0 state at a LoopStart takes neither branch: it falls all the
+-        # way through to process_input_state at the bottom, and the operator's
+-        # process_state MERGES its keys into the loop variables. That is the
+-        # opposite of what the LoopEnd branch below does with the identical
+-        # frame, and the asymmetry is forced, not an oversight. The back-edge
+-        # writes the next iteration's variables to the LoopStart's own
+-        # input-port state URI with that very same "no loop" envelope
+-        # (_jump_to_loop_start -> State.to_tuple(0)), so an unstamped counter-0
+-        # frame at a LoopStart is indistinguishable from -- and normally IS --
+-        # the loop's own state. A LoopEnd may forward instead of consuming
+-        # because its inbound loop state is always stamped by the matching
+-        # LoopStart; a LoopStart has no such signal. Consequence of the merge:
+-        # an upstream or body operator emitting a key that collides with a loop
+-        # variable overwrites it, and one emitting `table` trips
+-        # _reserved_name_error in produce_state_on_finish (see #7248).
+-
+         if isinstance(executor, LoopEndOperator):
+-            if not frame.loop_start_id:
+-                # An UNstamped counter-0 state at a LoopEnd is not the loop's
+-                # own boundary state -- it was produced by a loop-body
+-                # operator's produce_state_on_start/finish (a public API on
+-                # both engine sides), which emits with the "no loop" envelope.
+-                # A real loop state is always stamped: the matching LoopStart
+-                # stamps its own id on every iteration's output state.
+-                # Forward it downstream unchanged, skipping the operator, like
+-                # any default pass-through: taking it would clobber the
+-                # captured back-jump id with "" and then fail the deferred
+-                # consume's bookkeeping-URI lookup for LoopStart ''.
+-                #
+-                # This MUST stay ahead of the dedup and the stash below: an
+-                # unstamped frame is not the loop's own state, so it may
+-                # neither mark that state as taken nor be handed to the
+-                # operator as the iteration's state.
++            # Accumulate distinct publications until all input channels end.
++            # The loop identifier is routing metadata, not a first-frame lock:
++            # later body values must be available to update/checkCondition.
++            if frame.loop_start_id:
++                self._loop_state_consumed = True
++                self._loop_start_id = frame.loop_start_id
++            else:
+                 self._forwarded_unstamped_state = True
+-                self._emit_and_save_state(state, in_counter, frame.loop_start_id)
+-                self._check_and_process_control()
+-                return
+-            # Matching LoopEnd (in_counter == 0, stamped): it will consume this
+-            # state and jump back. Remember which LoopStart to jump to (it
+-            # rides the envelope) for complete()/_jump_to_loop_start, and STASH
+-            # the state -- the operator runs its update at EndChannel instead
+-            # of here, because the loop's input table is read from storage and
+-            # that read must not overlap this worker's own materialization
+-            # reader (see _consume_pending_loop_state). The LoopEnd emits no
+-            # state downstream on the matching consume, so deferring it
+-            # changes nothing observable outside the operator.
+-            #
+-            # With a branching loop body, each branch's reader replays the same
+-            # iteration's state, so this fires once per inbound link. The
+-            # deferred consume runs the user's update exactly once either way
+-            # (and run_update seeds its namespace from the incoming copy, so
+-            # re-running it on an identical copy would even be idempotent);
+-            # what this flag pins is WHICH copy is stashed -- the first,
+-            # instead of each later arrival silently overwriting
+-            # _pending_loop_state. The copies are the same state emitted by
+-            # the one matching LoopStart unless a body operator overrides
+-            # process_state to forward a modified one; rewriting the loop
+-            # state in a branching body is not supported (which copy arrives
+-            # first is scheduling-dependent either way), so take the first
+-            # deliberately.
+-            if self._loop_state_consumed:
+-                self._check_and_process_control()
+-                return
+-            self._loop_state_consumed = True
+-            self._loop_start_id = frame.loop_start_id
+-            self._pending_loop_state = state
++            if self._pending_loop_state is None:
++                self._pending_loop_state = State()
++            self._pending_loop_state.update(state)
+             self._check_and_process_control()
+             return
+ 
++        if frame.loop_start_id and (
++            not self._publication_envelope[1]
++            or in_counter <= self._publication_envelope[0]
++        ):
++            self._publication_envelope = (in_counter, frame.loop_start_id)
+         self.context.state_processing_manager.current_input_state = state
+         self.process_input_state(
+             output_loop_counter=in_counter,
+             output_loop_start_id=frame.loop_start_id,
++            input_message_id=frame.message_id,
++            input_snapshot=deepcopy(state),
+         )
+         self._check_and_process_control()
+ 
+@@ -614,6 +574,16 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         self.process_input_state()
+ 
+     def _process_end_channel(self) -> None:
++        executor = self.context.executor_manager.executor
++        try:
++            if isinstance(executor, LoopStartOperator):
++                self._restore_loop_checkpoint(executor)
++            elif isinstance(executor, LoopEndOperator):
++                self._forward_enclosing_frames()
++        except Exception as err:
++            self.context.report_exception(err)
++            self._check_exception()
++            return
+         self.process_input_state()
+         try:
+             self._check_loop_state_arrived()
+@@ -649,6 +619,22 @@ class MainLoop(StoppableQueueBlockingRunnable):
+             return
+         self.process_input_tuple()
+ 
++        finishing = (
++            self.context.input_manager.all_ports_completed()
++            and not self.context.output_manager.is_missing_output_ports()
++        )
++        if finishing:
++            self.context.output_manager.close_port_storage_writers()
++            if isinstance(executor, LoopEndOperator):
++                # Completion can release another region. Publish or clear the
++                # checkpoint first, while this invocation still owns it.
++                try:
++                    self._finish_loop_iteration(executor)
++                except Exception as err:
++                    self.context.report_exception(err)
++                    self._check_exception()
++                    return
++
+         input_port_id = self.context.input_manager.get_port_id(
+             self.context.current_input_channel_id
+         )
+@@ -661,13 +647,7 @@ class MainLoop(StoppableQueueBlockingRunnable):
+                 )
+             )
+ 
+-        if self.context.input_manager.all_ports_completed():
+-            # Special case for the hack of input port dependency.
+-            # See documentation of is_missing_output_ports
+-            if self.context.output_manager.is_missing_output_ports():
+-                return
+-            self.context.output_manager.close_port_storage_writers()
+-
++        if finishing:
+             self._send_ecm_to_data_channels(
+                 "EndChannel", EmbeddedControlMessageType.PORT_ALIGNMENT
+             )
+diff --git a/amber/src/main/python/core/runnables/network_receiver.py b/amber/src/main/python/core/runnables/network_receiver.py
+index c9f64c1fca..23406b6507 100644
+--- a/amber/src/main/python/core/runnables/network_receiver.py
++++ b/amber/src/main/python/core/runnables/network_receiver.py
+@@ -100,6 +100,7 @@ class NetworkReceiver(Runnable, Stoppable):
+                     State.from_json(table[State.CONTENT][0].as_py()),
+                     loop_counter=int(table[State.LOOP_COUNTER][0].as_py()),
+                     loop_start_id=table[State.LOOP_START_ID][0].as_py(),
++                    message_id=table[State.MESSAGE_ID][0].as_py(),
+                 ),
+                 "ECM",
+                 lambda _: EmbeddedControlMessage().parse(table["payload"][0].as_py()),
+diff --git a/amber/src/main/python/core/runnables/network_sender.py b/amber/src/main/python/core/runnables/network_sender.py
+index 3dcffb98b7..ee0df1312f 100644
+--- a/amber/src/main/python/core/runnables/network_sender.py
++++ b/amber/src/main/python/core/runnables/network_sender.py
+@@ -109,6 +109,7 @@ class NetworkSender(StoppableQueueBlockingRunnable):
+                 data_payload.frame.to_json(),
+                 data_payload.loop_counter,
+                 data_payload.loop_start_id,
++                data_payload.message_id,
+             )
+             table = pa.Table.from_pydict(
+                 {name: [value] for name, value in columns.items()},
+diff --git a/amber/src/main/python/core/storage/iceberg/iceberg_document.py b/amber/src/main/python/core/storage/iceberg/iceberg_document.py
+index 797c1ec4e4..cd566e1cb5 100644
+--- a/amber/src/main/python/core/storage/iceberg/iceberg_document.py
++++ b/amber/src/main/python/core/storage/iceberg/iceberg_document.py
+@@ -109,6 +109,10 @@ class IcebergDocument(VirtualDocument[T]):
+             return 0
+         return sum(f.file.record_count for f in table.scan().plan_files())
+ 
++    def replace_one(self, item: T) -> None:
++        table = self.catalog.load_table((self.table_namespace, self.table_name))
++        table.overwrite(self.serde(self.table_schema, [item]))
++
+     def writer(self, writer_identifier: str):
+         """
+         Creates a BufferedItemWriter for writing data to the table.
+diff --git a/amber/src/main/python/core/storage/model/virtual_document.py b/amber/src/main/python/core/storage/model/virtual_document.py
+index e145c61613..18aba18c50 100644
+--- a/amber/src/main/python/core/storage/model/virtual_document.py
++++ b/amber/src/main/python/core/storage/model/virtual_document.py
+@@ -59,6 +59,10 @@ class VirtualDocument(ReadonlyVirtualDocument[T], ABC):
+     def get_count(self) -> int:
+         raise NotImplementedError("get_count method is not implemented")
+ 
++    def replace_one(self, item: T) -> None:
++        """Atomically replace the document contents with one item."""
++        raise NotImplementedError("replace_one method is not implemented")
++
+     def writer(self, writer_identifier: str) -> BufferedItemWriter[T]:
+         """
+         return a writer that buffers the items and performs the flush operation at
+diff --git a/amber/src/main/python/core/storage/runnables/input_port_materialization_reader_runnable.py b/amber/src/main/python/core/storage/runnables/input_port_materialization_reader_runnable.py
+index 4bc4e68539..4457fd9db2 100644
+--- a/amber/src/main/python/core/storage/runnables/input_port_materialization_reader_runnable.py
++++ b/amber/src/main/python/core/storage/runnables/input_port_materialization_reader_runnable.py
+@@ -164,6 +164,7 @@ class InputPortMaterializationReaderRunnable(Runnable, Stoppable):
+                         State.from_tuple(state_row),
+                         loop_counter=state_row[State.LOOP_COUNTER],
+                         loop_start_id=state_row[State.LOOP_START_ID],
++                        message_id=state_row[State.MESSAGE_ID],
+                     )
+                 )
+ 
+diff --git a/amber/src/main/python/core/storage/vfs_uri_factory.py b/amber/src/main/python/core/storage/vfs_uri_factory.py
+index a4e7899b07..79bf5b7664 100644
+--- a/amber/src/main/python/core/storage/vfs_uri_factory.py
++++ b/amber/src/main/python/core/storage/vfs_uri_factory.py
+@@ -16,6 +16,7 @@
+ # under the License.
+ 
+ from enum import Enum
++from hashlib import sha256
+ from typing import NamedTuple, Optional
+ import re
+ from urllib.parse import urlparse
+@@ -164,6 +165,14 @@ class VFSURIFactory:
+         """The result-resource URI under a port base URI."""
+         return f"{base_uri}/{VFSResourceType.RESULT.value}"
+ 
++    @staticmethod
++    def loop_checkpoint_uri(base_uri: str, loop_start_id: str) -> str:
++        # Iceberg flattens the URI path into one table name. Keep the
++        # workflow/warehouse scope but bound the producer + loop part.
++        execution_uri = base_uri.partition("/globalportid/")[0]
++        key = sha256(base_uri.encode() + b"\0" + loop_start_id.encode()).hexdigest()
++        return VFSURIFactory.state_uri(f"{execution_uri}/loop-checkpoint/{key}")
++
+     @staticmethod
+     def state_uri(base_uri: str) -> str:
+         """The state-resource URI under a port base URI."""
+diff --git a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/messaginglayer/OutputManager.scala b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/messaginglayer/OutputManager.scala
+index b15e899254..2834339c50 100644
+--- a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/messaginglayer/OutputManager.scala
++++ b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/messaginglayer/OutputManager.scala
+@@ -196,12 +196,17 @@ class OutputManager(
+     * Emit a State to every network buffer and (if configured) the state
+     * storage. `loopCounter` / `loopStartId` are the loop envelope riding
+     * alongside the State (see `StateFrame`); a JVM hop inside a loop body
+-    * passes the incoming envelope through unchanged, while a Scala-originated
+-    * state (start/end-channel handlers) uses the "no loop" defaults.
++    * passes the incoming envelope through unchanged. Fresh publications carry
++    * their loop scope and receive one identifier before fan-out and storage.
+     */
+-  def emitState(state: State, loopCounter: Long = 0L, loopStartId: String = ""): Unit = {
+-    networkOutputBuffers.foreach(kv => kv._2.sendState(state, loopCounter, loopStartId))
+-    saveStateToStorageIfNeeded(state, loopCounter, loopStartId)
++  def emitState(
++      state: State,
++      loopCounter: Long = 0L,
++      loopStartId: String = "",
++      messageId: String = java.util.UUID.randomUUID().toString
++  ): Unit = {
++    networkOutputBuffers.foreach(kv => kv._2.sendState(state, loopCounter, loopStartId, messageId))
++    saveStateToStorageIfNeeded(state, loopCounter, loopStartId, messageId)
+   }
+ 
+   def addPort(portId: PortIdentity, schema: Schema, storageURIBaseOption: Option[URI]): Unit = {
+@@ -246,7 +251,8 @@ class OutputManager(
+   private def saveStateToStorageIfNeeded(
+       state: State,
+       loopCounter: Long,
+-      loopStartId: String
++      loopStartId: String,
++      messageId: String
+   ): Unit = {
+     // The same state row is fanned out to every output port's state
+     // table. This mirrors the broadcast-to-all-workers behavior on the
+@@ -254,7 +260,9 @@ class OutputManager(
+     // downstream operator (and every worker reading the materialization)
+     // needs the full set. The loop envelope is materialized as its own
+     // columns so the downstream reader can rebuild it.
+-    stateWriterThreads.values.foreach(_.queue.put(Left(state.toTuple(loopCounter, loopStartId))))
++    stateWriterThreads.values.foreach(
++      _.queue.put(Left(state.toTuple(loopCounter, loopStartId, messageId)))
++    )
+   }
+ 
+   /**
+diff --git a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyClient.scala b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyClient.scala
+index d3ea86cdd4..f496519cfe 100644
+--- a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyClient.scala
++++ b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyClient.scala
+@@ -124,11 +124,15 @@ class PythonProxyClient(portNumberPromise: Promise[Int], val actorId: ActorVirtu
+     dataPayload match {
+       case DataFrame(frame) =>
+         writeArrowStream(mutable.Queue(ArraySeq.unsafeWrapArray(frame): _*), from, "Data")
+-      case StateFrame(state, loopCounter, loopStartId) =>
++      case StateFrame(state, loopCounter, loopStartId, messageId) =>
+         // The Arrow wire format for states IS the State row (content +
+-        // loop_counter + loop_start_id), so the envelope rides its own
++        // loop_counter + loop_start_id + message_id), so the envelope rides its own
+         // columns to the Python worker -- see network_receiver.py.
+-        writeArrowStream(mutable.Queue(state.toTuple(loopCounter, loopStartId)), from, "State")
++        writeArrowStream(
++          mutable.Queue(state.toTuple(loopCounter, loopStartId, messageId)),
++          from,
++          "State"
++        )
+     }
+   }
+ 
+diff --git a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyServer.scala b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyServer.scala
+index 82b5cea85e..055f332ec8 100644
+--- a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyServer.scala
++++ b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyServer.scala
+@@ -134,7 +134,12 @@ private class AmberProducer(
+         val row = ArrowUtils.getTexeraTuple(0, root)
+         outputPort.sendTo(
+           to,
+-          StateFrame(State.fromTuple(row), State.loopCounterFrom(row), State.loopStartIdFrom(row))
++          StateFrame(
++            State.fromTuple(row),
++            State.loopCounterFrom(row),
++            State.loopStartIdFrom(row),
++            State.messageIdFrom(row)
++          )
+         )
+       case "ECM" =>
+         assert(root.getRowCount == 1)
+diff --git a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/scheduling/WorkflowExecutionManager.scala b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/scheduling/WorkflowExecutionManager.scala
+index aabfaba2fb..c395c67bc4 100644
+--- a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/scheduling/WorkflowExecutionManager.scala
++++ b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/scheduling/WorkflowExecutionManager.scala
+@@ -61,8 +61,8 @@ class WorkflowExecutionManager(
+     * The value is the BASE URI of the materialized port the Loop Start's
+     * input port READS FROM -- the upstream operator's output-port
+     * materialization (`cfg.storagePairs.head._1` below), not a port of the
+-    * Loop Start itself. The Python worker derives the state URI (loop-back
+-    * write) and the result URI (the loop's input table, read at consume time)
++    * Loop Start itself. The Python worker derives a loop-specific checkpoint
++    * URI and the result URI (the loop's input table, read at consume time)
+     * from it.
+     *
+     * Derived from the final (resource-allocated) schedule, so the URIs are
+diff --git a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/sendsemantics/partitioners/Partitioner.scala b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/sendsemantics/partitioners/Partitioner.scala
+index 620eb93651..c5dadee054 100644
+--- a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/sendsemantics/partitioners/Partitioner.scala
++++ b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/sendsemantics/partitioners/Partitioner.scala
+@@ -49,9 +49,14 @@ class NetworkOutputBuffer(
+     }
+   }
+ 
+-  def sendState(state: State, loopCounter: Long = 0L, loopStartId: String = ""): Unit = {
++  def sendState(
++      state: State,
++      loopCounter: Long = 0L,
++      loopStartId: String = "",
++      messageId: String = java.util.UUID.randomUUID().toString
++  ): Unit = {
+     flush()
+-    dataOutputPort.sendTo(to, StateFrame(state, loopCounter, loopStartId))
++    dataOutputPort.sendTo(to, StateFrame(state, loopCounter, loopStartId, messageId))
+     flush()
+   }
+ 
+diff --git a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/DataProcessor.scala b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/DataProcessor.scala
+index e82c9cbe27..97bc8d76a6 100644
+--- a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/DataProcessor.scala
++++ b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/DataProcessor.scala
+@@ -77,6 +77,14 @@ class DataProcessor(
+ 
+   /** The loop envelope of the last state that arrived on the control-variable port. */
+   private var controlVariableEnvelope: (Long, String) = (0L, "")
++  private var publicationEnvelope: (Long, String) = (0L, "")
++  private val processedStateMessages = mutable.HashSet[String]()
++
++  /** Publish a fresh message in the nearest loop scope observed by this worker. */
++  def emitProducedState(state: State): Unit = {
++    val (depth, loopId) = publicationEnvelope
++    outputManager.emitState(state, depth, loopId)
++  }
+ 
+   /**
+     * The channels that have delivered a tuple on the control-variable port. Every edge into the port
+@@ -174,21 +182,34 @@ class DataProcessor(
+       state: State,
+       port: Int,
+       loopCounter: Long,
+-      loopStartId: String
++      loopStartId: String,
++      messageId: String
+   ): Unit = {
++    // A duplicate can still be the first envelope seen on this port. Retain
++    // its routing metadata for tuples the port later turns into variables.
+     if (port == ControlVariablePort.Id.id) {
+       controlVariableEnvelope = (loopCounter, loopStartId)
+     }
++    if (messageId.nonEmpty && !processedStateMessages.add(messageId)) return
++    if (
++      loopStartId.nonEmpty && (publicationEnvelope._2.isEmpty || loopCounter <= publicationEnvelope._1)
++    ) {
++      publicationEnvelope = (loopCounter, loopStartId)
++    }
+     try {
+       // Before processState, which then sees the loop variables written into the setting.
+       executor.registerState(state, loopCounter)
++      val inputJson = state.toJson
+       val outputState = executor.processState(state, port)
+       if (outputState.isDefined) {
+         // Carry the incoming loop envelope through unchanged: loop operators
+         // are Python-only, so a JVM operator inside a loop body only ever
+         // forwards the envelope (the +1/-1 bookkeeping lives in the Python
+         // runtime's _process_state_frame).
+-        outputManager.emitState(outputState.get, loopCounter, loopStartId)
++        val outputMessageId =
++          if (outputState.get.toJson == inputJson) messageId
++          else java.util.UUID.randomUUID().toString
++        outputManager.emitState(outputState.get, loopCounter, loopStartId, outputMessageId)
+       }
+     } catch safely {
+       case e =>
+@@ -293,8 +314,8 @@ class DataProcessor(
+         )
+         inputManager.initBatch(channelId, tuples)
+         processInputTuple(inputManager.getNextTuple)
+-      case StateFrame(state, loopCounter, loopStartId) =>
+-        processInputState(state, portId.id, loopCounter, loopStartId)
++      case StateFrame(state, loopCounter, loopStartId, messageId) =>
++        processInputState(state, portId.id, loopCounter, loopStartId, messageId)
+     }
+     statisticsManager.increaseDataProcessingTime(System.nanoTime() - dataProcessingStartTime)
+   }
+diff --git a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/managers/InputPortMaterializationReaderThread.scala b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/managers/InputPortMaterializationReaderThread.scala
+index f090c4c803..c18cb5244d 100644
+--- a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/managers/InputPortMaterializationReaderThread.scala
++++ b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/managers/InputPortMaterializationReaderThread.scala
+@@ -105,7 +105,8 @@ class InputPortMaterializationReaderThread(
+         val stateFrame = StateFrame(
+           State.fromTuple(row),
+           State.loopCounterFrom(row),
+-          State.loopStartIdFrom(row)
++          State.loopStartIdFrom(row),
++          State.messageIdFrom(row)
+         )
+         inputMessageQueue.put(
+           FIFOMessageElement(WorkflowFIFOMessage(channelId, getSequenceNumber, stateFrame))
+diff --git a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/promisehandlers/EndChannelHandler.scala b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/promisehandlers/EndChannelHandler.scala
+index 1d047ecc93..3e23a28d8a 100644
+--- a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/promisehandlers/EndChannelHandler.scala
++++ b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/promisehandlers/EndChannelHandler.scala
+@@ -56,10 +56,7 @@ trait EndChannelHandler {
+         dp.bindStateReferences()
+         val outputState = dp.executor.produceStateOnFinish(portId.id)
+         if (outputState.isDefined) {
+-          // Operator-ORIGINATED boundary state, so no LoopStart stamp
+-          // (loopCounter = 0, loopStartId = ""); see
+-          // `main_loop._process_state_frame` for how a Loop End treats it.
+-          dp.outputManager.emitState(outputState.get)
++          dp.emitProducedState(outputState.get)
+         }
+         dp.outputManager.outputIterator.setTupleOutput(
+           dp.executor.onFinishMultiPort(portId.id)
+diff --git a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/promisehandlers/StartChannelHandler.scala b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/promisehandlers/StartChannelHandler.scala
+index 84de874aa6..c33712fd03 100644
+--- a/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/promisehandlers/StartChannelHandler.scala
++++ b/amber/src/main/scala/org/apache/texera/amber/engine/architecture/worker/promisehandlers/StartChannelHandler.scala
+@@ -45,7 +45,7 @@ trait StartChannelHandler {
+         // Operator-ORIGINATED boundary state, so no LoopStart stamp
+         // (loopCounter = 0, loopStartId = ""); see
+         // `main_loop._process_state_frame` for how a Loop End treats it.
+-        dp.outputManager.emitState(outputState.get)
++        dp.emitProducedState(outputState.get)
+       }
+     } catch safely {
+       case e =>
+diff --git a/amber/src/main/scala/org/apache/texera/amber/engine/common/ambermessage/DataPayload.scala b/amber/src/main/scala/org/apache/texera/amber/engine/common/ambermessage/DataPayload.scala
+index b8ac640ad5..e5c3ed356f 100644
+--- a/amber/src/main/scala/org/apache/texera/amber/engine/common/ambermessage/DataPayload.scala
++++ b/amber/src/main/scala/org/apache/texera/amber/engine/common/ambermessage/DataPayload.scala
+@@ -34,8 +34,12 @@ sealed trait DataPayload extends WorkflowFIFOMessagePayload {}
+   * unchanged; the defaults are the "no loop" values for all non-loop state.
+   * Mirrors the Python `StateFrame` (core/models/payload.py).
+   */
+-final case class StateFrame(frame: State, loopCounter: Long = 0L, loopStartId: String = "")
+-    extends DataPayload
++final case class StateFrame(
++    frame: State,
++    loopCounter: Long = 0L,
++    loopStartId: String = "",
++    messageId: String = ""
++) extends DataPayload
+ 
+ final case class DataFrame(frame: Array[Tuple]) extends DataPayload {
+   val inMemSize: Long = {
+diff --git a/amber/src/test/python/core/architecture/packaging/test_state_materialization_e2e.py b/amber/src/test/python/core/architecture/packaging/test_state_materialization_e2e.py
+index 0dbfe92c3a..2a8106a1b9 100644
+--- a/amber/src/test/python/core/architecture/packaging/test_state_materialization_e2e.py
++++ b/amber/src/test/python/core/architecture/packaging/test_state_materialization_e2e.py
+@@ -38,6 +38,7 @@ same payload.
+ import tempfile
+ import threading
+ import uuid
++from unittest.mock import Mock
+ 
+ import pytest
+ from pyiceberg.catalog.sql import SqlCatalog
+@@ -45,6 +46,8 @@ from pyiceberg.catalog.sql import SqlCatalog
+ from core.architecture.packaging.output_manager import OutputManager
+ from core.models import State, StateFrame
+ from core.models.internal_queue import DataElement, InternalQueue
++from core.models.operator import LoopStartOperator
++from core.runnables.main_loop import MainLoop
+ from core.storage.document_factory import DocumentFactory
+ from core.storage.iceberg.iceberg_catalog_instance import IcebergCatalogInstance
+ from core.storage.runnables.input_port_materialization_reader_runnable import (
+@@ -187,6 +190,7 @@ def test_state_written_by_output_manager_is_replayed_by_reader():
+         state,
+         loop_counter=7,
+         loop_start_id="outer-loop",
++        message_id="issued-A",
+     )
+ 
+     # 4. Force the writer threads to flush + commit by closing them.
+@@ -194,7 +198,17 @@ def test_state_written_by_output_manager_is_replayed_by_reader():
+     # nothing is durable yet.
+     producer.close_port_storage_writers()
+ 
+-    # 5. Consumer side: spin up the materialization reader against the
++    state_frames = _replay_frames(base_uri)
++    assert len(state_frames) == 1
++    [replayed] = state_frames
++    assert replayed.frame == state
++    assert replayed.loop_counter == 7
++    assert replayed.loop_start_id == "outer-loop"
++    assert replayed.message_id == "issued-A"
++
++
++def _replay_frames(base_uri):
++    # Consumer side: spin up the materialization reader against the
+     # same base URI. Each reader needs a partitioning even when no real
+     # downstream worker exists -- supply a OneToOnePartitioning whose
+     # only receiver is the consumer worker itself.
+@@ -234,22 +248,7 @@ def test_state_written_by_output_manager_is_replayed_by_reader():
+         if isinstance(elem, DataElement) and isinstance(elem.payload, StateFrame):
+             state_frames.append(elem.payload)
+ 
+-    assert len(state_frames) == 1, (
+-        f"expected exactly one State to flow through writer→iceberg→reader; "
+-        f"got {len(state_frames)}: {state_frames}"
+-    )
+-    assert state_frames[0].frame == state, (
+-        f"replayed state did not match what was written; "
+-        f"wrote={state}, read={state_frames[0].frame}"
+-    )
+-    assert state_frames[0].loop_counter == 7, (
+-        f"loop_counter must round-trip through its own column; "
+-        f"got {state_frames[0].loop_counter}"
+-    )
+-    assert state_frames[0].loop_start_id == "outer-loop", (
+-        f"loop_start_id must round-trip through its own column; "
+-        f"got {state_frames[0].loop_start_id!r}"
+-    )
++    return state_frames
+ 
+ 
+ def test_state_table_persists_across_writer_close():
+@@ -285,3 +284,77 @@ def test_state_table_persists_across_writer_close():
+     assert State.from_tuple(rows[0]) == state
+     assert rows[0][State.LOOP_COUNTER] == 3
+     assert rows[0][State.LOOP_START_ID] == "inner-loop"
++
++
++@pytest.mark.parametrize("updates", [(2, 3), (3, 2)])
++def test_inner_iteration_replays_enclosing_updates_in_input_order(updates, monkeypatch):
++    base = _fresh_base_uri()
++    DocumentFactory.create_document(VFSURIFactory.result_uri(base), State.SCHEMA)
++    input_doc = DocumentFactory.create_document(
++        VFSURIFactory.state_uri(base), State.SCHEMA
++    )
++    writer = input_doc.writer("0")
++    for index, value in enumerate(updates):
++        writer.put_one(State({"K": value}).to_tuple(0, "outer", f"update-{index}"))
++    writer.close()
++
++    class InnerStart(LoopStartOperator):
++        def process_table(self, table, port):
++            yield self.eval_output(table)
++
++    def run_inner_start(start_id="inner"):
++        worker = MainLoop(
++            f"Worker:WF0-{start_id}-main-0", InternalQueue(), InternalQueue()
++        )
++        worker.context.loop_start_port_uris = {"inner": base, "sibling": base}
++        start = InnerStart()
++        start.run_initialization("i = 0; seen_at_init = K")
++        start.run_output("observed = K")
++        worker.context.executor_manager.executor = start
++        # The input reader, frame handler, checkpoint restore and both user
++        # cells are real. Stand in only for the surrounding workflow.
++        monkeypatch.setattr(worker, "_emit_and_save_state", Mock())
++        monkeypatch.setattr(worker, "_check_and_process_control", Mock())
++        monkeypatch.setattr(
++            worker, "process_input_state", lambda: start.produce_state_on_finish(0)
++        )
++        monkeypatch.setattr(worker, "process_input_tuple", Mock())
++        monkeypatch.setattr(worker.context.input_manager, "get_port_id", lambda _: None)
++        monkeypatch.setattr(
++            worker.context.input_manager, "all_ports_completed", lambda: False
++        )
++        try:
++            frames = _replay_frames(base)
++            assert [(f.message_id, f.frame["K"]) for f in frames] == [
++                ("update-0", updates[0]),
++                ("update-1", updates[1]),
++            ]
++            for frame in frames:
++                worker._process_state_frame(frame)
++            worker._process_end_channel()
++            return start.variables
++        finally:
++            worker.data_processor.stop()
++
++    def finish_inner_iteration(again, i):
++        worker = MainLoop(
++            "Worker:WF0-inner-end-main-0", InternalQueue(), InternalQueue()
++        )
++        worker._loop_start_id = "inner"
++        worker.context.loop_start_port_uris = {"inner": base}
++        monkeypatch.setattr(worker._async_rpc_client, "coordinator_stub", Mock())
++        end = Mock(variables=State({"i": i}))
++        end.condition.return_value = again
++        try:
++            worker._finish_loop_iteration(end)
++        finally:
++            worker.data_processor.stop()
++
++    expected = {"seen_at_init": updates[-1], "observed": updates[-1]}
++    assert run_inner_start() == {**expected, "i": 0}
++    for i in (1, 2):
++        finish_inner_iteration(True, i)
++        assert run_inner_start() == {**expected, "i": i}
++    assert run_inner_start("sibling") == {**expected, "i": 0}
++    finish_inner_iteration(False, 2)
++    assert run_inner_start() == {**expected, "i": 0}
+diff --git a/amber/src/test/python/core/models/test_loop_operators.py b/amber/src/test/python/core/models/test_loop_operators.py
+index c301b0ced8..9635da09bd 100644
+--- a/amber/src/test/python/core/models/test_loop_operators.py
++++ b/amber/src/test/python/core/models/test_loop_operators.py
+@@ -131,6 +131,20 @@ def _one_row_table() -> Table:
+     return Table([Tuple({"v": 1})])
+ 
+ 
++def test_inner_assignment_shadows_enclosing_variable_without_exporting_other_names():
++    start = _StubLoopStart(
++        initialization="K = K + 1",
++        output_expr="observed = sum(K for _ in range(1)); observed",
++    )
++    start.open()
++    start.inherit_state(State({"K": 2, "unused": 9}), depth=1)
++    start.inherit_state(State({"K": 3}), depth=1)
++    start.inherit_state(State({"K": 8}), depth=2)
++    table = _one_row_table()
++    assert start.eval_output(table) == 4
++    assert start.produce_state_on_finish(0) == {"K": 4, "observed": 4}
++
++
+ class TestLoopStartProcessState:
+     def test_first_time_state_is_merged_into_self_variables_and_none_is_returned(self):
+         # First entry: state from upstream (no LoopStartId stamped). The
+diff --git a/amber/src/test/python/core/models/test_state.py b/amber/src/test/python/core/models/test_state.py
+index f75162251d..e6ecf30892 100644
+--- a/amber/src/test/python/core/models/test_state.py
++++ b/amber/src/test/python/core/models/test_state.py
+@@ -37,6 +37,7 @@ class TestState:
+             "content",
+             "loop_counter",
+             "loop_start_id",
++            "message_id",
+         ]
+ 
+     def test_json_round_trip_primitives(self):
+@@ -113,6 +114,12 @@ class TestState:
+         decoded = State.from_tuple(original.to_tuple())
+         assert decoded == original
+ 
++    def test_message_identity_is_metadata_not_a_user_variable(self):
++        original = State({"message_id": "user value", "K": 2})
++        row = original.to_tuple(1, "outer", "issued-A")
++        assert row[State.MESSAGE_ID] == "issued-A"
++        assert State.from_tuple(row) == original
++
+     def test_to_tuple_writes_content_and_loop_counter_columns(self):
+         tuple_ = State({"x": 1}).to_tuple(7)
+         # content holds the JSON serialization; loop_counter is its own column.
+diff --git a/amber/src/test/python/core/runnables/test_main_loop.py b/amber/src/test/python/core/runnables/test_main_loop.py
+index 6906bc3cb4..09e4ed2a18 100644
+--- a/amber/src/test/python/core/runnables/test_main_loop.py
++++ b/amber/src/test/python/core/runnables/test_main_loop.py
+@@ -124,6 +124,156 @@ class PortColumnsTableOperator(UDFTableOperator):
+ 
+ 
+ class TestMainLoop:
++    @staticmethod
++    def _finish_loop_end(main_loop, monkeypatch):
++        # Exercise the real condition/checkpoint and worker completion path
++        # after a LoopEnd with one materialized input finishes its last tuple.
++        monkeypatch.setattr(main_loop, "process_input_state", lambda: None)
++        monkeypatch.setattr(main_loop, "process_input_tuple", lambda: None)
++        monkeypatch.setattr(
++            main_loop.context.input_manager, "all_ports_completed", lambda: True
++        )
++        monkeypatch.setattr(
++            main_loop.context.input_manager, "get_port_id", lambda _: None
++        )
++        monkeypatch.setattr(
++            main_loop.context.output_manager, "is_missing_output_ports", lambda: False
++        )
++        monkeypatch.setattr(main_loop, "_send_ecm_to_data_channels", lambda *_: None)
++        main_loop._process_end_channel()
++
++    @pytest.mark.parametrize("change_value", [None, 3, 2.0, True])
++    def test_forwarded_identity_and_fresh_body_publication(
++        self, main_loop, monkeypatch, change_value
++    ):
++        main_loop.context.executor_manager.executor = EmptyOnFinishOperator()
++        monkeypatch.setattr(main_loop, "_check_and_process_control", lambda: None)
++        sent, saved = [], []
++        monkeypatch.setattr(
++            main_loop.context.output_manager,
++            "emit_state",
++            lambda state, depth, owner, identity: sent.append(
++                StateFrame(State(state), depth, owner, identity)
++            )
++            or [],
++        )
++        monkeypatch.setattr(
++            main_loop.context.output_manager,
++            "save_state_to_storage_if_needed",
++            lambda state, depth, owner, message_id: saved.append(message_id),
++        )
++        manager = main_loop.context.state_processing_manager
++
++        def callback():
++            state = manager.get_input_state()
++            if change_value is not None:
++                state["K"] = change_value
++            manager.current_output_state = state
++
++        monkeypatch.setattr(main_loop, "_switch_context", callback)
++        main_loop._process_state_frame(StateFrame(State({"K": 2}), 0, "loop", "A"))
++        assert bool(sent[0].message_id)
++        assert (sent[0].message_id != "A") is (change_value is not None)
++        assert sent[0].loop_start_id == "loop"
++        assert saved == [sent[0].message_id]
++
++        monkeypatch.setattr(main_loop, "_switch_context", lambda: None)
++        manager.current_output_state = State({"score": 0.4})
++        main_loop.process_input_state()  # produce_state_on_finish output
++        assert sent[1].loop_start_id == "loop"
++        assert sent[1].message_id not in ("", sent[0].message_id)
++        assert saved == [frame.message_id for frame in sent]
++
++    def test_invalid_changed_publication_reports_operator_error(
++        self, main_loop, monkeypatch
++    ):
++        main_loop.context.executor_manager.executor = EmptyOnFinishOperator()
++        monkeypatch.setattr(main_loop, "_switch_context", lambda: None)
++        errors, pauses, emitted = [], [], []
++        monkeypatch.setattr(main_loop.context, "report_exception", errors.append)
++        monkeypatch.setattr(main_loop, "_check_exception", lambda: pauses.append(True))
++        monkeypatch.setattr(
++            main_loop, "_emit_and_save_state", lambda *args: emitted.append(args)
++        )
++        main_loop.context.state_processing_manager.current_output_state = State(
++            {"K": object()}
++        )
++
++        main_loop.process_input_state(
++            input_message_id="A", input_snapshot=State({"K": 2})
++        )
++
++        assert len(errors) == 1
++        assert isinstance(errors[0], TypeError)
++        assert pauses == [True]
++        assert emitted == []
++
++    def test_figure12_discards_copy_before_callback_and_forward(
++        self, main_loop, monkeypatch
++    ):
++        main_loop.context.executor_manager.executor = EmptyOnFinishOperator()
++        monkeypatch.setattr(main_loop, "_check_and_process_control", lambda: None)
++        processed = []
++        monkeypatch.setattr(
++            main_loop, "process_input_state", lambda **kwargs: processed.append(kwargs)
++        )
++        original = StateFrame(State({"K": 2}), loop_start_id="loop")
++        original.message_id = "A"
++        changed = StateFrame(State({"K": 3}), loop_start_id="loop")
++        changed.message_id = "B"
++        equal_but_distinct = StateFrame(State({"K": 3}), loop_start_id="loop")
++        equal_but_distinct.message_id = "C"
++
++        for frame in (original, changed, original, equal_but_distinct):
++            main_loop._process_state_frame(frame)
++
++        assert len(processed) == 3
++        assert main_loop.context.state_processing_manager.current_input_state == {
++            "K": 3
++        }
++
++    def test_stopping_example_accumulates_late_score_for_two_iterations(
++        self, monkeypatch
++    ):
++        class StoppingLoopEnd(LoopEndOperator):
++            def process_state(self, state, port):
++                self.run_update(
++                    "again = prev is None or score > prev\nprev = score\nK += 1",
++                    state,
++                )
++
++            def condition(self):
++                return self.eval_condition("again")
++
++        variables = State({"K": 2, "prev": None})
++        for iteration, score in enumerate((0.5, 0.4)):
++            runtime = MainLoop("dummy_worker_id", InternalQueue(), InternalQueue())
++            try:
++                executor = StoppingLoopEnd()
++                runtime.context.executor_manager.executor = executor
++                emitted, _, _ = self._capture_state_emit(runtime, monkeypatch)
++                monkeypatch.setattr(
++                    runtime, "_read_loop_input_table", lambda: Table([Tuple({"v": 1})])
++                )
++                initial = StateFrame(variables, loop_start_id="loop")
++                initial.message_id = f"initial-{iteration}"
++                runtime._process_state_frame(initial)
++                # The score is published after Evaluate's tuples, before input end.
++                publication = StateFrame(State({"score": score}), loop_start_id="loop")
++                publication.message_id = f"score-{iteration}"
++                runtime._process_state_frame(publication)
++                runtime._process_state_frame(initial)  # delayed branch copy
++                assert executor._loop_table is None
++                runtime._consume_pending_loop_state(executor)
++
++                assert executor.variables["prev"] == score
++                assert executor.variables["K"] == iteration + 3
++                assert executor.condition() is (iteration == 0)
++                assert emitted == []  # own-block variables stop at LoopEnd
++                variables = State(executor.variables)
++            finally:
++                runtime.stop()
++
+     @pytest.fixture
+     def command_sequence(self):
+         return 1
+@@ -1384,7 +1534,7 @@ class TestMainLoop:
+         monkeypatch.setattr(
+             main_loop.context.output_manager,
+             "emit_state",
+-            lambda state, loop_counter, *_: [
++            lambda state, loop_counter, *_, **kwargs: [
+                 (mock_data_output_channel.to_worker_id, StateFrame(state))
+             ],
+         )
+@@ -1594,14 +1744,14 @@ class TestMainLoop:
+         monkeypatch.setattr(
+             main_loop.context.output_manager,
+             "emit_state",
+-            lambda state, loop_counter, *_: [
++            lambda state, loop_counter, *_, **kwargs: [
+                 (mock_data_output_channel.to_worker_id, StateFrame(state))
+             ],
+         )
+         monkeypatch.setattr(
+             main_loop.context.output_manager,
+             "save_state_to_storage_if_needed",
+-            lambda state, loop_counter, *_: saved_states.append(state),
++            lambda state, loop_counter, *_, **kwargs: saved_states.append(state),
+         )
+ 
+         def fake_switch_context():
+@@ -1655,14 +1805,14 @@ class TestMainLoop:
+         monkeypatch.setattr(
+             main_loop.context.output_manager,
+             "emit_state",
+-            lambda state, loop_counter, *_: [
++            lambda state, loop_counter, *_, **kwargs: [
+                 (mock_data_output_channel.to_worker_id, StateFrame(state))
+             ],
+         )
+         monkeypatch.setattr(
+             main_loop.context.output_manager,
+             "save_state_to_storage_if_needed",
+-            lambda state, loop_counter, *_: saved_states.append(state),
++            lambda state, loop_counter, *_, **kwargs: saved_states.append(state),
+         )
+         # _send_ecm_to_data_channels touches output_manager state we don't
+         # set up here; for this test the ECM forwarding is irrelevant -- the
+@@ -1722,12 +1872,12 @@ class TestMainLoop:
+         monkeypatch.setattr(
+             main_loop.context.output_manager,
+             "emit_state",
+-            lambda state, loop_counter, *_: [],
++            lambda state, loop_counter, *_, **kwargs: [],
+         )
+         monkeypatch.setattr(
+             main_loop.context.output_manager,
+             "save_state_to_storage_if_needed",
+-            lambda state, loop_counter, *_: save_calls.append(state),
++            lambda state, loop_counter, *_, **kwargs: save_calls.append(state),
+         )
+         # Pretend DataProc consumed the input but produced no output.
+         monkeypatch.setattr(main_loop, "_switch_context", lambda: None)
+@@ -2397,7 +2547,7 @@ class TestMainLoop:
+         )
+ 
+         # Must not raise: a bad condition is reported, not propagated.
+-        main_loop.complete()
++        self._finish_loop_end(main_loop, monkeypatch)
+ 
+         assert jumped == [], "must not take the loop-back edge on a failed condition"
+         assert not executor.closed, "must return before completing the worker"
+@@ -2413,9 +2563,9 @@ class TestMainLoop:
+         self, main_loop, monkeypatch
+     ):
+         # Reviewer feedback (#discussion_r3561096471): the back-edge state
+-        # write in _jump_to_loop_start runs after the jump DCM, on the main
+-        # loop thread, outside DataProcessor's guarded executor session. A
+-        # put_one/close failure must be reported the same way as a condition
++        # checkpoint write runs before the jump RPC on the main loop thread,
++        # outside DataProcessor's guarded executor session. An Iceberg commit
++        # failure must be reported the same way as a condition
+         # error (exception manager + ERROR console message + EXCEPTION_PAUSE)
+         # and skip completion, not propagate and kill the worker thread.
+         class _JumpingLoopEnd(LoopEndOperator):
+@@ -2446,16 +2596,19 @@ class TestMainLoop:
+             lambda pause_type, change_state=True: pauses.append(pause_type),
+         )
+ 
+-        class _BoomWriter:
+-            def put_one(self, item):
++        class _Doc:
++            def replace_one(self, item):
+                 raise OSError("iceberg commit failed")
+ 
+-            def close(self):
+-                pass
+-
+-        class _Doc:
+-            def writer(self, name):
+-                return _BoomWriter()
++        monkeypatch.setattr(
++            "core.runnables.main_loop.DocumentFactory.document_exists", lambda _: False
++        )
++        jumps = []
++        monkeypatch.setattr(
++            main_loop._async_rpc_client,
++            "coordinator_stub",
++            lambda: self._stub_coordinator(jumps),
++        )
+ 
+         monkeypatch.setattr(
+             "core.runnables.main_loop.DocumentFactory.create_document",
+@@ -2463,7 +2616,7 @@ class TestMainLoop:
+         )
+ 
+         # Must not raise: a failed back-edge write is reported, not propagated.
+-        main_loop.complete()
++        self._finish_loop_end(main_loop, monkeypatch)
+ 
+         assert not executor.closed, "must return before completing the worker"
+         assert main_loop.context.exception_manager.has_exception()
+@@ -2471,6 +2624,7 @@ class TestMainLoop:
+         error_msgs = [m for m in console_msgs if m.msg_type == ConsoleMessageType.ERROR]
+         assert len(error_msgs) == 1
+         assert "iceberg commit failed" in error_msgs[0].title
++        assert jumps == []
+ 
+     @pytest.mark.timeout(2)
+     def test_emit_and_save_state_reports_error_instead_of_killing_thread(
+@@ -2593,14 +2747,14 @@ class TestMainLoop:
+         monkeypatch.setattr(
+             main_loop.context.output_manager,
+             "emit_state",
+-            lambda state, loop_counter, loop_start_id="": (
++            lambda state, loop_counter, loop_start_id="", message_id=None: (
+                 emitted.append((state, loop_counter, loop_start_id)) or []
+             ),
+         )
+         monkeypatch.setattr(
+             main_loop.context.output_manager,
+             "save_state_to_storage_if_needed",
+-            lambda state, loop_counter, loop_start_id="": None,
++            lambda state, loop_counter, loop_start_id="", message_id=None: None,
+         )
+         return emitted, switched, reset_calls
+ 
+@@ -2641,14 +2795,8 @@ class TestMainLoop:
+     def test_loopstart_merges_unstamped_state_instead_of_forwarding_it(
+         self, main_loop, monkeypatch
+     ):
+-        # The deliberate asymmetry with the LoopEnd branch: an UNstamped
+-        # counter-0 frame at a LoopStart is MERGED into the loop variables,
+-        # not forwarded. It has to be -- the back-edge writes the next
+-        # iteration's variables to this LoopStart's own input-port state URI
+-        # with the identical "no loop" envelope (State.to_tuple(0)), so a
+-        # LoopStart cannot tell the loop's own state from an upstream/body
+-        # operator's boundary state. A LoopEnd can, because its inbound loop
+-        # state is always stamped.
++        # Ordinary upstream publications without a loop stamp still supply
++        # values to the LoopStart's local variables.
+         class StubLoopStart(LoopStartOperator):
+             def process_table(self, table, port):
+                 yield
+@@ -2676,37 +2824,38 @@ class TestMainLoop:
+         passed = main_loop.context.state_processing_manager.current_input_state
+         assert passed == State({"seed": 7})
+ 
+-    def test_loopend_passthrough_decrements_resets_output_and_skips_operator(
+-        self, main_loop, monkeypatch
++    @pytest.mark.parametrize("continuing", [False, True])
++    def test_inner_loopend_replays_outer_frames_without_resetting_accumulated_output(
++        self, main_loop, monkeypatch, continuing
+     ):
+-        # loop_counter > 0 at a LoopEnd means the state belongs to an outer
+-        # loop: the runtime decrements and forwards, skipping the operator.
+-        # Reviewer feedback (#discussion_r3400851478): it also resets this
+-        # (inner) LoopEnd's output storage -- the outer loop advancing is the
+-        # signal to drop the previous outer iteration's rows; see the
+-        # reset_output_storage call site in _process_state_frame for the
+-        # full story.
+-        main_loop.context.executor_manager.executor = _FalseLoopEnd()
++        executor = _FalseLoopEnd()
++        main_loop.context.executor_manager.executor = executor
++        main_loop.context.loop_start_port_uris = {"inner": "vfs:///wf/input"}
+         emitted, switched, reset_calls = self._capture_state_emit(
+             main_loop, monkeypatch
+         )
+-
+-        main_loop._process_state_frame(
+-            StateFrame(
+-                State({"outer_var": "v"}),
+-                loop_counter=2,
+-                loop_start_id="outer-loop",
+-            )
++        monkeypatch.setattr(
++            "core.runnables.main_loop.DocumentFactory.document_exists",
++            lambda _: continuing,
+         )
+-
+-        assert switched == [], "pass-through must not invoke the operator"
+-        assert reset_calls == [True], "pass-through resets the inner LoopEnd output"
+-        assert len(emitted) == 1
+-        emitted_state, emitted_counter, emitted_id = emitted[0]
+-        assert emitted_counter == 1  # 2 - 1
+-        assert emitted_state["outer_var"] == "v"
+-        # the outer loop's id rides through unchanged
+-        assert emitted_id == "outer-loop"
++        for k in (2, 3):
++            main_loop._process_state_frame(
++                StateFrame(State({"K": k}), 2, "outer-loop", str(k))
++            )
++        main_loop._process_state_frame(
++            StateFrame(State({"i": 1}), 0, "inner", "inner-iteration")
++        )
++        main_loop._forward_enclosing_frames()
++        assert switched == []
++        assert reset_calls == ([] if continuing else [True])
++        assert emitted == [
++            (State({"K": 2}), 1, "outer-loop"),
++            (State({"K": 3}), 1, "outer-loop"),
++        ]
++        executor.attach_loop_table(Table([Tuple({"v": 1})]))
++        executor.run_update("seen = K", State({"i": 1}))
++        assert executor.eval_condition("seen == K == 3")
++        assert executor.variables == {"i": 1, "seen": 3}
+ 
+     def test_loopend_consume_defers_operator_to_end_channel(
+         self, main_loop, monkeypatch
+@@ -2754,7 +2903,7 @@ class TestMainLoop:
+         # (no storage I/O while this worker's reader is still streaming).
+         assert switched == [], "consume must not invoke the operator yet"
+         assert reads == [], "the table must not be read at consume time"
+-        assert main_loop._pending_loop_state is incoming
++        assert main_loop._pending_loop_state == incoming
+         assert executor._attached_table is None
+         assert emitted == [], "the matching consume emits no state downstream"
+         assert reset_calls == [], "consume / single loop must not reset output"
+@@ -2844,23 +2993,14 @@ class TestMainLoop:
+ 
+         main_loop._jump_to_loop_start(executor, self._stub_coordinator([]))
+ 
+-        puts = [event for event in events if event[0] == "put_one"]
+-        assert puts == [("put_one", State({"i": 8}).to_tuple(0))]
++        writes = [event for event in events if event[0] == "replace_one"]
++        assert writes == [("replace_one", State({"i": 8}).to_tuple(0))]
+ 
+-    def test_loopend_forwards_unstamped_state_without_consuming(
++    def test_loopend_accumulates_unstamped_publication_without_changing_jump_target(
+         self, main_loop, monkeypatch
+     ):
+-        # A loop-body operator that emits its own boundary state
+-        # (produce_state_on_start/finish -- a public API on both engine sides)
+-        # sends it with the "no loop" envelope (counter 0, id ""). That state
+-        # is NOT the loop's own boundary state: taking it would clobber the
+-        # captured back-jump id with "" and then fail the deferred consume's
+-        # bookkeeping-URI lookup for LoopStart ''. A real loop state is always
+-        # stamped --
+-        # the matching LoopStart stamps its own id on every iteration's output
+-        # -- so an UNstamped counter-0 frame at a LoopEnd must be forwarded
+-        # downstream unchanged, skipping the operator, like any default
+-        # pass-through.
++        # A legacy unstamped body publication joins the iteration map,
++        # without erasing the captured loop routing identity.
+         main_loop.context.executor_manager.executor = _FalseLoopEnd()
+         emitted, switched, reset_calls = self._capture_state_emit(
+             main_loop, monkeypatch
+@@ -2878,10 +3018,8 @@ class TestMainLoop:
+ 
+         assert switched == [], "unstamped state must not invoke the operator"
+         assert reset_calls == [], "unstamped state must not reset output"
+-        assert emitted == [(State({"note": "from-body-op"}), 0, "")], (
+-            "unstamped state must forward downstream with its envelope "
+-            f"unchanged; emitted: {emitted}"
+-        )
++        assert emitted == [], "own-block publications must not escape LoopEnd"
++        assert main_loop._pending_loop_state == {"note": "from-body-op"}
+         assert main_loop._loop_start_id == "loop-start-1", (
+             "an unstamped state must not clobber the captured back-jump id"
+         )
+@@ -3022,14 +3160,19 @@ class TestMainLoop:
+ 
+         def deliver(state):
+             main_loop._process_state_frame(
+-                StateFrame(state, loop_counter=0, loop_start_id="outer-loop")
++                StateFrame(
++                    state,
++                    loop_counter=0,
++                    loop_start_id="outer-loop",
++                    message_id="issued-A",
++                )
+             )
+ 
+         deliver(first)  # branch A
+         deliver(second)  # branch B replays the same iteration's state
+ 
+         assert main_loop._loop_state_consumed is True
+-        assert main_loop._pending_loop_state is first, "the duplicate must not stash"
++        assert main_loop._pending_loop_state == first, "the duplicate must not stash"
+         assert emitted == [], "a consume emits nothing downstream, duplicate or not"
+         assert reset_calls == []
+         assert main_loop._loop_start_id == "outer-loop"
+@@ -3068,29 +3211,17 @@ class TestMainLoop:
+ 
+     @staticmethod
+     def _patch_create_document(monkeypatch, write_log):
+-        """Patch DocumentFactory.create_document at the symbol imported
+-        into main_loop. Each call appends ``(uri, schema)`` to
+-        ``write_log`` and returns an object whose ``writer(name)`` yields
+-        a mock that records ``put_one`` and ``close`` calls into the
+-        same list (tagged so order is observable)."""
+-
+-        class _Writer:
+-            def __init__(self, log):
+-                self._log = log
+-
+-            def put_one(self, item):
+-                self._log.append(("put_one", item))
+-
+-            def close(self):
+-                self._log.append(("close",))
++        """Record the write to a newly created loop checkpoint."""
++        monkeypatch.setattr(
++            "core.runnables.main_loop.DocumentFactory.document_exists", lambda _: False
++        )
+ 
+         class _Doc:
+             def __init__(self, log):
+                 self._log = log
+ 
+-            def writer(self, name):
+-                self._log.append(("writer", name))
+-                return _Writer(self._log)
++            def replace_one(self, item):
++                self._log.append(("replace_one", item))
+ 
+         def _create(uri, schema):
+             write_log.append(("create_document", uri, schema))
+@@ -3146,7 +3277,7 @@ class TestMainLoop:
+             main_loop._async_rpc_client, "coordinator_stub", lambda: _Coordinator()
+         )
+ 
+-        main_loop.complete()
++        self._finish_loop_end(main_loop, monkeypatch)
+ 
+         printed = [m for m in console_msgs if "hello from condition" in m.title]
+         assert printed, (
+@@ -3306,7 +3437,7 @@ class TestMainLoop:
+         assert port_completed_calls == [], "no port may be reported complete"
+         assert completed == [], "the worker must not complete"
+ 
+-    def test_jump_to_loop_start_sends_rpc_then_writes_state_in_order(
++    def test_jump_to_loop_start_commits_checkpoint_before_sending_rpc(
+         self, main_loop, monkeypatch
+     ):
+         # One shared event log for the jump RPC and the storage calls, so
+@@ -3328,29 +3459,15 @@ class TestMainLoop:
+ 
+         main_loop._jump_to_loop_start(_Executor(), _Coordinator())
+ 
+-        assert len(events) == 5
+-        # (i) The jump RPC fires before any storage event, carrying the
+-        # loop_start_id we captured from the incoming StateFrame envelope
+-        # -- never read off user state.
+-        kind, request = events[0]
+-        assert kind == "jump"
+-        assert request.target_operator_id.id == "outer-loop"
+-        # (ii) Then the exact iceberg write contract, in order:
+-        # create_document with the state URI DERIVED from the configured base
+-        # URI and State.SCHEMA, open
+-        # writer("0"), a single put_one with the State as a depth-0 tuple
+-        # (the back-edge fires only after the matching LoopEnd consumed at
+-        # loop_counter == 0, so the next iteration starts at depth 0),
+-        # then close. The tuple object's internals are exercised elsewhere.
+-        assert events[1] == (
++        create, write, jump = events
++        assert create == (
+             "create_document",
+-            VFSURIFactory.state_uri("vfs:///wf/port/outer"),
++            VFSURIFactory.loop_checkpoint_uri("vfs:///wf/port/outer", "outer-loop"),
+             State.SCHEMA,
+         )
+-        assert events[2] == ("writer", "0")
+-        assert events[3][0] == "put_one"
+-        assert events[3][1] == State({"i": 7}).to_tuple(0)
+-        assert events[4] == ("close",)
++        assert write == ("replace_one", State({"i": 7}).to_tuple(0))
++        assert jump[0] == "jump"
++        assert jump[1].target_operator_id.id == "outer-loop"
+ 
+     def test_jump_to_loop_start_raises_when_uri_not_configured(
+         self, main_loop, monkeypatch
+diff --git a/amber/src/test/python/core/runnables/test_network_receiver.py b/amber/src/test/python/core/runnables/test_network_receiver.py
+index 8fbca258bb..7008b08a11 100644
+--- a/amber/src/test/python/core/runnables/test_network_receiver.py
++++ b/amber/src/test/python/core/runnables/test_network_receiver.py
+@@ -178,13 +178,13 @@ class TestNetworkReceiver:
+         input_queue.put(
+             DataElement(
+                 tag=channel_id,
+-                payload=StateFrame(State({"i": 1}), loop_counter=0),
++                payload=StateFrame(State({"i": 1}), loop_counter=0, message_id="A"),
+             )
+         )
+         input_queue.put(
+             DataElement(
+                 tag=channel_id,
+-                payload=StateFrame(State({"i": 2}), loop_counter=5),
++                payload=StateFrame(State({"i": 2}), loop_counter=5, message_id="B"),
+             )
+         )
+ 
+@@ -194,11 +194,13 @@ class TestNetworkReceiver:
+         assert isinstance(first_element.payload, StateFrame)
+         assert first_element.payload.frame == {"i": 1}
+         assert first_element.payload.loop_counter == 0
++        assert first_element.payload.message_id == "A"
+         assert first_element.tag == channel_id
+ 
+         assert isinstance(second_element.payload, StateFrame)
+         assert second_element.payload.frame == {"i": 2}
+         assert second_element.payload.loop_counter == 5
++        assert second_element.payload.message_id == "B"
+         assert second_element.tag == channel_id
+ 
+     @pytest.mark.timeout(10)
+@@ -377,6 +379,7 @@ class TestNetworkReceiver:
+                 State.CONTENT: [State({"answer": 42}).to_json()],
+                 State.LOOP_COUNTER: [7],
+                 State.LOOP_START_ID: ["loop-start-1"],
++                State.MESSAGE_ID: ["issued-A"],
+             }
+         )
+ 
+@@ -387,6 +390,7 @@ class TestNetworkReceiver:
+         assert element.payload.frame == {"answer": 42}
+         assert element.payload.loop_counter == 7
+         assert element.payload.loop_start_id == "loop-start-1"
++        assert element.payload.message_id == "issued-A"
+         assert element.tag == channel_id
+ 
+     @pytest.mark.timeout(10)
+diff --git a/amber/src/test/python/core/storage/runnables/test_input_port_materialization_reader_runnable.py b/amber/src/test/python/core/storage/runnables/test_input_port_materialization_reader_runnable.py
+index 56069b3163..2893fbba26 100644
+--- a/amber/src/test/python/core/storage/runnables/test_input_port_materialization_reader_runnable.py
++++ b/amber/src/test/python/core/storage/runnables/test_input_port_materialization_reader_runnable.py
+@@ -117,10 +117,12 @@ class TestRunStateReadingBlock:
+         row_a = {
+             State.LOOP_COUNTER: 0,
+             State.LOOP_START_ID: "loop-a",
++            State.MESSAGE_ID: "message-a",
+         }
+         row_b = {
+             State.LOOP_COUNTER: 1,
+             State.LOOP_START_ID: "loop-b",
++            State.MESSAGE_ID: "message-b",
+         }
+         result_doc = MagicMock()
+         result_doc.get.return_value = iter([])  # No materialized tuples.
+@@ -154,6 +156,10 @@ class TestRunStateReadingBlock:
+         assert [sf.payload.frame for sf in state_frames] == [state_a, state_b]
+         assert [sf.payload.loop_counter for sf in state_frames] == [0, 1]
+         assert [sf.payload.loop_start_id for sf in state_frames] == ["loop-a", "loop-b"]
++        assert [sf.payload.message_id for sf in state_frames] == [
++            "message-a",
++            "message-b",
++        ]
+         assert runnable._finished is True
+ 
+ 
+diff --git a/amber/src/test/python/core/storage/test_vfs_uri_factory.py b/amber/src/test/python/core/storage/test_vfs_uri_factory.py
+index 25fd824976..27c55cc463 100644
+--- a/amber/src/test/python/core/storage/test_vfs_uri_factory.py
++++ b/amber/src/test/python/core/storage/test_vfs_uri_factory.py
+@@ -70,6 +70,29 @@ class TestCreatePortBaseUri:
+         assert VFSURIFactory.state_uri(base) == f"{base}/state"
+ 
+ 
++def test_checkpoint_table_name_fits_generated_operator_ids():
++    from urllib.parse import urlparse
++    from core.storage.document_factory import DocumentFactory
++
++    producer = _gpi(
++        "PythonUDFOpDescV2-bab7bdc2-668e-4c77-bc49-20d12996f031", is_input=False
++    )
++    base = VFSURIFactory.create_port_base_uri(
++        WorkflowIdentity(id=114866108),
++        ExecutionIdentity(id=114866108),
++        producer,
++        warehouse="test",
++    )
++    loop = "LoopStartOpDesc-bedd6b8d-239b-4f3a-a958-67cde1c9b463"
++    uri = VFSURIFactory.loop_checkpoint_uri(base, loop)
++    table_name = DocumentFactory.sanitize_uri_path(urlparse(uri))
++    assert len(table_name.encode()) <= 255
++    assert VFSURIFactory.decode_uri(uri).warehouse == "test"
++    assert VFSURIFactory.decode_uri(uri).resource_type == VFSResourceType.STATE
++    assert uri != VFSURIFactory.loop_checkpoint_uri(base, loop + "-other")
++    assert uri != VFSURIFactory.loop_checkpoint_uri(base.replace("bab7", "cab7"), loop)
++
++
+ class TestDecodeUriRoundTrip:
+     def test_result_uri_round_trips_through_decode(self):
+         wid, eid, gpi = (
+diff --git a/amber/src/test/scala/org/apache/texera/amber/engine/architecture/messaginglayer/OutputManagerSpec.scala b/amber/src/test/scala/org/apache/texera/amber/engine/architecture/messaginglayer/OutputManagerSpec.scala
+index 943dd98ab6..5a56709382 100644
+--- a/amber/src/test/scala/org/apache/texera/amber/engine/architecture/messaginglayer/OutputManagerSpec.scala
++++ b/amber/src/test/scala/org/apache/texera/amber/engine/architecture/messaginglayer/OutputManagerSpec.scala
+@@ -296,15 +296,31 @@ class OutputManagerSpec extends AnyFlatSpec with MockFactory {
+     // Each buffer's sendState flushes (no-op, empty), sends a StateFrame, then
+     // flushes again (no-op). With no writer threads configured,
+     // saveStateToStorageIfNeeded is a no-op over the empty writer map.
+-    inAnyOrder {
+-      (mockHandler.apply _).expects(
+-        WorkflowFIFOMessage(channelTo(recA), 0, StateFrame(state))
+-      )
+-      (mockHandler.apply _).expects(
+-        WorkflowFIFOMessage(channelTo(recB), 0, StateFrame(state))
+-      )
+-    }
++    val messages = scala.collection.mutable.ArrayBuffer[WorkflowFIFOMessage]()
++    (mockHandler.apply _)
++      .expects(*)
++      .onCall { message: WorkflowFIFOMessage =>
++        messages += message; ()
++      }
++      .repeat(4)
+     outputManager.emitState(state)
++    outputManager.emitState(state)
++    val frames = messages.map(_.payload.asInstanceOf[StateFrame])
++    assert(
++      messages.collect { case WorkflowFIFOMessage(channel, seq, _) => (channel, seq) }.toSet ==
++        Set(
++          (channelTo(recA), 0L),
++          (channelTo(recB), 0L),
++          (channelTo(recA), 1L),
++          (channelTo(recB), 1L)
++        )
++    )
++    assert(frames.size == 4)
++    assert(frames.forall(_.frame == state))
++    assert(frames.forall(_.messageId.nonEmpty))
++    assert(frames(0).messageId == frames(1).messageId)
++    assert(frames(2).messageId == frames(3).messageId)
++    assert(frames(0).messageId != frames(2).messageId)
+   }
+ 
+   it should "carry the loop envelope onto every emitted StateFrame" in {
+@@ -325,9 +341,9 @@ class OutputManagerSpec extends AnyFlatSpec with MockFactory {
+ 
+     val state = State(Map("k" -> 1))
+     (mockHandler.apply _).expects(
+-      WorkflowFIFOMessage(channelTo(rec), 0, StateFrame(state, 2L, "outer-loop"))
++      WorkflowFIFOMessage(channelTo(rec), 0, StateFrame(state, 2L, "outer-loop", "A"))
+     )
+-    outputManager.emitState(state, loopCounter = 2L, loopStartId = "outer-loop")
++    outputManager.emitState(state, loopCounter = 2L, loopStartId = "outer-loop", messageId = "A")
+   }
+ 
+   // -- addPort / storage no-ops / getSingleOutputPortIdentity --------------
+diff --git a/amber/src/test/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyClientSpec.scala b/amber/src/test/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyClientSpec.scala
+index f536b61d1c..882a6d6556 100644
+--- a/amber/src/test/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyClientSpec.scala
++++ b/amber/src/test/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyClientSpec.scala
+@@ -309,7 +309,10 @@ class PythonProxyClientSpec extends AnyFlatSpec {
+       val dataChannel = ChannelIdentity(clientWorkerId, controllerId, isControl = false)
+ 
+       fixture.client.enqueueData(
+-        DataElement(StateFrame(state, loopCounter = 3L, loopStartId = "loop-start-1"), dataChannel)
++        DataElement(
++          StateFrame(state, loopCounter = 3L, loopStartId = "loop-start-1", messageId = "A"),
++          dataChannel
++        )
+       )
+ 
+       awaitTrue()(!fixture.producer.putsReceived.isEmpty)
+@@ -320,6 +323,7 @@ class PythonProxyClientSpec extends AnyFlatSpec {
+       assert(State.fromTuple(row) == state)
+       assert(State.loopCounterFrom(row) == 3L)
+       assert(State.loopStartIdFrom(row) == "loop-start-1")
++      assert(State.messageIdFrom(row) == "A")
+     }
+   }
+ 
+diff --git a/amber/src/test/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyServerSpec.scala b/amber/src/test/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyServerSpec.scala
+index 1e4c531a0b..3554524fae 100644
+--- a/amber/src/test/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyServerSpec.scala
++++ b/amber/src/test/scala/org/apache/texera/amber/engine/architecture/pythonworker/PythonProxyServerSpec.scala
+@@ -252,7 +252,7 @@ class PythonProxyServerSpec extends AnyFlatSpec {
+       val to =
+         ChannelIdentity(pythonWorkerId, ActorVirtualIdentity("downstream"), isControl = false)
+       val state = State(Map("count" -> "5"))
+-      val row = state.toTuple(loopCounter = 3L, loopStartId = "loop-start-1")
++      val row = state.toTuple(loopCounter = 3L, loopStartId = "loop-start-1", messageId = "A")
+ 
+       putBatch(
+         fixture,
+@@ -265,7 +265,7 @@ class PythonProxyServerSpec extends AnyFlatSpec {
+       val out = fixture.messages
+       assert(out.size == 1)
+       assert(out.head.channelId == to)
+-      assert(out.head.payload == StateFrame(state, 3L, "loop-start-1"))
++      assert(out.head.payload == StateFrame(state, 3L, "loop-start-1", "A"))
+     }
+   }
+ 
+diff --git a/amber/src/test/scala/org/apache/texera/amber/engine/architecture/worker/DataProcessorSpec.scala b/amber/src/test/scala/org/apache/texera/amber/engine/architecture/worker/DataProcessorSpec.scala
+index 2edb043048..3aea58ee50 100644
+--- a/amber/src/test/scala/org/apache/texera/amber/engine/architecture/worker/DataProcessorSpec.scala
++++ b/amber/src/test/scala/org/apache/texera/amber/engine/architecture/worker/DataProcessorSpec.scala
+@@ -347,6 +347,45 @@ class DataProcessorSpec extends AnyFlatSpec with MockFactory with Matchers with
+     )
+   }
+ 
++  "data processor" should "process Figure 12 copies once across input ports but accept distinct messages" in {
++    val dp = mkDataProcessor
++    dp.executor = executor
++    dp.stateManager.transitTo(READY)
++    val emitted = scala.collection.mutable.ArrayBuffer[WorkflowFIFOMessage]()
++    (outputHandler.apply _)
++      .expects(*)
++      .onCall { (m: Either[MainThreadDelegateMessage, WorkflowFIFOMessage]) =>
++        m.foreach(emitted += _); ()
++      }
++      .anyNumberOfTimes()
++    val inputState = State(Map("K" -> 2))
++    ((state: State, port: Int) => executor.processState(state, port))
++      .expects(inputState, 0)
++      .returning(Some(inputState))
++      .twice()
++    dp.inputManager.addPort(inputPortId, schema, List.empty, List.empty)
++    val secondPort = PortIdentity(1)
++    dp.inputManager.addPort(secondPort, schema, List.empty, List.empty)
++    val direct = ChannelIdentity(senderWorkerId, testWorkerId, isControl = false)
++    val filtered =
++      ChannelIdentity(ActorVirtualIdentity("filtered"), testWorkerId, isControl = false)
++    dp.inputGateway.getChannel(direct).setPortId(inputPortId)
++    dp.inputGateway.getChannel(filtered).setPortId(secondPort)
++    dp.outputManager.addPort(outputPortId, schema, None)
++    dp.outputManager.addPartitionerWithPartitioning(
++      PhysicalLink(testOpId, outputPortId, upstreamOpId, inputPortId),
++      OneToOnePartitioning(1, Seq(ChannelIdentity(testWorkerId, senderWorkerId, isControl = false)))
++    )
++    val original = StateFrame(inputState, 0L, "loop", "A")
++    dp.processDataPayload(direct, original)
++    dp.processDataPayload(filtered, original)
++    dp.processDataPayload(direct, original.copy(messageId = "B"))
++    dp.processDataPayload(filtered, original)
++    assert(!dp.pauseManager.isPaused)
++    val forwarded = emitted.map(_.payload).collect { case frame: StateFrame => frame }
++    assert(forwarded.map(_.messageId).toList == List("A", "B"))
++  }
++
+   "data processor" should "not emit when processState yields None" in {
+     val dp = mkDataProcessor
+     dp.executor = executor
+@@ -523,7 +562,7 @@ class DataProcessorSpec extends AnyFlatSpec with MockFactory with Matchers with
+     }
+ 
+   private def statesSent(sent: ArrayBuffer[WorkflowFIFOMessage]): List[State] =
+-    sent.map(_.payload).collect { case StateFrame(state, _, _) => state }.toList
++    sent.map(_.payload).collect { case StateFrame(state, _, _, _) => state }.toList
+ 
+   private def tuplesSent(sent: ArrayBuffer[WorkflowFIFOMessage]): List[Tuple] =
+     sent.map(_.payload).collect { case DataFrame(frame) => frame.toList }.flatten.toList
+@@ -582,6 +621,27 @@ class DataProcessorSpec extends AnyFlatSpec with MockFactory with Matchers with
+     assert(tuplesSent(sent).size == 3)
+   }
+ 
++  "data processor" should "retain the port envelope when its state is a duplicate from a data edge" in {
++    val (dp, exec, sent) = initializedWith(limitReferringToN)
++    val feederChannel = portChannel(dp, "feeder")
++    openExecutor(dp)
++    val original = StateFrame(State(Map("n" -> 2L)), 1L, "outer-loop", "A")
++    dp.processDataPayload(senderChannel, original)
++    dp.processDataPayload(feederChannel, original)
++    dp.processDataPayload(feederChannel, DataFrame(Array(feederRow(3L))))
++    drain(dp)
++
++    val frames = sent.map(_.payload).collect { case frame: StateFrame => frame }
++    assert(exec.calls.count(_._1 == "state") == 1)
++    assert(frames.size == 2)
++    val published = frames.last
++    assert(published.frame.values("n") == 3L)
++    assert(published.loopCounter == 1L)
++    assert(published.loopStartId == "outer-loop")
++    assert(published.messageId.nonEmpty && published.messageId != "A")
++    assert(!dp.pauseManager.isPaused)
++  }
++
+   "data processor" should "report an error and pause when an edge into the control-variable port carries a second tuple" in {
+     // Without a row chosen on the port, an edge into it must carry exactly one tuple: taking one row
+     // of several silently would bind a value the user never picked.
+diff --git a/amber/src/test/scala/org/apache/texera/amber/engine/architecture/worker/managers/InputPortMaterializationReaderThreadSpec.scala b/amber/src/test/scala/org/apache/texera/amber/engine/architecture/worker/managers/InputPortMaterializationReaderThreadSpec.scala
+index 9651b2d35a..67ebb0ce2f 100644
+--- a/amber/src/test/scala/org/apache/texera/amber/engine/architecture/worker/managers/InputPortMaterializationReaderThreadSpec.scala
++++ b/amber/src/test/scala/org/apache/texera/amber/engine/architecture/worker/managers/InputPortMaterializationReaderThreadSpec.scala
+@@ -126,18 +126,20 @@ class InputPortMaterializationReaderThreadSpec extends AnyFlatSpec {
+     * Both must exist — `RegionExecutionManager` creates the pair together — so even a
+     * states-only or tuples-only case writes both tables.
+     *
+-    * @param states (user state, loop counter, LoopStart id) triples, written as state rows.
++    * @param states (user state, loop counter, LoopStart id, message id), written as state rows.
+     */
+   private def materialize(
+       operatorId: String,
+       tuples: Seq[Tuple] = Seq.empty,
+-      states: Seq[(State, Long, String)] = Seq.empty
++      states: Seq[(State, Long, String, String)] = Seq.empty
+   ): URI = {
+     val base = baseURI(operatorId)
+     write(
+       VFSURIFactory.stateURI(base),
+       State.schema,
+-      states.map { case (state, counter, startId) => state.toTuple(counter, startId) }
++      states.map {
++        case (state, counter, startId, messageId) => state.toTuple(counter, startId, messageId)
++      }
+     )
+     write(VFSURIFactory.resultURI(base), schema, tuples)
+     base
+@@ -229,7 +231,11 @@ class InputPortMaterializationReaderThreadSpec extends AnyFlatSpec {
+ 
+   it should "send every message on one channel from a URI-derived sender, numbered from zero" in {
+     val uri =
+-      materialize("channel", tuples = Seq(tuple(1)), states = Seq((State(Map("k" -> 1)), 0L, "")))
++      materialize(
++        "channel",
++        tuples = Seq(tuple(1)),
++        states = Seq((State(Map("k" -> 1)), 0L, "", "A"))
++      )
+     val messages = replay(uri, broadcastTo(workerId))
+ 
+     // The dummy sender is derived from the URI *and* the receiving worker, so two workers reading
+@@ -248,8 +254,8 @@ class InputPortMaterializationReaderThreadSpec extends AnyFlatSpec {
+     // Distinct counters and ids per state, so a reader that reused one row's envelope for the
+     // other, or defaulted to the "no loop" values, would show up.
+     val states = Seq(
+-      (State(Map("phase" -> "a")), 7L, "loop-start-A"),
+-      (State(Map("phase" -> "b")), 9L, "loop-start-B")
++      (State(Map("phase" -> "a")), 7L, "loop-start-A", "message-A"),
++      (State(Map("phase" -> "b")), 9L, "loop-start-B", "message-B")
+     )
+     val uri = materialize("states", tuples = Seq(tuple(1), tuple(2)), states = states)
+ 
+@@ -262,8 +268,8 @@ class InputPortMaterializationReaderThreadSpec extends AnyFlatSpec {
+     assert(lastState >= 0 && firstData >= 0 && lastState < firstData)
+     assert(
+       stateFrames(messages).map(frame =>
+-        (frame.frame.values("phase"), frame.loopCounter, frame.loopStartId)
+-      ) == Seq(("a", 7L, "loop-start-A"), ("b", 9L, "loop-start-B"))
++        (frame.frame.values("phase"), frame.loopCounter, frame.loopStartId, frame.messageId)
++      ) == Seq(("a", 7L, "loop-start-A", "message-A"), ("b", 9L, "loop-start-B", "message-B"))
+     )
+   }
+ 
+diff --git a/common/workflow-core/src/main/scala/org/apache/texera/amber/core/state/State.scala b/common/workflow-core/src/main/scala/org/apache/texera/amber/core/state/State.scala
+index aa88ce1660..280bcf53e8 100644
+--- a/common/workflow-core/src/main/scala/org/apache/texera/amber/core/state/State.scala
++++ b/common/workflow-core/src/main/scala/org/apache/texera/amber/core/state/State.scala
+@@ -20,6 +20,7 @@
+ package org.apache.texera.amber.core.state
+ 
+ import com.fasterxml.jackson.databind.JsonNode
++import com.fasterxml.jackson.databind.node.NullNode
+ import org.apache.texera.amber.core.tuple.{Attribute, AttributeType, Schema, Tuple}
+ import org.apache.texera.amber.util.JSONUtils.objectMapper
+ 
+@@ -33,11 +34,12 @@ final case class State(values: Map[String, Any]) {
+ 
+   def toTuple(
+       loopCounter: Long = 0L,
+-      loopStartId: String = ""
++      loopStartId: String = "",
++      messageId: String = ""
+   ): Tuple =
+     Tuple
+       .builder(State.schema)
+-      .addSequentially(Array(toJson, Long.box(loopCounter), loopStartId))
++      .addSequentially(Array(toJson, Long.box(loopCounter), loopStartId, messageId))
+       .build()
+ }
+ 
+@@ -51,6 +53,9 @@ object State {
+   // extractors below read them back off a materialized/transported row.
+   private val LoopCounter = "loop_counter"
+   private val LoopStartId = "loop_start_id"
++  private val MessageId = "message_id"
++
++  def messageIdFrom(row: Tuple): String = row.getField[String](MessageId)
+ 
+   /** Read the loop-envelope counter off a State row (see `toTuple`). */
+   def loopCounterFrom(row: Tuple): Long = row.getField[java.lang.Long](LoopCounter).longValue()
+@@ -64,7 +69,8 @@ object State {
+   val schema: Schema = new Schema(
+     new Attribute(Content, AttributeType.STRING),
+     new Attribute(LoopCounter, AttributeType.LONG),
+-    new Attribute(LoopStartId, AttributeType.STRING)
++    new Attribute(LoopStartId, AttributeType.STRING),
++    new Attribute(MessageId, AttributeType.STRING)
+   )
+ 
+   def fromJson(payload: String): State =
+@@ -81,7 +87,8 @@ object State {
+ 
+   private def toJsonValue(value: Any): Any =
+     value match {
+-      case null => null
++      // Preserve Python's None sentinel despite the shared mapper's NON_NULL policy.
++      case null => NullNode.getInstance()
+       case bytes: Array[Byte] =>
+         Map(BytesTypeMarker -> BytesValue, PayloadMarker -> Base64.getEncoder.encodeToString(bytes))
+       case map: Map[?, ?] =>
+diff --git a/common/workflow-core/src/test/scala/org/apache/texera/amber/core/state/StateSpec.scala b/common/workflow-core/src/test/scala/org/apache/texera/amber/core/state/StateSpec.scala
+index 8856d48ea9..c8744e400c 100644
+--- a/common/workflow-core/src/test/scala/org/apache/texera/amber/core/state/StateSpec.scala
++++ b/common/workflow-core/src/test/scala/org/apache/texera/amber/core/state/StateSpec.scala
+@@ -46,15 +46,10 @@ class StateSpec extends AnyFlatSpec {
+     assert(decoded.values("bool_false") == false)
+   }
+ 
+-  it should "drop null entries during JSON serialization" in {
+-    // The shared `objectMapper` is configured with `Include.NON_NULL`, so
+-    // null values are stripped before they hit the wire. Document the
+-    // behavior here so callers know they cannot transport an explicit null
+-    // through a State -- Python's serializer keeps nulls but Scala does not.
+-    val original = State(Map("present" -> "value", "absent" -> null))
++  it should "preserve the stopping example's None sentinel through a JVM hop" in {
++    val original = State(Map("K" -> 2L, "prev" -> null, "nested" -> Map("prev" -> null)))
+     val decoded = State.fromJson(original.toJson)
+-    assert(decoded.values.keySet == Set("present"))
+-    assert(decoded.values("present") == "value")
++    assert(decoded == original)
+   }
+ 
+   it should "json-round-trip byte arrays via the bytes type marker" in {
+@@ -131,9 +126,10 @@ class StateSpec extends AnyFlatSpec {
+     // exist precisely so the envelope survives storage. These extractors are
+     // what InputPortMaterializationReaderThread / PythonProxyServer read; a
+     // rename of the columns on either side must break this.
+-    val tuple = State(Map("i" -> 1L)).toTuple(2L, "outer-loop")
++    val tuple = State(Map("i" -> 1L)).toTuple(2L, "outer-loop", "issued-A")
+     assert(State.loopCounterFrom(tuple) == 2L)
+     assert(State.loopStartIdFrom(tuple) == "outer-loop")
++    assert(State.messageIdFrom(tuple) == "issued-A")
+   }
+ 
+   it should "default the loop envelope to the no-loop values" in {
+diff --git a/common/workflow-operator/src/main/scala/org/apache/texera/amber/operator/loop/LoopStartOpDesc.scala b/common/workflow-operator/src/main/scala/org/apache/texera/amber/operator/loop/LoopStartOpDesc.scala
+index 56040ce6d0..ba2f9a1b0a 100644
+--- a/common/workflow-operator/src/main/scala/org/apache/texera/amber/operator/loop/LoopStartOpDesc.scala
++++ b/common/workflow-operator/src/main/scala/org/apache/texera/amber/operator/loop/LoopStartOpDesc.scala
+@@ -43,7 +43,7 @@ class LoopStartOpDesc extends LoopOpDesc {
+     "Begin a loop that iterates over rows of the input table; pairs with Loop End."
+ 
+   // The jump/write-back target of the loop's back-edge: the scheduler resolves
+-  // this operator's input-port state URI and ships it to workers at setup.
++  // its materialized input's base URI and ships it to workers at setup.
+   override protected def isLoopStart: Boolean = true
+ 
+   // The scheduler resolves this loop's bookkeeping URIs from this port's

@@ -1,0 +1,403 @@
+{
+  "operators": [
+    {
+      "operatorID": "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c",
+      "operatorType": "PythonUDFSourceV2",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "code": "from pytexera import *\nimport pandas as pd\nclass Points(UDFSourceOperator):\n    def produce(self):\n        yield pd.read_csv('${RUNS}/execution-20261114-fixed/points-2000.csv')\n",
+        "workers": 1,
+        "defaultEnv": true,
+        "envName": "",
+        "columns": [
+          {
+            "attributeName": "x",
+            "attributeType": "double"
+          },
+          {
+            "attributeName": "y",
+            "attributeType": "double"
+          }
+        ]
+      },
+      "inputPorts": [],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Points",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    },
+    {
+      "operatorID": "PythonUDFV2-operator-0ad765a8-fe80-529f-ac0b-600ff4e323d5",
+      "operatorType": "PythonUDFV2",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "code": "from pytexera import *\nimport pandas as pd\nfrom sklearn.cluster import KMeans\nfrom threadpoolctl import threadpool_limits\nclass Cluster(UDFTableOperator):\n    k = 2\n    def process_state(self, state, port):\n        if 'K' in state:\n            self.k = int(state['K'])\n        return state\n    def process_table(self, table, port):\n        if self.k is None:\n            raise ValueError('K did not arrive before the input table')\n        with threadpool_limits(limits=1):\n            model = KMeans(n_clusters=self.k, n_init=10, random_state=0, algorithm='lloyd').fit(table[['x','y']].to_numpy())\n        yield pd.DataFrame([{'K': self.k, 'score': -float(model.inertia_)}])\n",
+        "workers": 1,
+        "defaultEnv": true,
+        "envName": "",
+        "outputColumns": [
+          {
+            "attributeName": "K",
+            "attributeType": "integer"
+          },
+          {
+            "attributeName": "score",
+            "attributeType": "double"
+          }
+        ],
+        "retainInputColumns": false
+      },
+      "inputPorts": [
+        {
+          "portID": "input-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Cluster 2",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    },
+    {
+      "operatorID": "PythonUDFV2-operator-2e994e9b-e052-520b-8f98-b54b3e071d67",
+      "operatorType": "PythonUDFV2",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "code": "from pytexera import *\nimport pandas as pd\nfrom sklearn.cluster import KMeans\nfrom threadpoolctl import threadpool_limits\nclass Cluster(UDFTableOperator):\n    k = 3\n    def process_state(self, state, port):\n        if 'K' in state:\n            self.k = int(state['K'])\n        return state\n    def process_table(self, table, port):\n        if self.k is None:\n            raise ValueError('K did not arrive before the input table')\n        with threadpool_limits(limits=1):\n            model = KMeans(n_clusters=self.k, n_init=10, random_state=0, algorithm='lloyd').fit(table[['x','y']].to_numpy())\n        yield pd.DataFrame([{'K': self.k, 'score': -float(model.inertia_)}])\n",
+        "workers": 1,
+        "defaultEnv": true,
+        "envName": "",
+        "outputColumns": [
+          {
+            "attributeName": "K",
+            "attributeType": "integer"
+          },
+          {
+            "attributeName": "score",
+            "attributeType": "double"
+          }
+        ],
+        "retainInputColumns": false
+      },
+      "inputPorts": [
+        {
+          "portID": "input-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Cluster 3",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    },
+    {
+      "operatorID": "PythonUDFV2-operator-b7ed040c-16cd-5db6-b2c6-b204dabfcccf",
+      "operatorType": "PythonUDFV2",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "code": "from pytexera import *\nimport pandas as pd\nfrom sklearn.cluster import KMeans\nfrom threadpoolctl import threadpool_limits\nclass Cluster(UDFTableOperator):\n    k = 4\n    def process_state(self, state, port):\n        if 'K' in state:\n            self.k = int(state['K'])\n        return state\n    def process_table(self, table, port):\n        if self.k is None:\n            raise ValueError('K did not arrive before the input table')\n        with threadpool_limits(limits=1):\n            model = KMeans(n_clusters=self.k, n_init=10, random_state=0, algorithm='lloyd').fit(table[['x','y']].to_numpy())\n        yield pd.DataFrame([{'K': self.k, 'score': -float(model.inertia_)}])\n",
+        "workers": 1,
+        "defaultEnv": true,
+        "envName": "",
+        "outputColumns": [
+          {
+            "attributeName": "K",
+            "attributeType": "integer"
+          },
+          {
+            "attributeName": "score",
+            "attributeType": "double"
+          }
+        ],
+        "retainInputColumns": false
+      },
+      "inputPorts": [
+        {
+          "portID": "input-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Cluster 4",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    },
+    {
+      "operatorID": "PythonUDFV2-operator-a0f6ddbe-7e41-5ba6-9a1c-bbb00e600e30",
+      "operatorType": "PythonUDFV2",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "code": "from pytexera import *\nimport pandas as pd\nfrom sklearn.cluster import KMeans\nfrom threadpoolctl import threadpool_limits\nclass Cluster(UDFTableOperator):\n    k = 5\n    def process_state(self, state, port):\n        if 'K' in state:\n            self.k = int(state['K'])\n        return state\n    def process_table(self, table, port):\n        if self.k is None:\n            raise ValueError('K did not arrive before the input table')\n        with threadpool_limits(limits=1):\n            model = KMeans(n_clusters=self.k, n_init=10, random_state=0, algorithm='lloyd').fit(table[['x','y']].to_numpy())\n        yield pd.DataFrame([{'K': self.k, 'score': -float(model.inertia_)}])\n",
+        "workers": 1,
+        "defaultEnv": true,
+        "envName": "",
+        "outputColumns": [
+          {
+            "attributeName": "K",
+            "attributeType": "integer"
+          },
+          {
+            "attributeName": "score",
+            "attributeType": "double"
+          }
+        ],
+        "retainInputColumns": false
+      },
+      "inputPorts": [
+        {
+          "portID": "input-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Cluster 5",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    },
+    {
+      "operatorID": "PythonUDFV2-operator-49a728ea-45a6-5820-9d48-6c8687a73805",
+      "operatorType": "PythonUDFV2",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "code": "from pytexera import *\nclass Collect(UDFOperatorV2):\n    def process_tuple(self, row, port):\n        yield row\n",
+        "workers": 1,
+        "defaultEnv": true,
+        "envName": "",
+        "outputColumns": [
+          {
+            "attributeName": "K",
+            "attributeType": "integer"
+          },
+          {
+            "attributeName": "score",
+            "attributeType": "double"
+          }
+        ],
+        "retainInputColumns": false
+      },
+      "inputPorts": [
+        {
+          "portID": "input-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": true,
+          "disallowMultiInputs": false,
+          "dependencies": []
+        }
+      ],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Results",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": true
+    }
+  ],
+  "links": [
+    {
+      "linkID": "link-0",
+      "source": {
+        "operatorID": "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "PythonUDFV2-operator-0ad765a8-fe80-529f-ac0b-600ff4e323d5",
+        "portID": "input-0"
+      }
+    },
+    {
+      "linkID": "link-1",
+      "source": {
+        "operatorID": "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "PythonUDFV2-operator-2e994e9b-e052-520b-8f98-b54b3e071d67",
+        "portID": "input-0"
+      }
+    },
+    {
+      "linkID": "link-2",
+      "source": {
+        "operatorID": "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "PythonUDFV2-operator-b7ed040c-16cd-5db6-b2c6-b204dabfcccf",
+        "portID": "input-0"
+      }
+    },
+    {
+      "linkID": "link-3",
+      "source": {
+        "operatorID": "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "PythonUDFV2-operator-a0f6ddbe-7e41-5ba6-9a1c-bbb00e600e30",
+        "portID": "input-0"
+      }
+    },
+    {
+      "linkID": "link-4",
+      "source": {
+        "operatorID": "PythonUDFV2-operator-0ad765a8-fe80-529f-ac0b-600ff4e323d5",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "PythonUDFV2-operator-49a728ea-45a6-5820-9d48-6c8687a73805",
+        "portID": "input-0"
+      }
+    },
+    {
+      "linkID": "link-5",
+      "source": {
+        "operatorID": "PythonUDFV2-operator-2e994e9b-e052-520b-8f98-b54b3e071d67",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "PythonUDFV2-operator-49a728ea-45a6-5820-9d48-6c8687a73805",
+        "portID": "input-0"
+      }
+    },
+    {
+      "linkID": "link-6",
+      "source": {
+        "operatorID": "PythonUDFV2-operator-b7ed040c-16cd-5db6-b2c6-b204dabfcccf",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "PythonUDFV2-operator-49a728ea-45a6-5820-9d48-6c8687a73805",
+        "portID": "input-0"
+      }
+    },
+    {
+      "linkID": "link-7",
+      "source": {
+        "operatorID": "PythonUDFV2-operator-a0f6ddbe-7e41-5ba6-9a1c-bbb00e600e30",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "PythonUDFV2-operator-49a728ea-45a6-5820-9d48-6c8687a73805",
+        "portID": "input-0"
+      }
+    }
+  ],
+  "operatorPositions": {
+    "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c": {
+      "x": 0,
+      "y": 100
+    },
+    "PythonUDFV2-operator-0ad765a8-fe80-529f-ac0b-600ff4e323d5": {
+      "x": 180,
+      "y": 100
+    },
+    "PythonUDFV2-operator-2e994e9b-e052-520b-8f98-b54b3e071d67": {
+      "x": 360,
+      "y": 100
+    },
+    "PythonUDFV2-operator-b7ed040c-16cd-5db6-b2c6-b204dabfcccf": {
+      "x": 540,
+      "y": 100
+    },
+    "PythonUDFV2-operator-a0f6ddbe-7e41-5ba6-9a1c-bbb00e600e30": {
+      "x": 720,
+      "y": 100
+    },
+    "PythonUDFV2-operator-49a728ea-45a6-5820-9d48-6c8687a73805": {
+      "x": 900,
+      "y": 100
+    }
+  },
+  "commentBoxes": [],
+  "settings": {
+    "dataTransferBatchSize": 400,
+    "executionMode": "MATERIALIZED"
+  }
+}

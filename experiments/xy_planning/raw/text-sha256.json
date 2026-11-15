@@ -1,0 +1,237 @@
+{
+  "fork-0/compilation.csv": {
+    "source_sha256": "48901aba90ecd840c03a266c299f0d124daa7645f595885563ff97dd0b49beed",
+    "saved_utf8_lf_sha256": "48901aba90ecd840c03a266c299f0d124daa7645f595885563ff97dd0b49beed",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-0/edges.csv": {
+    "source_sha256": "b1b1086afb2b69f9d171a193ef039966eec7b66c90c3a623913e406f1f37a0e8",
+    "saved_utf8_lf_sha256": "b1b1086afb2b69f9d171a193ef039966eec7b66c90c3a623913e406f1f37a0e8",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-0/inside-1-outside-1.logical.json": {
+    "source_sha256": "05717fdb5e08f1e825ba1fb92a9c2f6e64ada7ae4ec1c62fe382405fdf1e52e2",
+    "saved_utf8_lf_sha256": "df7056b5f487776db77709be692decaf3814e84b82b658d81967b3b86d8e017e",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-0/inside-1-outside-4.logical.json": {
+    "source_sha256": "8790882a906f4c0fcdb233c9e01cd5b5c06af2a7738d5fcdbd901e02bba4e9e2",
+    "saved_utf8_lf_sha256": "06493f02a187e81321336503af40746661e68dabb4aa9843fcde9cb8b2216b94",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-0/inside-2-outside-2.logical.json": {
+    "source_sha256": "fef775c4ab2872d6ef75ebce23136f6f4e52749badcf7dd7b12914850f5d1a80",
+    "saved_utf8_lf_sha256": "babd4ff67ae15dad434291c540a5b2a26acafb26a5d7a51f6bee0d5f74e82eaf",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-0/inside-3-outside-3.logical.json": {
+    "source_sha256": "3517e6ba44b698a56cafeb68225253b2740b5bac6252b8f7cec24a03c0837247",
+    "saved_utf8_lf_sha256": "c03140499e9feeb16cc9c096337344bf09bd699652ee5d93887da4c0a881d27a",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-0/inside-4-outside-1.logical.json": {
+    "source_sha256": "5a278add9b2f9679e5768ef79118e22f5e32a87b52c0c055fe96dffe52c92344",
+    "saved_utf8_lf_sha256": "433de96ed54a87e8cef89a5ca5b7d300c7f0fb4427f5ed0cbf981a5e35f4d7c3",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-0/inside-4-outside-4.logical.json": {
+    "source_sha256": "0b438435620610ef2969ddd5fd015074f64f32fd32b8cb3340739ff3265f6124",
+    "saved_utf8_lf_sha256": "c60b96c239f89834059f878d99cc7a39a9c6ccb9fd8a6d1b0ec74fef9fd6c435",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-0/operators.csv": {
+    "source_sha256": "9e91995afe51895b3071c454e5bbfb7864b87d0de22fd43266b116adafee27d4",
+    "saved_utf8_lf_sha256": "9e91995afe51895b3071c454e5bbfb7864b87d0de22fd43266b116adafee27d4",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-0/results.csv": {
+    "source_sha256": "eb55d55894d422a2ba5edd0fd4be7b27f9cfc21ddec9330c409d582ec250fa7d",
+    "saved_utf8_lf_sha256": "eb55d55894d422a2ba5edd0fd4be7b27f9cfc21ddec9330c409d582ec250fa7d",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-0/run.log": {
+    "source_sha256": "f52f62871d074fc7aacf7743755d29404af11cdf3ac8dd810bc611eed5b03246",
+    "saved_utf8_lf_sha256": "e05c4fa866d0515335558b282da3db808584919ec6d30426fa0d3e16b0438bcb",
+    "source_encoding": "utf-16"
+  },
+  "fork-1/compilation.csv": {
+    "source_sha256": "4bff6c70bf0cbed8a6343fb04ded7b5e58026de5edbcded9e5f5dcf0b84b6b25",
+    "saved_utf8_lf_sha256": "4bff6c70bf0cbed8a6343fb04ded7b5e58026de5edbcded9e5f5dcf0b84b6b25",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-1/edges.csv": {
+    "source_sha256": "ec0de1eeed142b0e027d34a5aea5be696195018790aadf6dcbf12a48d9044c89",
+    "saved_utf8_lf_sha256": "ec0de1eeed142b0e027d34a5aea5be696195018790aadf6dcbf12a48d9044c89",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-1/inside-1-outside-1.logical.json": {
+    "source_sha256": "05717fdb5e08f1e825ba1fb92a9c2f6e64ada7ae4ec1c62fe382405fdf1e52e2",
+    "saved_utf8_lf_sha256": "df7056b5f487776db77709be692decaf3814e84b82b658d81967b3b86d8e017e",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-1/inside-1-outside-4.logical.json": {
+    "source_sha256": "8790882a906f4c0fcdb233c9e01cd5b5c06af2a7738d5fcdbd901e02bba4e9e2",
+    "saved_utf8_lf_sha256": "06493f02a187e81321336503af40746661e68dabb4aa9843fcde9cb8b2216b94",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-1/inside-2-outside-2.logical.json": {
+    "source_sha256": "fef775c4ab2872d6ef75ebce23136f6f4e52749badcf7dd7b12914850f5d1a80",
+    "saved_utf8_lf_sha256": "babd4ff67ae15dad434291c540a5b2a26acafb26a5d7a51f6bee0d5f74e82eaf",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-1/inside-3-outside-3.logical.json": {
+    "source_sha256": "3517e6ba44b698a56cafeb68225253b2740b5bac6252b8f7cec24a03c0837247",
+    "saved_utf8_lf_sha256": "c03140499e9feeb16cc9c096337344bf09bd699652ee5d93887da4c0a881d27a",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-1/inside-4-outside-1.logical.json": {
+    "source_sha256": "5a278add9b2f9679e5768ef79118e22f5e32a87b52c0c055fe96dffe52c92344",
+    "saved_utf8_lf_sha256": "433de96ed54a87e8cef89a5ca5b7d300c7f0fb4427f5ed0cbf981a5e35f4d7c3",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-1/inside-4-outside-4.logical.json": {
+    "source_sha256": "0b438435620610ef2969ddd5fd015074f64f32fd32b8cb3340739ff3265f6124",
+    "saved_utf8_lf_sha256": "c60b96c239f89834059f878d99cc7a39a9c6ccb9fd8a6d1b0ec74fef9fd6c435",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-1/operators.csv": {
+    "source_sha256": "8eb141424d6105891ddd2023eff0dc1fc00cc4c86e3eb49190a5c1ea97f17800",
+    "saved_utf8_lf_sha256": "8eb141424d6105891ddd2023eff0dc1fc00cc4c86e3eb49190a5c1ea97f17800",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-1/results.csv": {
+    "source_sha256": "920be93f37f3963c5c1bfcf1599bf1851390fd4b8a2601b590fd0461e9503e89",
+    "saved_utf8_lf_sha256": "920be93f37f3963c5c1bfcf1599bf1851390fd4b8a2601b590fd0461e9503e89",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-1/run.log": {
+    "source_sha256": "de9987daaa1ce2f210ff27fed1a579686ff038e7985a00c244a708b470ff926f",
+    "saved_utf8_lf_sha256": "0f796bb736b4699e8fb4b3b4e2db95a3251f064d96afec60136e3dd90dd65e89",
+    "source_encoding": "utf-16"
+  },
+  "fork-2/compilation.csv": {
+    "source_sha256": "f6058ab6cbc35ad5c0bb347ac1e0ef955505569c59c6ae35f2fc62d389660c78",
+    "saved_utf8_lf_sha256": "f6058ab6cbc35ad5c0bb347ac1e0ef955505569c59c6ae35f2fc62d389660c78",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-2/edges.csv": {
+    "source_sha256": "b40e845e4df0e20b34c33e83a5bef99f4f58ee253bd6b65bbd9dac83fa31ff76",
+    "saved_utf8_lf_sha256": "b40e845e4df0e20b34c33e83a5bef99f4f58ee253bd6b65bbd9dac83fa31ff76",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-2/inside-1-outside-1.logical.json": {
+    "source_sha256": "05717fdb5e08f1e825ba1fb92a9c2f6e64ada7ae4ec1c62fe382405fdf1e52e2",
+    "saved_utf8_lf_sha256": "df7056b5f487776db77709be692decaf3814e84b82b658d81967b3b86d8e017e",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-2/inside-1-outside-4.logical.json": {
+    "source_sha256": "8790882a906f4c0fcdb233c9e01cd5b5c06af2a7738d5fcdbd901e02bba4e9e2",
+    "saved_utf8_lf_sha256": "06493f02a187e81321336503af40746661e68dabb4aa9843fcde9cb8b2216b94",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-2/inside-2-outside-2.logical.json": {
+    "source_sha256": "fef775c4ab2872d6ef75ebce23136f6f4e52749badcf7dd7b12914850f5d1a80",
+    "saved_utf8_lf_sha256": "babd4ff67ae15dad434291c540a5b2a26acafb26a5d7a51f6bee0d5f74e82eaf",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-2/inside-3-outside-3.logical.json": {
+    "source_sha256": "3517e6ba44b698a56cafeb68225253b2740b5bac6252b8f7cec24a03c0837247",
+    "saved_utf8_lf_sha256": "c03140499e9feeb16cc9c096337344bf09bd699652ee5d93887da4c0a881d27a",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-2/inside-4-outside-1.logical.json": {
+    "source_sha256": "5a278add9b2f9679e5768ef79118e22f5e32a87b52c0c055fe96dffe52c92344",
+    "saved_utf8_lf_sha256": "433de96ed54a87e8cef89a5ca5b7d300c7f0fb4427f5ed0cbf981a5e35f4d7c3",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-2/inside-4-outside-4.logical.json": {
+    "source_sha256": "0b438435620610ef2969ddd5fd015074f64f32fd32b8cb3340739ff3265f6124",
+    "saved_utf8_lf_sha256": "c60b96c239f89834059f878d99cc7a39a9c6ccb9fd8a6d1b0ec74fef9fd6c435",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-2/operators.csv": {
+    "source_sha256": "0e9bab4814c4e1f415ff4208c19daaf3655c32e719ac84dc836a60e36f632dba",
+    "saved_utf8_lf_sha256": "0e9bab4814c4e1f415ff4208c19daaf3655c32e719ac84dc836a60e36f632dba",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-2/results.csv": {
+    "source_sha256": "8db57ac8126c82968133a3de20419d93bdacc9823400ad28d6ddfb3348539054",
+    "saved_utf8_lf_sha256": "8db57ac8126c82968133a3de20419d93bdacc9823400ad28d6ddfb3348539054",
+    "source_encoding": "utf-8-sig"
+  },
+  "fork-2/run.log": {
+    "source_sha256": "117f9dbc70a9a6e6826041db2e31d8bb6b6b1824ca7deea89204b17291f5c99b",
+    "saved_utf8_lf_sha256": "eb56526d0ff983fba6750a6c605b9a7050b3d0f429b3704c49d3e88bb43d6b3f",
+    "source_encoding": "utf-16"
+  },
+  "metadata.json": {
+    "source_sha256": "e53595cd809aa162416df860ace194785cf7d4feaa3ed19b2083879c603d5e52",
+    "saved_utf8_lf_sha256": "51f5af7cf1426bc4e1033c45d89b9314e51509e4711436ba3c88e28d911bf5ad",
+    "source_encoding": "utf-8-sig"
+  },
+  "native-large-comparison.svg": {
+    "source_sha256": "f40eca2f5adc8c00261f474b20b7313e0a4dc0ed3234ef8f9a06e6af2dc60a2b",
+    "saved_utf8_lf_sha256": "626f99a53de06e996d0b495c494d3a46d987305b31f2923076dded3f8df95740",
+    "source_encoding": "utf-8-sig"
+  },
+  "oracle-tests.log": {
+    "source_sha256": "497adc61d15e9bbe7ea99e22e80283d11484ee99789f5285dfaa7aba49d6920b",
+    "saved_utf8_lf_sha256": "41cee9cc70f8e2902ff4277cf9577cbdf05c130cf7652490990fd48efa2e4859",
+    "source_encoding": "utf-16"
+  },
+  "REPORT.md": {
+    "source_sha256": "c2c3417a946506c0e80fa7079666a6088524ebf7b48ed68fe848c7a052b556a2",
+    "saved_utf8_lf_sha256": "ced49fb555d832e61ac1e17e3a3396c9739b8082295acbda47e21f0908c46f08",
+    "source_encoding": "utf-8-sig"
+  },
+  "summary.csv": {
+    "source_sha256": "eb0170aedd522f73f4bfc8664e12400bc62eb2fdf3459313d7c7f670a814ad05",
+    "saved_utf8_lf_sha256": "49675df2c3857aa945fc75664d13e96e536950a1d3ce86dfc7799732f314308c",
+    "source_encoding": "utf-8-sig"
+  },
+  "tests.log": {
+    "source_sha256": "32265a4d99bf2e23b28e2cd3f03b22c7a5c668d2300cc4045ee0a061da0f069b",
+    "saved_utf8_lf_sha256": "91cf2442c84393f9a96032cf58246490aaff7526907e522a7eac3869e0b1235b",
+    "source_encoding": "utf-16"
+  },
+  "verification.json": {
+    "source_sha256": "4a45fbfe109df38e9487c76e85c5aa336f40fff2fd3dde974210f9809b1445c2",
+    "saved_utf8_lf_sha256": "85b283224f8b466bab2bbb776a893e397b495e3232a2691d9e2d744e13db0aed",
+    "source_encoding": "utf-8-sig"
+  },
+  "native-input.csv": {
+    "source_sha256": "7c7013690ab1e8763bc96ee4b2684596e480988a38762951162489d08aa3aa57",
+    "saved_utf8_lf_sha256": "7c7013690ab1e8763bc96ee4b2684596e480988a38762951162489d08aa3aa57",
+    "source_encoding": "utf-8-sig"
+  },
+  "check_native_large_analysis.py": {
+    "source_sha256": "de25d2cb80a27481a8e91ed4e40cba4150ed76ab2b597354fcd08da865ea0a4e",
+    "saved_utf8_lf_sha256": "de25d2cb80a27481a8e91ed4e40cba4150ed76ab2b597354fcd08da865ea0a4e",
+    "source_encoding": "utf-8-sig"
+  },
+  "plot_native_large.py": {
+    "source_sha256": "916e5ecbbe32047af05936618a9604bb029042afafe80e5f296c12e64f6e6b3a",
+    "saved_utf8_lf_sha256": "916e5ecbbe32047af05936618a9604bb029042afafe80e5f296c12e64f6e6b3a",
+    "source_encoding": "utf-8-sig"
+  },
+  "check_native_runner.ps1": {
+    "source_sha256": "8c236985cd98f91f0f60f20b3e9b0cd969741dd30932c4f0c303ccd5b39290a2",
+    "saved_utf8_lf_sha256": "8c236985cd98f91f0f60f20b3e9b0cd969741dd30932c4f0c303ccd5b39290a2",
+    "source_encoding": "utf-8-sig"
+  },
+  "native-large-format.log": {
+    "source_sha256": "2d3974919f703cf9946bfc4bfc034db7775e1817a54d7010bf96c1d03ebe1b72",
+    "saved_utf8_lf_sha256": "022c0aa8be46925836a0e3049ea85536b94d45738bd85394dd43951d3c1d0cf5",
+    "source_encoding": "utf-8-sig"
+  },
+  "native-large-red.log": {
+    "source_sha256": "a12f8eb3ae5fddd52a2aee20be716681f5065895eff741c71088429f02270bd1",
+    "saved_utf8_lf_sha256": "9ee3a0378d1e18eb0f12cb2d647b8383cfeb1e2eb2dc4601847095f23c348cd0",
+    "source_encoding": "utf-8-sig"
+  },
+  "module-oracle-red.log": {
+    "source_sha256": "934bbd1a34160f6d0de98e14f3d27db897ca8b3f81047a0a479892cefae2778a",
+    "saved_utf8_lf_sha256": "3200bb77083bbea085692a1f51499efe9eb44ab345f68ae6db23bd8b05af2176",
+    "source_encoding": "utf-8-sig"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "runs": [
+    {
+      "case": "9",
+      "strategy": "chunks",
+      "workflow": "09-texera.json",
+      "fields": [
+        "payload"
+      ],
+      "pair": 0,
+      "warmup": false
+    },
+    {
+      "case": "10",
+      "strategy": "fixed count",
+      "workflow": "10-texera.json",
+      "fields": [
+        "payload"
+      ],
+      "pair": 0,
+      "warmup": false
+    },
+    {
+      "case": "11",
+      "strategy": "groups",
+      "workflow": "11-texera.json",
+      "fields": [
+        "payload"
+      ],
+      "pair": 0,
+      "warmup": false
+    },
+    {
+      "case": "12",
+      "strategy": "row variables",
+      "workflow": "12-texera.json",
+      "fields": [
+        "payload"
+      ],
+      "pair": 0,
+      "warmup": false
+    },
+    {
+      "case": "13",
+      "strategy": "condition",
+      "workflow": "13-texera.json",
+      "fields": [
+        "payload"
+      ],
+      "pair": 0,
+      "warmup": false
+    },
+    {
+      "case": "14",
+      "strategy": "interval",
+      "workflow": "14-texera.json",
+      "fields": [
+        "payload"
+      ],
+      "pair": 0,
+      "warmup": false
+    },
+    {
+      "case": "15",
+      "strategy": "column collection",
+      "workflow": "15-texera.json",
+      "fields": [
+        "payload"
+      ],
+      "pair": 0,
+      "warmup": false
+    },
+    {
+      "case": "16",
+      "strategy": "variable collection",
+      "workflow": "16-texera.json",
+      "fields": [
+        "payload"
+      ],
+      "pair": 0,
+      "warmup": false
+    }
+  ],
+  "input_hashes": {
+    "09-input.csv": "9de7e9dc9e51fbd0ebd0c81963ca0b9e1d09ab7a34d9e862303dee47cffbaa67",
+    "10-input.csv": "e52f81695a31640d531ebea136828f4eedf2fef355e4f5a83b3e86c2e2f409a0",
+    "11-input.csv": "64a89502c54805608cbc785174b474597d749933c322d2b1d4c0467264472043",
+    "12-input.csv": "d3318f2d17c73b1dfb5329cf29151f23665b9b3dbb12493d25381f2614e4b579",
+    "13-input.csv": "e52f81695a31640d531ebea136828f4eedf2fef355e4f5a83b3e86c2e2f409a0",
+    "14-input.csv": "1568e1f174b8a875bf688f5559177c0b6082a8d71ac785de76abeece8a293acb",
+    "15-input.csv": "e52f81695a31640d531ebea136828f4eedf2fef355e4f5a83b3e86c2e2f409a0",
+    "16-input.csv": "e52f81695a31640d531ebea136828f4eedf2fef355e4f5a83b3e86c2e2f409a0",
+    "12-points.csv": "87b32545de4a2923ac1f46fd8252afecfba769b39438e9a282ea45649f785cd7",
+    "09-texera.json": "8c0569516eaf25bb3ea1934ae9444e451e5f0e0738aa3526866010b0d565781d",
+    "10-texera.json": "ae0ff9dab79b425ffa58a13aaea70f16b76686512d34d49830f078658aeb0bf8",
+    "11-texera.json": "0412b2ac8670ad00db65b220c3c445b00a7009c32e49ba143c8c297a15758db8",
+    "12-texera.json": "698854f793ff6b02f12e6b4c6aa143e84d2965431d383d4ae776b6d4f60013b7",
+    "13-texera.json": "2e15c0ad2edc44936012db8d17155478a6eee27f4b6efd8a9776940ba9cb1558",
+    "14-texera.json": "a5010d73ab9e359b57e69f494d1cfbecded1b67bfa2740798fa33d4f27c66a2d",
+    "15-texera.json": "9cc1514f3ad093fb58fd96dfe11880654c41de7de6c023368ae800ab533b65ed",
+    "16-texera.json": "d7838ef4ecef2185832a03df86f2a23d8b937e350a1b69cb3ba789400aa5ee0c",
+    "09-results.csv": "e5a8e469630139f6adf551ad6a2b3fb6120762340c28a90f9129db39455a90d0",
+    "10-results.csv": "6ced9abcebd919fc2a8d293dc3f4d218b7d89468faa2d4ddde907df6dad1f8ae",
+    "11-results.csv": "1c1d6a14608859713e905cbe66ccf33620fd4d3297a803fbca59dfa5e18ae5a8",
+    "12-results.csv": "d2f36c9f9b68fd709d9bffee2eeb738bdf9653b7342f8feb1ab55e3882deac86",
+    "13-results.csv": "6ced9abcebd919fc2a8d293dc3f4d218b7d89468faa2d4ddde907df6dad1f8ae",
+    "14-results.csv": "f20eb34c2f763d176ddcf7bc9d9dab0e18146cdb950f57f407dc7b2d79b993f7",
+    "15-results.csv": "c721b974801ebdfec56ed8cc8bca19f9bded5c9f88b77da3396e3603ff8ea364",
+    "16-results.csv": "b8578c3ee5ee1a080a4c3d17ff3beef51c78108fb6cd7c52f7261f1807e8e5fc"
+  },
+  "captured_input_hashes": {
+    "09-input.csv": "9de7e9dc9e51fbd0ebd0c81963ca0b9e1d09ab7a34d9e862303dee47cffbaa67",
+    "10-input.csv": "e52f81695a31640d531ebea136828f4eedf2fef355e4f5a83b3e86c2e2f409a0",
+    "11-input.csv": "64a89502c54805608cbc785174b474597d749933c322d2b1d4c0467264472043",
+    "12-input.csv": "d3318f2d17c73b1dfb5329cf29151f23665b9b3dbb12493d25381f2614e4b579",
+    "13-input.csv": "e52f81695a31640d531ebea136828f4eedf2fef355e4f5a83b3e86c2e2f409a0",
+    "14-input.csv": "1568e1f174b8a875bf688f5559177c0b6082a8d71ac785de76abeece8a293acb",
+    "15-input.csv": "e52f81695a31640d531ebea136828f4eedf2fef355e4f5a83b3e86c2e2f409a0",
+    "16-input.csv": "e52f81695a31640d531ebea136828f4eedf2fef355e4f5a83b3e86c2e2f409a0",
+    "12-points.csv": "87b32545de4a2923ac1f46fd8252afecfba769b39438e9a282ea45649f785cd7",
+    "09-texera.json": "db242c4cb2e26e26bf6be5077318c74b8ae8de2990d38927d1713c7498877f78",
+    "10-texera.json": "0101cd16588801f08675144e124c0d99601298eb6f679ec2e32f4ed051205646",
+    "11-texera.json": "2a6b805386d674db2b1a1a04f4118ee68ca398e3094ff767dbe12e6aa8d230bf",
+    "12-texera.json": "df7b1d56b972215b578e9e011ece28cc69a1bedebaf9197c0d99c5f040608359",
+    "13-texera.json": "24ec84f1be33d0f3e0a659da21084b84ab5da1b99d416fa9107bfc0964e415e5",
+    "14-texera.json": "d4e98d0223758ca2b05739305a42ca7b8c07afae967bf70e3e8ec871a381e1db",
+    "15-texera.json": "82b3b6f46c1b92edfc0619bfe0748d6a204483d8ed6ab4594709cddc88d41703",
+    "16-texera.json": "66c081548e2eb163fbe794726d81b2233473797232c208500a538fd92e10629e",
+    "09-results.csv": "e5a8e469630139f6adf551ad6a2b3fb6120762340c28a90f9129db39455a90d0",
+    "10-results.csv": "6ced9abcebd919fc2a8d293dc3f4d218b7d89468faa2d4ddde907df6dad1f8ae",
+    "11-results.csv": "1c1d6a14608859713e905cbe66ccf33620fd4d3297a803fbca59dfa5e18ae5a8",
+    "12-results.csv": "d2f36c9f9b68fd709d9bffee2eeb738bdf9653b7342f8feb1ab55e3882deac86",
+    "13-results.csv": "6ced9abcebd919fc2a8d293dc3f4d218b7d89468faa2d4ddde907df6dad1f8ae",
+    "14-results.csv": "f20eb34c2f763d176ddcf7bc9d9dab0e18146cdb950f57f407dc7b2d79b993f7",
+    "15-results.csv": "c721b974801ebdfec56ed8cc8bca19f9bded5c9f88b77da3396e3603ff8ea364",
+    "16-results.csv": "b8578c3ee5ee1a080a4c3d17ff3beef51c78108fb6cd7c52f7261f1807e8e5fc"
+  }
+}

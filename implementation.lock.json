@@ -1,0 +1,14 @@
+{
+  "source_repository": "https://github.com/aglinxinyuan/texera.git",
+  "runtime": {
+    "base": "36d1d6f28a66dff65d496980ec4001ef1c01698e",
+    "original_revision": "a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6",
+    "tree": "7cb877ac9ebdc8d829ba59b1fb1e20a870e4a344",
+    "patch": "patches/runtime.patch",
+    "patch_sha256": "599009c33db6364a9f1a126224fe0f8996dc081f55b7c0b28aa628babcb13eb8"
+  },
+  "planning": {
+    "revision": "ddc04792511838d06f982ced01641e7d06ce6524",
+    "tree": "a97fec19c596eef1f1a87d4412ba95245f17732d"
+  }
+}

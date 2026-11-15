@@ -1,0 +1,41 @@
+{
+  "repetitions": 100,
+  "os": "Microsoft Windows NT 10.0.26300.0",
+  "pruning": true,
+  "forks": 3,
+  "cpu": "AMD Ryzen 9 9950X 16-Core Processor            ",
+  "utc": "2026-11-06T03:15:04.8325826Z",
+  "cases": [
+    "inside-1-outside-1",
+    "inside-2-outside-2",
+    "inside-3-outside-3",
+    "inside-4-outside-4",
+    "inside-1-outside-4",
+    "inside-4-outside-1"
+  ],
+  "revision": "ddc04792511838d06f982ced01641e7d06ce6524",
+  "suite": "native-large",
+  "source_sha256": {
+    "experiment/xy-planning/workflows/demo2_per_file_counts.json": "3E748775F811A93E5AF9A2F84D8177AFE30D9DB7892765378A43590D141A44E0",
+    "experiment/xy-planning/workflows/demo3_branching_file_metrics.json": "5D05A5B0B10B57D0AF27F39CE2A15DE4A54FE6641BB91D0895BE22F39BF41A2E",
+    "amber/src/test/scala/org/apache/texera/amber/engine/architecture/scheduling/CompiledXYBenchmark.scala": "A3D9936CDAA10CA4AE39CB76A123AE180253E170119DD0830209249B15F3F49C",
+    "experiment/xy-planning/module-oracle.py": "99088131C4EFB6B285FBC14B8F73BB582B532AF50366DD0028649BB5F6516910",
+    "experiment/xy-planning/workflows/provenance.json": "5161615D1325B2F61D2548DEA964198372E4F068A4704688D62E845B23C1A7DE",
+    "amber/src/test/scala/org/apache/texera/amber/engine/architecture/scheduling/CompiledXYPlanningSpec.scala": "452F02C89C18A7515ABB08486743F69E50F2F130E2D04448DFE35F75C61DBA17",
+    "experiment/xy-planning/oracle.py": "49679F5654635C82710BB5C7774F6893FE4A14B3E464FC85029D198580B81AEE",
+    "experiment/xy-planning/workflows/demo1_kmeans_choose_k.json": "E46B9202A763946D060CAF85AFFBD955D63A1BA1C2DE401DD17E366FC6D3E09F",
+    "amber/src/test/scala/org/apache/texera/amber/engine/architecture/scheduling/XYPlanningComparison.scala": "FFE2CB87070F59DBDF8C194B16503CB84954C0B69AAA9351B5A7A246CF857930",
+    "amber/src/test/scala/org/apache/texera/amber/engine/architecture/scheduling/NativeBranchXYSpec.scala": "C652D2D72872B39724F3714264C569321FD2BC6EA302079D4052DD9132D490FC",
+    "experiment/xy-planning/native-input.csv": "7C7013690AB1E8763BC96EE4B2684596E480988A38762951162489D08AA3AA57",
+    "amber/src/main/scala/org/apache/texera/amber/engine/architecture/scheduling/CostBasedScheduleGenerator.scala": "1BE9B49ED4263F09E4E89786386C06FAE9AC0319B55DF37050A435C28AA3393E",
+    "amber/src/test/scala/org/apache/texera/amber/engine/architecture/scheduling/CompiledXYFixtures.scala": "553AE5F788CA6F172AA9C08CE3D91145D2CFD554D68E4809563A7DC08380C164",
+    "experiment/xy-planning/test_module_oracle.py": "3DEDBE3C1BF515B8039C16A81FE93D00133BB92673D86FF02DC94F2298B4C4E7",
+    "amber/src/test/scala/org/apache/texera/amber/engine/architecture/scheduling/NativeXYPlanningSpec.scala": "69DA093469332E21677B9E7C598536D767338DDAC07985CFCF858337A2A58F1A",
+    "experiment/xy-planning/run-compiled.ps1": "168E768215C88AD5981E7C7EEB708B6BDFE21C07EC4C197ACCF71167B8485E61",
+    "experiment/xy-planning/analyze-compiled.py": "C605432C69A995E847EA4B190EBB74A18A3542196291D15217FF626CCD1AA6D7",
+    "amber/src/test/scala/org/apache/texera/amber/engine/architecture/scheduling/NativeXYFixtures.scala": "8E090F0D91D2D91CDCBA52E9B2418A47CF0AC28D79263BA6323A33D2B0DDD460",
+    "amber/src/test/scala/org/apache/texera/amber/engine/architecture/scheduling/NativeBranchXYFixtures.scala": "BD4D1BB68574B6CD513ECE2770195A22A001EED006BF8B0A8C23A878ACD00C46"
+  },
+  "warmups": 20,
+  "java_home": "${JAVA_HOME}"
+}

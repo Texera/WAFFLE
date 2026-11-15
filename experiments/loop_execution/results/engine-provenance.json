@@ -1,0 +1,51 @@
+{
+  "revision": "a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6",
+  "command": [
+    "${JAVA_HOME}/bin/java.exe",
+    "--add-opens=java.base/java.lang=ALL-UNNAMED",
+    "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+    "--add-opens=java.base/java.util=ALL-UNNAMED",
+    "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED",
+    "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+    "--add-opens=java.base/java.nio=ALL-UNNAMED",
+    "--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED",
+    "-Dsbt.supershell=false",
+    "-jar",
+    "${SBT_LAUNCH}",
+    "set DAO / jooqGenerate := Seq.empty",
+    "set WorkflowExecutionService / Test / unmanagedSources += file(\"${PAPER_SOURCE}/artifacts/loop_execution/NativeExecutionSpec.scala\")",
+    "WorkflowExecutionService/testOnly *NativeExecutionSpec -- -oD"
+  ],
+  "metadata_recorded_utc": "2026-11-15T05:51:18.457665+00:00",
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "libraries": {
+    "numpy": "2.1.0",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.16.3",
+    "joblib": "1.5.2",
+    "threadpoolctl": "3.6.0"
+  },
+  "source_sha256": {
+    "experiment.py": "e131002eda1f0d5980a8ac23f4f20d150a58af7d18c2496ab58e2369f06af681",
+    "NativeExecutionSpec.scala": "9c15b3a0fa203672008ef2a3d7b5a9cd570b71be3c458e4c6e30237c52f1d9ef",
+    "run_native.py": "894f889fc7753c5effde97c8ab0c35e2e2622ce218ce2e24dc8c53dc2da04942",
+    "prepare_schema.py": "3f84e0222885a5ecef3a87ef41a9aefe95b121fa301e6c3c4dbb093a40bc6235",
+    "GenerateSchema.java": "9063099d91a6e3823846231c027085797b702ee9d831e2e6b9a7d2ee4cd71ea4"
+  },
+  "runtime": {
+    "java": "JBR17.0.14",
+    "max_concurrent_regions": 1,
+    "workers_per_operator": 1,
+    "blas_threads": 1,
+    "execution_mode": "MATERIALIZED",
+    "jvm": "one JVM for the full batch",
+    "caches": "OS and JVM caches not flushed; fresh Python workers and execution IDs",
+    "timing": "coordinator construction through result retrieval, including region planning; workflow compilation and fixture setup/cleanup excluded",
+    "warmup": "one unmeasured pair per case",
+    "order": "alternating pairs, fixed case order; descriptive single-machine measurements",
+    "coverage": "JaCoCo 3.5.0 instruments Amber JVM classes in Test/fullClasspath; probe overhead included, generation outside timer; not separately quantified",
+    "installed_ram_bytes": 206158430208
+  }
+}

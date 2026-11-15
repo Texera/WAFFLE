@@ -1,0 +1,2236 @@
+{
+  "runs": [
+    {
+      "case": "n200-i1",
+      "strategy": "copies",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n200-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i1",
+      "strategy": "loop",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n200-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i1",
+      "strategy": "loop",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n200-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i1",
+      "strategy": "copies",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n200-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i1",
+      "strategy": "copies",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n200-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i1",
+      "strategy": "loop",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n200-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i1",
+      "strategy": "loop",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n200-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i1",
+      "strategy": "copies",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n200-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i1",
+      "strategy": "copies",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n200-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i1",
+      "strategy": "loop",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n200-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i1",
+      "strategy": "loop",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n200-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i1",
+      "strategy": "copies",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n200-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "copies",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n200-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "loop",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n200-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "loop",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n200-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "copies",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n200-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "copies",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n200-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "loop",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n200-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "loop",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n200-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "copies",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n200-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "copies",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n200-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "loop",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n200-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "loop",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n200-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i4",
+      "strategy": "copies",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n200-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "copies",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n200-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "loop",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n200-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "loop",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n200-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "copies",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n200-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "copies",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n200-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "loop",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n200-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "loop",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n200-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "copies",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n200-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "copies",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n200-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "loop",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n200-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "loop",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n200-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n200-i8",
+      "strategy": "copies",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n200-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -3400.856658669596
+        },
+        {
+          "K": 3,
+          "score": -1834.0422180320127
+        },
+        {
+          "K": 4,
+          "score": -230.23441434127406
+        },
+        {
+          "K": 5,
+          "score": -197.3208844607013
+        },
+        {
+          "K": 6,
+          "score": -173.94512576550892
+        },
+        {
+          "K": 7,
+          "score": -153.45100607030793
+        },
+        {
+          "K": 8,
+          "score": -135.41219508568727
+        },
+        {
+          "K": 9,
+          "score": -114.69466449058527
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "copies",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n2000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "loop",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n2000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "loop",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n2000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "copies",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n2000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "copies",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n2000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "loop",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n2000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "loop",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n2000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "copies",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n2000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "copies",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n2000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "loop",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n2000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "loop",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n2000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i1",
+      "strategy": "copies",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n2000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "copies",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n2000-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "loop",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n2000-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "loop",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n2000-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "copies",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n2000-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "copies",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n2000-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "loop",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n2000-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "loop",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n2000-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "copies",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n2000-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "copies",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n2000-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "loop",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n2000-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "loop",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n2000-i4-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i4",
+      "strategy": "copies",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n2000-i4-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "copies",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n2000-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "loop",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n2000-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "loop",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n2000-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "copies",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n2000-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "copies",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n2000-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "loop",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n2000-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "loop",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n2000-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "copies",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n2000-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "copies",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n2000-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "loop",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n2000-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "loop",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n2000-i8-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    },
+    {
+      "case": "n2000-i8",
+      "strategy": "copies",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n2000-i8-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -34663.44315603928
+        },
+        {
+          "K": 3,
+          "score": -18564.037284574137
+        },
+        {
+          "K": 4,
+          "score": -2623.8072432408203
+        },
+        {
+          "K": 5,
+          "score": -2386.809846116814
+        },
+        {
+          "K": 6,
+          "score": -2160.2211632282606
+        },
+        {
+          "K": 7,
+          "score": -1946.4881939148177
+        },
+        {
+          "K": 8,
+          "score": -1739.3679335734128
+        },
+        {
+          "K": 9,
+          "score": -1571.2237170559117
+        }
+      ]
+    }
+  ],
+  "input_hashes": {
+    "n200-i1-copies.json": "c16354ba0f27f43885abe8ec881b89098f2a6ef4831623e81617c31eeda5f1e6",
+    "n200-i1-loop.json": "9ebc89950eafb1996e505834b0939e2a2577e61d3b12395ba0da1650e4a1ec6f",
+    "n200-i4-copies.json": "6478d71d32bf125f8e10e0e86d50aa4164d305c67f0e40a022bc849d5ff5bd69",
+    "n200-i4-loop.json": "a853fb1a3f17c9d6fd700554ed58ee01d53057653c503cfe0590eca9502012c9",
+    "n200-i8-copies.json": "ffde625a92ce195c1d7b8e97b20a099979363086cca975de991c3f4bda77060a",
+    "n200-i8-loop.json": "d6805f769f8fb117bb6459d4b179ed1e3f626d31347f7e6f4cfa939f3f42f3cf",
+    "n2000-i1-copies.json": "3d70cc579a50e2d2dfd7f602a53d42754ea1a7ab41e7df57ac5447afe0237b09",
+    "n2000-i1-loop.json": "d9c261e1e0e4c318275c00ed12d4d510c86bf7858bca249f01417365101b3951",
+    "n2000-i4-copies.json": "da8df3969f838f1741c9373bd859fd8eaaf7adc6ccf93bd6f7af735e09f953a9",
+    "n2000-i4-loop.json": "16248b751a4d7ad26e4024ca6170312c62a6c4159cd12c4934f0441d1698bb38",
+    "n2000-i8-copies.json": "9807ce0d0ecf833b370d93c69540f733b01ccf73519763fc0ee5cbcc61c50b2c",
+    "n2000-i8-loop.json": "5dfe96a6edac440667cbe009a5f8070937dd6dbbefb5b19be427e697f2f96818",
+    "points-200.csv": "a29425bd69aaa2a0847930718c033c3f429c16c0f6e22d536b202bb2fb8c6464",
+    "points-2000.csv": "3407e822a210dc66eef9f7c6d2b3d86d984fcff244115d685bccf9c1478014f5"
+  },
+  "seed": 20261114,
+  "counts": [
+    200,
+    2000
+  ],
+  "iterations": [
+    1,
+    4,
+    8
+  ],
+  "pairs": 5,
+  "max_concurrent_regions": 1,
+  "workers_per_operator": 1,
+  "execution_mode": "MATERIALIZED",
+  "timing": "native coordinator and workers through result retrieval; compilation excluded",
+  "baseline": "one explicit body copy per K; branches scheduled sequentially; K order may differ",
+  "captured_input_hashes": {
+    "n200-i1-copies.json": "d29b33232b90ad27a81216b3b54f3be79acdeae8086fa9496314bb5e35628305",
+    "n200-i1-loop.json": "fc80d808af62ce9ca1f30e12f0a10524c3af19fab69a1cdbd549ce807c0af9ec",
+    "n200-i4-copies.json": "15aa3fa71533da1da53443249c6a32c3c91cd485b4b12ba107408af1515ecaeb",
+    "n200-i4-loop.json": "9822576b38b0cce7cd4e442f32ad3fd7ea2b32689452ee8f3e87e59f7d9d3f7f",
+    "n200-i8-copies.json": "be07469a140f896764d633666f8f8d750b4290ea2ed28c433f134e4f705b1236",
+    "n200-i8-loop.json": "e118cbebffdd6cdfb035a53d0b1ebffdcfb82da7fae7930086e25ca8f99353b7",
+    "n2000-i1-copies.json": "336798042ee03a82695b475648b5b17da03067375b26cfbdf783bd2934696ce4",
+    "n2000-i1-loop.json": "3df60aedd395375c9a0f2c2e280cc9da58b7e4d275e945f035dfc00fb3430288",
+    "n2000-i4-copies.json": "a405bdbc82b5cb0582b9f0f9f48cbe2d3d15594d3f7c99308ed14e1cdd89b786",
+    "n2000-i4-loop.json": "583b3360b55ab9f173af836dc4d0c2a767152f61ca08dce18e1ebdf45f10fb02",
+    "n2000-i8-copies.json": "483f4a046820d41dc983175ca82af3f80592b77490784a4b93030f5633f7282b",
+    "n2000-i8-loop.json": "7cb6f6d99be943551c2eb432d9c6d860a72c555f2f4baa6cadd861852f94e711",
+    "points-200.csv": "a29425bd69aaa2a0847930718c033c3f429c16c0f6e22d536b202bb2fb8c6464",
+    "points-2000.csv": "3407e822a210dc66eef9f7c6d2b3d86d984fcff244115d685bccf9c1478014f5"
+  }
+}

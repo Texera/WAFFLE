@@ -1,0 +1,77 @@
+{
+  "criterion": "All eight consecutive basic-loop demonstrations 09 through 16, selected before execution/translation",
+  "cases": [
+    {
+      "id": "*yzuCrGQLdRvfX1dB",
+      "path": "/Users/knime/Examples/06_Control_Structures/04_Loops/09_Looping_over_Chunks_of_the_Data",
+      "itemVersionId": "4d166276-a76c-46a2-912b-1ef8582bfe27",
+      "author": "dietzc",
+      "lastUploadedOn": "2025-07-21T13:39:08+00:00",
+      "archive_sha256": "3d82f6cb6a9e37a8a4864720f511d55f033ebbbe434c7b6628fe83e1fe00e740"
+    },
+    {
+      "id": "*7TU_ObbI7cnIAMNr",
+      "path": "/Users/knime/Examples/06_Control_Structures/04_Loops/10_Looping_a_fixed_number",
+      "itemVersionId": "19fdaf87-0cc1-4d0c-a013-a0ddfdc42145",
+      "author": "dietzc",
+      "lastUploadedOn": "2019-06-26T01:27:07+00:00",
+      "archive_sha256": "6365b17b1fe8272b3b51c97cd28f5d1afe08130b06094455d1394c3bfa8b12fe"
+    },
+    {
+      "id": "*zmNqa_mISpp0uWQc",
+      "path": "/Users/knime/Examples/06_Control_Structures/04_Loops/11_Looping_over_Groups_of_the_Data",
+      "itemVersionId": "5e5733e2-2112-4461-8f2f-960f6823595d",
+      "author": "dietzc",
+      "lastUploadedOn": "2019-06-26T01:27:06+00:00",
+      "archive_sha256": "978ed3bb994bfa50fae7d88c0f847640f514a0af5c8bb9beb43dbd3b7f4c5944"
+    },
+    {
+      "id": "*g_W4wvGJ-PrikNkj",
+      "path": "/Users/knime/Examples/06_Control_Structures/04_Loops/12_Using_TableRows_as_FlowVariables_in_Loop",
+      "itemVersionId": "a3e332f5-347b-46e0-895c-e38f8a83e772",
+      "author": "dietzc",
+      "lastUploadedOn": "2025-07-21T14:09:37+00:00",
+      "archive_sha256": "fb0c853efc11aa7f3bdd739f2d63d7dcd417de011e07be01d7995838dba04a8a"
+    },
+    {
+      "id": "*xgqSRhbwkfl0fMGv",
+      "path": "/Users/knime/Examples/06_Control_Structures/04_Loops/13_Usage_of_Generic_Loop_Start",
+      "itemVersionId": "725b4bc3-1c04-43d6-8e1b-09cb9946d1a3",
+      "author": "dietzc",
+      "lastUploadedOn": "2019-06-26T01:27:11+00:00",
+      "archive_sha256": "9395eb5401e1dff02fe12c28a9552e369ac1ba5e6acce89a5e6e33857c09e7a0"
+    },
+    {
+      "id": "*Wt1d_D78DwK3VM1k",
+      "path": "/Users/knime/Examples/06_Control_Structures/04_Loops/14_Looping_over_defined_Intervals",
+      "itemVersionId": "851afd7b-ed5a-40da-8fb5-8c89a72557a0",
+      "author": "dietzc",
+      "lastUploadedOn": "2019-06-26T01:27:15+00:00",
+      "archive_sha256": "41f1c0cf08ce0483cabb9d60b68a9a50b91a3d9fc2389649cffb1da13565b5ee"
+    },
+    {
+      "id": "*VyZ6AOnhx-lJMo77",
+      "path": "/Users/knime/Examples/06_Control_Structures/04_Loops/15_Collecting_Columns_in_Loop",
+      "itemVersionId": "60cd74ea-0c5f-4674-a2ae-4a29526af304",
+      "author": "dietzc",
+      "lastUploadedOn": "2019-06-26T01:27:13+00:00",
+      "archive_sha256": "642fbe374c8e7c0a7a5306372d9295b36991b7adfa769e7e211985b5822f0584"
+    },
+    {
+      "id": "*8G8EEmKjpUERDdTE",
+      "path": "/Users/knime/Examples/06_Control_Structures/04_Loops/16_Collecting_Variables_in_Loop",
+      "itemVersionId": "a7ef8be2-a303-4238-8543-6d502d8ba985",
+      "author": "dietzc",
+      "lastUploadedOn": "2019-06-26T01:27:10+00:00",
+      "archive_sha256": "e3ec21c49123dd7a68467031b072a979db74cfbf1a6ecc0d4d25b465adca383c"
+    }
+  ],
+  "writer_template": {
+    "id": "*pP_AMFQIV6lO04tD",
+    "path": "/Users/knime/Examples/06_Control_Structures/04_Loops/05_Write_each_row_in_one_file",
+    "itemVersionId": "4a540fa3-d9f2-4238-8437-ad09b1ccf751",
+    "author": "iris.adae",
+    "lastUploadedOn": "2019-06-26T01:27:14+00:00",
+    "archive_sha256": "750a87dcda1978d2bcf58b2e3096e37aef7c6cd8a924a194bc8a3a58f833090f"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "revision": "ddc04792511838d06f982ced01641e7d06ce6524",
+  "utc": "2026-11-06T03:15:04.8325826Z",
+  "cpu": "AMD Ryzen 9 9950X 16-Core Processor            ",
+  "os": "Microsoft Windows NT 10.0.26300.0",
+  "forks": 3,
+  "warmups": 20,
+  "repetitions": 100,
+  "pruning": true,
+  "cases": [
+    "inside-1-outside-1",
+    "inside-2-outside-2",
+    "inside-3-outside-3",
+    "inside-4-outside-4",
+    "inside-1-outside-4",
+    "inside-4-outside-1"
+  ],
+  "raw_sha256": {
+    "fork-0/results.csv": "eb55d55894d422a2ba5edd0fd4be7b27f9cfc21ddec9330c409d582ec250fa7d",
+    "fork-1/results.csv": "920be93f37f3963c5c1bfcf1599bf1851390fd4b8a2601b590fd0461e9503e89",
+    "fork-2/results.csv": "8db57ac8126c82968133a3de20419d93bdacc9823400ad28d6ddfb3348539054"
+  },
+  "java": "JBR 17.0.14",
+  "retained_samples": 3600,
+  "cost_model": "sum of region maxima; original operators weight 1; Y macro weight 0",
+  "method": "pooled median of 300 total-planning times per graph/strategy; whiskers span three JVM medians"
+}

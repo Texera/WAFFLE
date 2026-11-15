@@ -1,0 +1,247 @@
+{
+  "operators": [
+    {
+      "operatorType": "CSVFileScan",
+      "dummyPropertyList": [],
+      "fileName": "file:///${HOME}/IdeaProjects/texera-worktrees/codex/xy-planning-pilot/experiment/xy-planning/native-input.csv",
+      "fileEncoding": "UTF_8",
+      "hasHeader": true,
+      "operatorID": "csv",
+      "operatorVersion": "N/A",
+      "stateReferences": {}
+    },
+    {
+      "operatorType": "LoopStart",
+      "dummyPropertyList": [],
+      "initialization": "i = 0",
+      "output": "table[table['value'] >= i]",
+      "operatorID": "LS",
+      "operatorVersion": "N/A",
+      "stateReferences": {}
+    },
+    {
+      "operatorType": "LoopEnd",
+      "dummyPropertyList": [],
+      "update": "i += 1",
+      "condition": "i < 3",
+      "operatorID": "LE",
+      "operatorVersion": "N/A",
+      "stateReferences": {}
+    },
+    {
+      "operatorType": "Aggregate",
+      "dummyPropertyList": [],
+      "operatorID": "out-aggregate-1",
+      "operatorVersion": "N/A",
+      "stateReferences": {},
+      "aggregations": [
+        {
+          "aggFunction": "sum",
+          "attribute": "value",
+          "result attribute": "out_stat_1"
+        }
+      ],
+      "groupByKeys": [
+        "file"
+      ]
+    },
+    {
+      "operatorType": "HashJoin",
+      "dummyPropertyList": [],
+      "buildAttributeName": "file",
+      "probeAttributeName": "file",
+      "joinType": "inner",
+      "operatorID": "out-join-1",
+      "operatorVersion": "N/A",
+      "stateReferences": {}
+    },
+    {
+      "operatorType": "Aggregate",
+      "dummyPropertyList": [],
+      "operatorID": "in-aggregate-1",
+      "operatorVersion": "N/A",
+      "stateReferences": {},
+      "aggregations": [
+        {
+          "aggFunction": "sum",
+          "attribute": "value",
+          "result attribute": "in_stat_1"
+        }
+      ],
+      "groupByKeys": [
+        "file"
+      ]
+    },
+    {
+      "operatorType": "HashJoin",
+      "dummyPropertyList": [],
+      "buildAttributeName": "file",
+      "probeAttributeName": "file",
+      "joinType": "inner",
+      "operatorID": "in-join-1",
+      "operatorVersion": "N/A",
+      "stateReferences": {}
+    },
+    {
+      "operatorType": "Sort",
+      "dummyPropertyList": [],
+      "attributes": [
+        {
+          "attribute": "file",
+          "sortPreference": "ASC"
+        }
+      ],
+      "operatorID": "sort",
+      "operatorVersion": "N/A",
+      "stateReferences": {}
+    }
+  ],
+  "links": [
+    {
+      "fromOpId": {
+        "id": "csv"
+      },
+      "fromPortId": {
+        "id": 0,
+        "internal": false
+      },
+      "toOpId": {
+        "id": "out-aggregate-1"
+      },
+      "toPortId": {
+        "id": 0,
+        "internal": false
+      }
+    },
+    {
+      "fromOpId": {
+        "id": "out-aggregate-1"
+      },
+      "fromPortId": {
+        "id": 0,
+        "internal": false
+      },
+      "toOpId": {
+        "id": "out-join-1"
+      },
+      "toPortId": {
+        "id": 0,
+        "internal": false
+      }
+    },
+    {
+      "fromOpId": {
+        "id": "csv"
+      },
+      "fromPortId": {
+        "id": 0,
+        "internal": false
+      },
+      "toOpId": {
+        "id": "out-join-1"
+      },
+      "toPortId": {
+        "id": 1,
+        "internal": false
+      }
+    },
+    {
+      "fromOpId": {
+        "id": "out-join-1"
+      },
+      "fromPortId": {
+        "id": 0,
+        "internal": false
+      },
+      "toOpId": {
+        "id": "LS"
+      },
+      "toPortId": {
+        "id": 0,
+        "internal": false
+      }
+    },
+    {
+      "fromOpId": {
+        "id": "LS"
+      },
+      "fromPortId": {
+        "id": 0,
+        "internal": false
+      },
+      "toOpId": {
+        "id": "in-aggregate-1"
+      },
+      "toPortId": {
+        "id": 0,
+        "internal": false
+      }
+    },
+    {
+      "fromOpId": {
+        "id": "in-aggregate-1"
+      },
+      "fromPortId": {
+        "id": 0,
+        "internal": false
+      },
+      "toOpId": {
+        "id": "in-join-1"
+      },
+      "toPortId": {
+        "id": 0,
+        "internal": false
+      }
+    },
+    {
+      "fromOpId": {
+        "id": "LS"
+      },
+      "fromPortId": {
+        "id": 0,
+        "internal": false
+      },
+      "toOpId": {
+        "id": "in-join-1"
+      },
+      "toPortId": {
+        "id": 1,
+        "internal": false
+      }
+    },
+    {
+      "fromOpId": {
+        "id": "in-join-1"
+      },
+      "fromPortId": {
+        "id": 0,
+        "internal": false
+      },
+      "toOpId": {
+        "id": "LE"
+      },
+      "toPortId": {
+        "id": 0,
+        "internal": false
+      }
+    },
+    {
+      "fromOpId": {
+        "id": "LE"
+      },
+      "fromPortId": {
+        "id": 0,
+        "internal": false
+      },
+      "toOpId": {
+        "id": "sort"
+      },
+      "toPortId": {
+        "id": 0,
+        "internal": false
+      }
+    }
+  ],
+  "opsToViewResult": [],
+  "opsToReuseResult": []
+}

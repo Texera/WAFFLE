@@ -1,0 +1,22 @@
+{
+  "knime_bundles": [
+    "org.knime.base,5.5.3.v202601141520,plugins/org.knime.base_5.5.3.v202601141520/,4,false",
+    "org.knime.core,5.5.3.v202601141525,plugins/org.knime.core_5.5.3.v202601141525/,4,false",
+    "org.knime.datageneration,5.4.0.v202407231409,plugins/org.knime.datageneration_5.4.0.v202407231409.jar,4,false",
+    "org.knime.product,5.5.3.v202601141523,plugins/org.knime.product_5.5.3.v202601141523/,4,false"
+  ],
+  "encoding": "UTF-8 forced for CSV export",
+  "originals": "Official examples 09 through 16; source hashes in selection.json",
+  "output_rule": "Scalar output multisets; retain duplicates; exact strings; abs/rel numeric tolerance 1e-9; NaN tagged distinct from null; generated row IDs excluded except Value Counter categories; display-only histogram/images excluded",
+  "adaptations": "Six long examples shortened to five iterations; chunks retain four, groups retain thirteen; same inputs and bounds in both systems; column collection uses a post-loop pivot",
+  "source_sha256": {
+    "CaseExecutionSpec.scala": "a1452e07dd80a50af9d4e015c2011397579165663e0e13f41f744fb1a93d2581",
+    "check.py": "d3822afe331229630d8543e190041311a21494d8a30e523ed50203f6022203c6",
+    "download.py": "4768f30fe0cc6d327ae90a566a71f9277ce22f62c44cf2be2827691c093c6f49",
+    "prepare_knime.py": "5c58332737c852d73644390c46bc38194d49fddb11c84ef2888e39d3d37bda9a",
+    "run_knime.py": "48f371736a136a44f75dabaa2f6d1f146ca8560cdcca2d5c120f9d6f0d1bbd56",
+    "sources.json": "65c1b541cb4539f173af450e40a3198327593fe8c4ce9513d193c8de063f9f2a",
+    "test_check.py": "76d3c45e496cb7b37465c03fc60b0b3c58c7fc1049e953893c985fd041d984b4",
+    "translate.py": "e45ad2b232df6084f8f5147844405fdfde61dfcf5302d81e9e689fd11ff91106"
+  }
+}

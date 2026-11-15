@@ -1,0 +1,4 @@
+* -text whitespace=cr-at-eol
+/experiments/*/results/** -whitespace
+/experiments/xy_planning/raw/** -whitespace
+/patches/*.patch -whitespace

@@ -1,0 +1,62 @@
+{
+  "cases": [
+    {
+      "case": 9,
+      "status": "match",
+      "reason": "",
+      "rows": 4
+    },
+    {
+      "case": 10,
+      "status": "match",
+      "reason": "",
+      "rows": 5
+    },
+    {
+      "case": 11,
+      "status": "match",
+      "reason": "",
+      "rows": 26
+    },
+    {
+      "case": 12,
+      "status": "match",
+      "reason": "",
+      "rows": 20
+    },
+    {
+      "case": 13,
+      "status": "match",
+      "reason": "",
+      "rows": 5
+    },
+    {
+      "case": 14,
+      "status": "match",
+      "reason": "",
+      "rows": 175
+    },
+    {
+      "case": 15,
+      "status": "match",
+      "reason": "",
+      "rows": 1
+    },
+    {
+      "case": 16,
+      "status": "match",
+      "reason": "",
+      "rows": 5
+    }
+  ],
+  "tolerance": {
+    "relative": 1e-09,
+    "absolute": 1e-09
+  },
+  "row_order": "multiset",
+  "row_ids": "ignored except Value Counter category keys in case09",
+  "presentation": "case11 Histogram image cells, color metadata and interactive views excluded; all scalar result columns compared",
+  "undefined_statistics": "NaN is encoded as {\"__float__\":\"NaN\"}, distinct from missing/null",
+  "matched": 8,
+  "total": 8
+}

@@ -1,0 +1,19 @@
+{
+  "revision": "a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6",
+  "command": [
+    "${JAVA_HOME}/bin/java.exe",
+    "--add-opens=java.base/java.lang=ALL-UNNAMED",
+    "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+    "--add-opens=java.base/java.util=ALL-UNNAMED",
+    "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED",
+    "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+    "--add-opens=java.base/java.nio=ALL-UNNAMED",
+    "--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED",
+    "-Dsbt.supershell=false",
+    "-jar",
+    "${SBT_LAUNCH}",
+    "set DAO / jooqGenerate := Seq.empty",
+    "set WorkflowExecutionService / Test / unmanagedSources += file(\"${PAPER_SOURCE}/artifacts/case_study/CaseExecutionSpec.scala\")",
+    "WorkflowExecutionService/testOnly *CaseExecutionSpec -- -oD"
+  ]
+}

@@ -1,0 +1,570 @@
+[
+  {
+    "case": "inside-1-outside-1",
+    "assignments": 152,
+    "independent_oracle": {
+      "minimum_cost": 7.0,
+      "cuts": [
+        0,
+        2,
+        4,
+        5,
+        7,
+        9,
+        11,
+        12
+      ],
+      "method": "sealed-module exhaustive enumeration",
+      "inner": {
+        "minimum_cost": 3.0,
+        "cuts": [
+          1,
+          2,
+          4
+        ],
+        "assignments": 16,
+        "valid_assignments": 8
+      },
+      "outer": {
+        "minimum_cost": 4.0,
+        "cuts": [
+          0,
+          2,
+          3,
+          5,
+          6
+        ],
+        "assignments": 8,
+        "valid_assignments": 4
+      },
+      "whole": {
+        "minimum_cost": 7.0,
+        "cuts": [
+          0,
+          2,
+          4,
+          5,
+          7,
+          9,
+          11,
+          12
+        ],
+        "assignments": 128,
+        "valid_assignments": 32
+      },
+      "global_optional_edges": 7,
+      "assignments": 152
+    },
+    "minimum_cost": 7.0,
+    "verified_plans": 600,
+    "forks": [
+      {
+        "fork": 0,
+        "paired_y_over_x": 1.181267291750024,
+        "X_median_ms": 3.1398,
+        "Y_median_ms": 3.6029
+      },
+      {
+        "fork": 1,
+        "paired_y_over_x": 1.2197910538702996,
+        "X_median_ms": 2.8261000000000003,
+        "Y_median_ms": 3.3748
+      },
+      {
+        "fork": 2,
+        "paired_y_over_x": 1.186857499102132,
+        "X_median_ms": 3.189,
+        "Y_median_ms": 3.88755
+      }
+    ],
+    "y_phase_median_ms": {
+      "decomposition_ns": 0.14715,
+      "search_ns": 1.9317000000000002,
+      "composition_ns": 1.5309
+    },
+    "gc_affected_plans": 0
+  },
+  {
+    "case": "inside-1-outside-4",
+    "assignments": 4112,
+    "independent_oracle": {
+      "minimum_cost": 13.0,
+      "cuts": [
+        0,
+        2,
+        4,
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19,
+        20,
+        22,
+        23,
+        25,
+        26,
+        27
+      ],
+      "method": "sealed-module exhaustive enumeration",
+      "inner": {
+        "minimum_cost": 3.0,
+        "cuts": [
+          1,
+          2,
+          4
+        ],
+        "assignments": 16,
+        "valid_assignments": 8
+      },
+      "outer": {
+        "minimum_cost": 10.0,
+        "cuts": [
+          0,
+          2,
+          3,
+          5,
+          7,
+          9,
+          11,
+          13,
+          14,
+          16,
+          17,
+          19,
+          20,
+          21
+        ],
+        "assignments": 4096,
+        "valid_assignments": 256
+      },
+      "whole": null,
+      "global_optional_edges": 16,
+      "assignments": 4112
+    },
+    "minimum_cost": 13.0,
+    "verified_plans": 600,
+    "forks": [
+      {
+        "fork": 0,
+        "paired_y_over_x": 0.6046057776646568,
+        "X_median_ms": 54.4961,
+        "Y_median_ms": 33.005449999999996
+      },
+      {
+        "fork": 1,
+        "paired_y_over_x": 0.6080215816356449,
+        "X_median_ms": 35.3934,
+        "Y_median_ms": 21.45675
+      },
+      {
+        "fork": 2,
+        "paired_y_over_x": 0.6173693594198069,
+        "X_median_ms": 42.2218,
+        "Y_median_ms": 25.8429
+      }
+    ],
+    "y_phase_median_ms": {
+      "decomposition_ns": 0.36685,
+      "search_ns": 20.85015,
+      "composition_ns": 4.57805
+    },
+    "gc_affected_plans": 19
+  },
+  {
+    "case": "inside-2-outside-2",
+    "assignments": 8384,
+    "independent_oracle": {
+      "minimum_cost": 11.0,
+      "cuts": [
+        0,
+        2,
+        4,
+        5,
+        7,
+        9,
+        11,
+        12,
+        14,
+        16,
+        18,
+        20,
+        21,
+        22
+      ],
+      "method": "sealed-module exhaustive enumeration",
+      "inner": {
+        "minimum_cost": 5.0,
+        "cuts": [
+          1,
+          2,
+          4,
+          6,
+          8,
+          9
+        ],
+        "assignments": 128,
+        "valid_assignments": 32
+      },
+      "outer": {
+        "minimum_cost": 6.0,
+        "cuts": [
+          0,
+          2,
+          3,
+          5,
+          7,
+          9,
+          10,
+          11
+        ],
+        "assignments": 64,
+        "valid_assignments": 16
+      },
+      "whole": {
+        "minimum_cost": 11.0,
+        "cuts": [
+          0,
+          2,
+          4,
+          5,
+          7,
+          9,
+          11,
+          12,
+          14,
+          16,
+          18,
+          20,
+          21,
+          22
+        ],
+        "assignments": 8192,
+        "valid_assignments": 512
+      },
+      "global_optional_edges": 13,
+      "assignments": 8384
+    },
+    "minimum_cost": 11.0,
+    "verified_plans": 600,
+    "forks": [
+      {
+        "fork": 0,
+        "paired_y_over_x": 0.5453922469052596,
+        "X_median_ms": 16.69425,
+        "Y_median_ms": 9.125499999999999
+      },
+      {
+        "fork": 1,
+        "paired_y_over_x": 0.526470172835027,
+        "X_median_ms": 14.64595,
+        "Y_median_ms": 7.72425
+      },
+      {
+        "fork": 2,
+        "paired_y_over_x": 0.5302756482230251,
+        "X_median_ms": 18.300449999999998,
+        "Y_median_ms": 9.620000000000001
+      }
+    ],
+    "y_phase_median_ms": {
+      "decomposition_ns": 0.25155,
+      "search_ns": 5.3156,
+      "composition_ns": 3.1709
+    },
+    "gc_affected_plans": 5
+  },
+  {
+    "case": "inside-3-outside-3",
+    "assignments": 1536,
+    "independent_oracle": {
+      "minimum_cost": 15.0,
+      "cuts": [
+        0,
+        2,
+        4,
+        5,
+        7,
+        9,
+        11,
+        13,
+        14,
+        16,
+        17,
+        19,
+        21,
+        23,
+        25,
+        27,
+        28,
+        30,
+        31,
+        32
+      ],
+      "method": "sealed-module exhaustive enumeration",
+      "inner": {
+        "minimum_cost": 7.0,
+        "cuts": [
+          1,
+          2,
+          4,
+          6,
+          8,
+          10,
+          11,
+          13,
+          14
+        ],
+        "assignments": 1024,
+        "valid_assignments": 128
+      },
+      "outer": {
+        "minimum_cost": 8.0,
+        "cuts": [
+          0,
+          2,
+          3,
+          5,
+          7,
+          9,
+          11,
+          12,
+          14,
+          15,
+          16
+        ],
+        "assignments": 512,
+        "valid_assignments": 64
+      },
+      "whole": null,
+      "global_optional_edges": 19,
+      "assignments": 1536
+    },
+    "minimum_cost": 15.0,
+    "verified_plans": 600,
+    "forks": [
+      {
+        "fork": 0,
+        "paired_y_over_x": 0.20899899171182812,
+        "X_median_ms": 99.70915,
+        "Y_median_ms": 20.9039
+      },
+      {
+        "fork": 1,
+        "paired_y_over_x": 0.20110183640177426,
+        "X_median_ms": 85.12455,
+        "Y_median_ms": 17.006349999999998
+      },
+      {
+        "fork": 2,
+        "paired_y_over_x": 0.20076327319058979,
+        "X_median_ms": 101.49355,
+        "Y_median_ms": 20.793349999999997
+      }
+    ],
+    "y_phase_median_ms": {
+      "decomposition_ns": 0.3789,
+      "search_ns": 13.8492,
+      "composition_ns": 5.5176
+    },
+    "gc_affected_plans": 31
+  },
+  {
+    "case": "inside-4-outside-1",
+    "assignments": 8200,
+    "independent_oracle": {
+      "minimum_cost": 13.0,
+      "cuts": [
+        0,
+        2,
+        4,
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        16,
+        18,
+        19,
+        21,
+        22,
+        24,
+        26,
+        27
+      ],
+      "method": "sealed-module exhaustive enumeration",
+      "inner": {
+        "minimum_cost": 9.0,
+        "cuts": [
+          1,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          13,
+          15,
+          16,
+          18,
+          19
+        ],
+        "assignments": 8192,
+        "valid_assignments": 512
+      },
+      "outer": {
+        "minimum_cost": 4.0,
+        "cuts": [
+          0,
+          2,
+          3,
+          5,
+          6
+        ],
+        "assignments": 8,
+        "valid_assignments": 4
+      },
+      "whole": null,
+      "global_optional_edges": 16,
+      "assignments": 8200
+    },
+    "minimum_cost": 13.0,
+    "verified_plans": 600,
+    "forks": [
+      {
+        "fork": 0,
+        "paired_y_over_x": 0.5351019213152901,
+        "X_median_ms": 39.2033,
+        "Y_median_ms": 21.3506
+      },
+      {
+        "fork": 1,
+        "paired_y_over_x": 0.5363767062943907,
+        "X_median_ms": 33.8859,
+        "Y_median_ms": 18.169
+      },
+      {
+        "fork": 2,
+        "paired_y_over_x": 0.53259453447784,
+        "X_median_ms": 39.54755,
+        "Y_median_ms": 20.8714
+      }
+    ],
+    "y_phase_median_ms": {
+      "decomposition_ns": 0.32730000000000004,
+      "search_ns": 15.4647,
+      "composition_ns": 3.9843
+    },
+    "gc_affected_plans": 15
+  },
+  {
+    "case": "inside-4-outside-4",
+    "assignments": 12288,
+    "independent_oracle": {
+      "minimum_cost": 19.0,
+      "cuts": [
+        0,
+        2,
+        4,
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        16,
+        18,
+        19,
+        21,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+        34,
+        35,
+        37,
+        38,
+        40,
+        41,
+        42
+      ],
+      "method": "sealed-module exhaustive enumeration",
+      "inner": {
+        "minimum_cost": 9.0,
+        "cuts": [
+          1,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          13,
+          15,
+          16,
+          18,
+          19
+        ],
+        "assignments": 8192,
+        "valid_assignments": 512
+      },
+      "outer": {
+        "minimum_cost": 10.0,
+        "cuts": [
+          0,
+          2,
+          3,
+          5,
+          7,
+          9,
+          11,
+          13,
+          14,
+          16,
+          17,
+          19,
+          20,
+          21
+        ],
+        "assignments": 4096,
+        "valid_assignments": 256
+      },
+      "whole": null,
+      "global_optional_edges": 25,
+      "assignments": 12288
+    },
+    "minimum_cost": 19.0,
+    "verified_plans": 600,
+    "forks": [
+      {
+        "fork": 0,
+        "paired_y_over_x": 0.07589869802413064,
+        "X_median_ms": 564.14155,
+        "Y_median_ms": 43.755849999999995
+      },
+      {
+        "fork": 1,
+        "paired_y_over_x": 0.07628639869418613,
+        "X_median_ms": 509.65455,
+        "Y_median_ms": 38.820499999999996
+      },
+      {
+        "fork": 2,
+        "paired_y_over_x": 0.07493916282916008,
+        "X_median_ms": 588.1529,
+        "Y_median_ms": 44.41315
+      }
+    ],
+    "y_phase_median_ms": {
+      "decomposition_ns": 0.44595,
+      "search_ns": 32.58655,
+      "composition_ns": 8.287849999999999
+    },
+    "gc_affected_plans": 164
+  }
+]

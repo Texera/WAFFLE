@@ -1,0 +1,129 @@
+{
+  "raw_sha256": "502c58874606537717deaac85301660e609ff24e4216a22ab8095266987f0447",
+  "completed_runs": 72,
+  "measured_runs": 60,
+  "all_outputs_match": true,
+  "timing": "native coordinator and workers through result retrieval; compilation excluded",
+  "summary": [
+    {
+      "case": "n200-i1",
+      "points": 200,
+      "iterations": 1,
+      "strategy": "loop",
+      "runs": 5,
+      "median_s": 11.2775731,
+      "min_s": 10.7960914,
+      "max_s": 11.5307746
+    },
+    {
+      "case": "n200-i1",
+      "points": 200,
+      "iterations": 1,
+      "strategy": "copies",
+      "runs": 5,
+      "median_s": 7.0817851,
+      "min_s": 6.8514367,
+      "max_s": 7.233696
+    },
+    {
+      "case": "n200-i4",
+      "points": 200,
+      "iterations": 4,
+      "strategy": "loop",
+      "runs": 5,
+      "median_s": 36.2905599,
+      "min_s": 32.2354383,
+      "max_s": 36.6556956
+    },
+    {
+      "case": "n200-i4",
+      "points": 200,
+      "iterations": 4,
+      "strategy": "copies",
+      "runs": 5,
+      "median_s": 17.5779938,
+      "min_s": 17.1362344,
+      "max_s": 19.8957267
+    },
+    {
+      "case": "n200-i8",
+      "points": 200,
+      "iterations": 8,
+      "strategy": "loop",
+      "runs": 5,
+      "median_s": 61.4323434,
+      "min_s": 60.703508,
+      "max_s": 66.3820823
+    },
+    {
+      "case": "n200-i8",
+      "points": 200,
+      "iterations": 8,
+      "strategy": "copies",
+      "runs": 5,
+      "median_s": 29.0384847,
+      "min_s": 27.4292241,
+      "max_s": 34.9968363
+    },
+    {
+      "case": "n2000-i1",
+      "points": 2000,
+      "iterations": 1,
+      "strategy": "loop",
+      "runs": 5,
+      "median_s": 13.971039,
+      "min_s": 13.4776467,
+      "max_s": 14.8594958
+    },
+    {
+      "case": "n2000-i1",
+      "points": 2000,
+      "iterations": 1,
+      "strategy": "copies",
+      "runs": 5,
+      "median_s": 8.7031031,
+      "min_s": 8.387466,
+      "max_s": 8.7999891
+    },
+    {
+      "case": "n2000-i4",
+      "points": 2000,
+      "iterations": 4,
+      "strategy": "loop",
+      "runs": 5,
+      "median_s": 37.8811106,
+      "min_s": 36.8335846,
+      "max_s": 41.1461623
+    },
+    {
+      "case": "n2000-i4",
+      "points": 2000,
+      "iterations": 4,
+      "strategy": "copies",
+      "runs": 5,
+      "median_s": 18.2772949,
+      "min_s": 17.611548,
+      "max_s": 19.442753
+    },
+    {
+      "case": "n2000-i8",
+      "points": 2000,
+      "iterations": 8,
+      "strategy": "loop",
+      "runs": 5,
+      "median_s": 71.4844277,
+      "min_s": 68.9108202,
+      "max_s": 82.8011635
+    },
+    {
+      "case": "n2000-i8",
+      "points": 2000,
+      "iterations": 8,
+      "strategy": "copies",
+      "runs": 5,
+      "median_s": 35.2928775,
+      "min_s": 31.4555372,
+      "max_s": 37.3852189
+    }
+  ]
+}
