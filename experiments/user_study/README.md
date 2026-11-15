@@ -35,6 +35,8 @@ If Activity 1 fails, record that outcome and provide a correct fallback before A
 
 ## Assignment and session
 
+For teammates working without a live facilitator, see the [asynchronous pilot design](ASYNC.md). It proposes three short Google Forms, per-task submissions and explicitly self-reported timing. The forms and hosted delivery still need preparation and a pilot.
+
 Pilot with one teammate. Then aim for 16 participants if feasible, with four participants per sequence: KNIME/A then Texera/B; KNIME/B then Texera/A; Texera/A then KNIME/B; Texera/B then KNIME/A. Randomize within balanced blocks and spread prior KNIME/Texera experience across orders. Record Python experience and involvement in WAFFLE. Authors and implementers rehearse the materials; report recruitment from the team and any direct contributors included in the main study.
 
 Use the same process for everyone:
