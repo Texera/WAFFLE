@@ -1,0 +1,54 @@
+[
+  {
+    "run": "knime-A-sweep-starter-visible",
+    "engine_log_sha256": "42794879e6dfe98756aafcf40de885070fd3be32f1f88de4ff5b6bd3ab303d5c"
+  },
+  {
+    "run": "knime-A-sweep-visible",
+    "engine_log_sha256": "9f6a212613aeeebed6da175c25dab08ad157bee885a03de6083f633404a4c93d"
+  },
+  {
+    "run": "knime-A-sweep-first",
+    "engine_log_sha256": "b6668c3ed80556db2471011e7d70c4922e43c8faebff24edf234fd0c9347b93f"
+  },
+  {
+    "run": "knime-A-adapt-visible",
+    "engine_log_sha256": "6e946837b7f430596355bba8ad2604274706e9b673108257584fa1ae7f4a1341"
+  },
+  {
+    "run": "knime-A-adapt-first",
+    "engine_log_sha256": "b606f02f6907ea69e88df8b22c83f19f3cabb27a0b41db7f06157c068765ce9c"
+  },
+  {
+    "run": "knime-A-adapt-cap",
+    "engine_log_sha256": "dc90eb8b074df607c673cddbdde30b0eddde20d2d02fcfc3db7aac24452f06b6"
+  },
+  {
+    "run": "knime-B-sweep-starter-visible",
+    "engine_log_sha256": "39b47cdcdaf7f4785d44d058bfe56e1e89645d20e5aeb2cf7d3536c1b53942ee"
+  },
+  {
+    "run": "knime-B-sweep-visible",
+    "engine_log_sha256": "cb760ee4242603fca422af7ba86c4a19ac0f076e59abfd0032bf7005d8a78b63"
+  },
+  {
+    "run": "knime-B-sweep-first",
+    "engine_log_sha256": "36dc537819657ef92af54cc88c3fec7a56eb4502a3f74aafff9c9463975d3f6b"
+  },
+  {
+    "run": "knime-B-adapt-visible",
+    "engine_log_sha256": "313a2d599dfebb01df2d95759e6eddad9d8fecdf1e98d9e650fbb1ed4af9d7e8"
+  },
+  {
+    "run": "knime-B-adapt-first",
+    "engine_log_sha256": "a3357e2010e6a6c920774130315c2774f58669026a6a7b23c218437ecd47f5bc"
+  },
+  {
+    "run": "knime-B-adapt-cap",
+    "engine_log_sha256": "14d60c3bf0d63ebdfb0091e262c23a9f4f7462cb787471da6f831473ab1284da"
+  },
+  {
+    "engine": "waffle",
+    "engine_log_sha256": "6808b806016e201e199a7c7c71fa12369f3f57b0711fdab1edc871f474097dac"
+  }
+]

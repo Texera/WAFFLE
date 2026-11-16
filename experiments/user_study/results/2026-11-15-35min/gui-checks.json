@@ -1,0 +1,115 @@
+{
+  "date": "2026-11-15",
+  "type": "author GUI rehearsal; no participant data",
+  "pack": "A",
+  "steps": [
+    "import connected starter",
+    "run once",
+    "edit sweep",
+    "run sweep",
+    "export sweep",
+    "edit stop condition",
+    "run adaptation",
+    "export adaptation"
+  ],
+  "exports": [
+    {
+      "tool": "KNIME",
+      "task": "sweep",
+      "sha256": "64a31fd037dc5e956529f83173232c41a9b15a6f474cdc27d764174ed1a8e306",
+      "loops": 3,
+      "stop_variable": "score",
+      "stop_comparison": ">=",
+      "stop_value": 0.0,
+      "observed_K": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "tool": "Texera",
+      "task": "sweep",
+      "sha256": "b6703410da7df54cba25671b7efe4841e6f4145f8e75c09adb5952542e4f64cf",
+      "condition": "K <= 4",
+      "update": "K += 1",
+      "observed_K": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "tool": "KNIME",
+      "task": "adapt",
+      "sha256": "f517907d59c75f3243fe5679c4ccca7910fe681b8302b5cc896d1cb43b402557",
+      "loops": 3,
+      "stop_variable": "score",
+      "stop_comparison": ">=",
+      "stop_value": -236.896667,
+      "observed_K": [
+        2,
+        3
+      ]
+    },
+    {
+      "tool": "Texera",
+      "task": "adapt",
+      "sha256": "7544b8f6892974a13dd8001c148c15528ccf4cae9fb8e9e623c0993cf04bcbb7",
+      "condition": "K <= 4 and score < -236.896667",
+      "update": "K += 1",
+      "observed_K": [
+        2,
+        3
+      ]
+    }
+  ],
+  "texera_visit_trace": [
+    {
+      "K": 2,
+      "score": -343.56333333333333
+    },
+    {
+      "K": 2,
+      "score": -343.56333333333333
+    },
+    {
+      "K": 3,
+      "score": -130.23000000000002
+    },
+    {
+      "K": 4,
+      "score": -2.2300000000000004
+    },
+    {
+      "K": 2,
+      "score": -343.56333333333333
+    },
+    {
+      "K": 3,
+      "score": -130.23000000000002
+    }
+  ],
+  "trace_groups": [
+    {
+      "task": "starter",
+      "start": 0,
+      "count": 1
+    },
+    {
+      "task": "sweep",
+      "start": 1,
+      "count": 3
+    },
+    {
+      "task": "adapt",
+      "start": 4,
+      "count": 2
+    }
+  ],
+  "limitations": [
+    "Pack B GUI not rehearsed; native checks passed",
+    "No participant timing or usability result",
+    "Hosted server still requires rehearsal"
+  ]
+}

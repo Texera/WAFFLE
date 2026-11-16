@@ -1,0 +1,15 @@
+[info] - should execute waffle-A-sweep-starter-visible and preserve the expected result rows (25 seconds, 451 milliseconds)
+[info] - should execute waffle-A-sweep-visible and preserve the expected result rows (28 seconds, 357 milliseconds)
+[info] - should execute waffle-A-sweep-first and preserve the expected result rows (30 seconds, 719 milliseconds)
+[info] - should execute waffle-A-adapt-visible and preserve the expected result rows (16 seconds, 474 milliseconds)
+[info] - should execute waffle-A-adapt-first and preserve the expected result rows (8 seconds, 923 milliseconds)
+[info] - should execute waffle-A-adapt-cap and preserve the expected result rows (22 seconds, 815 milliseconds)
+[info] - should execute waffle-B-sweep-starter-visible and preserve the expected result rows (8 seconds, 943 milliseconds)
+[info] - should execute waffle-B-sweep-visible and preserve the expected result rows (34 seconds, 895 milliseconds)
+[info] - should execute waffle-B-sweep-first and preserve the expected result rows (25 seconds, 778 milliseconds)
+[info] - should execute waffle-B-adapt-visible and preserve the expected result rows (15 seconds, 565 milliseconds)
+[info] - should execute waffle-B-adapt-first and preserve the expected result rows (8 seconds, 859 milliseconds)
+[info] - should execute waffle-B-adapt-cap and preserve the expected result rows (22 seconds, 779 milliseconds)
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 12, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.

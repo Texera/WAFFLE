@@ -3,9 +3,56 @@ from pathlib import Path
 import unittest
 from model import make_data, scores, expected, compare, check_evidence
 import waffle
+import knime
+import study
+import xml.etree.ElementTree as E
+import zipfile
 
 
 class StudyTests(unittest.TestCase):
+    def test_short_study_has_working_loop_scaffolds(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); meta=make_data(root/'data','A')
+            graph=waffle.graph(root/'data/visible',root/'audit','sweep-starter',meta['target'],short=True)
+            kinds=[n['operatorType'] for n in graph['operators']]
+            self.assertEqual(kinds,['CSVFileScan','LoopStart','PythonUDFV2','LoopEnd','Sort'])
+            self.assertEqual(len(graph['links']),4)
+            end=next(n for n in graph['operators'] if n['operatorType']=='LoopEnd')
+            self.assertEqual(end['operatorProperties']['condition'],'False')
+            for task in ('sweep-starter','sweep','adapt'):
+                dest=root/task
+                knime.workflow(dest,root/'data/visible',root/'audit',task,meta['target'],short=True)
+                settings=[E.parse(p) for p in dest.glob('*/settings.xml')]
+                entries={e.get('key'):e.get('value') for tree in settings for e in tree.iter() if e.tag.endswith('entry')}
+                self.assertEqual(entries['loops'],'1' if task.endswith('starter') else '3')
+                self.assertEqual(entries['variableName'],'score')
+                self.assertEqual(entries['value'],str(meta['target']) if task=='adapt' else '0.0')
+
+    def test_short_package_excludes_file_activity_and_solutions(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)/'package'; study.prepare(root,short=True)
+            import json
+            manifest=json.loads((root/'manifest.json').read_text())
+            self.assertEqual(manifest['protocol'],'35-minute')
+            self.assertEqual(len(manifest['runs']),24)
+            self.assertFalse(any(r['task'].startswith('files') for r in manifest['runs']))
+            self.assertEqual(sorted(p.name for p in (root/'cards/A').iterdir()),['1-configure.txt','2-adapt.txt'])
+            self.assertEqual(sorted(p.name for p in (root/'participants/A/knime').iterdir()),['START-HERE.txt','sweep-starter.knwf'])
+            with zipfile.ZipFile(root/'participants/A/knime/sweep-starter.knwf') as archive:
+                source='\n'.join(archive.read(n).decode() for n in archive.namelist() if n.endswith('.xml'))
+                self.assertNotIn(root.as_posix(),source)
+                self.assertIn('java.io.tmpdir',source)
+                self.assertIn('java.util.Arrays.asList',source)
+            for pack in ('A','B'):
+                fallback=root/'facilitator/fallbacks'/pack
+                with zipfile.ZipFile(fallback/'knime/sweep-fallback.knwf') as archive:
+                    source='\n'.join(archive.read(n).decode() for n in archive.namelist() if n.endswith('.xml'))
+                    self.assertNotIn(root.as_posix(),source)
+                    self.assertIn('key="loops" type="xint" value="3"',source)
+                graph=json.loads((fallback/'waffle/sweep-fallback.json').read_text())
+                end=next(n for n in graph['operators'] if n['operatorType']=='LoopEnd')
+                self.assertEqual(end['operatorProperties']['condition'],'K <= 4')
+
     def test_native_readers_and_aggregate(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); meta=make_data(root/'data','A')

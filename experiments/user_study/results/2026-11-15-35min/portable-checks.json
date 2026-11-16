@@ -1,0 +1,152 @@
+[
+  {
+    "id": "knime-A-sweep-starter-visible",
+    "exit_code": 0,
+    "passed": true,
+    "visits": [
+      {
+        "K": 2,
+        "score": -343.5633333333333
+      }
+    ],
+    "results": [
+      {
+        "K": 2,
+        "score": -343.5633333333333
+      }
+    ]
+  },
+  {
+    "id": "knime-A-sweep-visible",
+    "exit_code": 0,
+    "passed": true,
+    "visits": [
+      {
+        "K": 2,
+        "score": -343.5633333333333
+      },
+      {
+        "K": 3,
+        "score": -130.23
+      },
+      {
+        "K": 4,
+        "score": -2.23
+      }
+    ],
+    "results": [
+      {
+        "K": 2,
+        "score": -343.5633333333333
+      },
+      {
+        "K": 3,
+        "score": -130.23
+      },
+      {
+        "K": 4,
+        "score": -2.23
+      }
+    ]
+  },
+  {
+    "id": "knime-A-adapt-visible",
+    "exit_code": 0,
+    "passed": true,
+    "visits": [
+      {
+        "K": 2,
+        "score": -343.5633333333333
+      },
+      {
+        "K": 3,
+        "score": -130.23
+      }
+    ],
+    "results": [
+      {
+        "K": 2,
+        "score": -343.5633333333333
+      },
+      {
+        "K": 3,
+        "score": -130.23
+      }
+    ]
+  },
+  {
+    "id": "knime-B-sweep-starter-visible",
+    "exit_code": 0,
+    "passed": true,
+    "visits": [
+      {
+        "K": 2,
+        "score": -434.22999999999996
+      }
+    ],
+    "results": [
+      {
+        "K": 2,
+        "score": -434.22999999999996
+      }
+    ]
+  },
+  {
+    "id": "knime-B-sweep-visible",
+    "exit_code": 0,
+    "passed": true,
+    "visits": [
+      {
+        "K": 2,
+        "score": -434.22999999999996
+      },
+      {
+        "K": 3,
+        "score": -164.23000000000005
+      },
+      {
+        "K": 4,
+        "score": -2.2300000000000004
+      }
+    ],
+    "results": [
+      {
+        "K": 2,
+        "score": -434.22999999999996
+      },
+      {
+        "K": 3,
+        "score": -164.23000000000005
+      },
+      {
+        "K": 4,
+        "score": -2.2300000000000004
+      }
+    ]
+  },
+  {
+    "id": "knime-B-adapt-visible",
+    "exit_code": 0,
+    "passed": true,
+    "visits": [
+      {
+        "K": 2,
+        "score": -434.22999999999996
+      },
+      {
+        "K": 3,
+        "score": -164.23000000000005
+      }
+    ],
+    "results": [
+      {
+        "K": 2,
+        "score": -434.22999999999996
+      },
+      {
+        "K": 3,
+        "score": -164.23000000000005
+      }
+    ]
+  }
+]

@@ -14,3 +14,4 @@ jobs:
       - run: python -m unittest discover -s experiments/user_study -v
       - run: python experiments/user_study/verify_recorded.py
       - run: python experiments/user_study/verify_recorded.py 2026-11-15-native-operators
+      - run: python experiments/user_study/verify_recorded.py 2026-11-15-35min

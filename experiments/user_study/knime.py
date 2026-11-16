@@ -31,7 +31,7 @@ def snippet(model,code,in_cols=(),out_cols=(),in_vars=(),out_vars=(),replace=())
             if out:entry(f,'replaceExisting',name in replace)
     entry(model,'version','version 1.x');entry(model,'runOnExecute',False)
 
-def workflow(folder,data,evidence,task,target):
+def workflow(folder,data,evidence,task,target,short=False):
     folder=Path(folder);folder.mkdir(parents=True)
     root=E.Element('{'+NS+'}config',key='workflow.knime')
     for k,v in [('created_by','5.5.3'),('created_by_nightly',False),('version','4.1.0'),('name','Files' if task.startswith('files') else 'K-means'),('state','CONFIGURED')]:entry(root,k,v)
@@ -67,9 +67,9 @@ def workflow(folder,data,evidence,task,target):
         code+='try(java.util.stream.Stream<Path> paths=Files.list(Paths.get('+json.dumps((data/'sales').as_posix())+'))){count=(int)paths.filter(x->x.toString().endsWith(".csv")).count();}\n'
     else:code+='count=3;\n'
     snippet(m,code,out_vars=[('currentIteration','iteration','Integer'),('input_count','count','Integer')]);write(p,s)
-    if not starter:
+    if not starter or (short and not files):
         s,m,p=node('Counting Loop Start','org.knime.base.node.meta.looper.LoopStartCountDynamicNodeFactory')
-        entry(m,'loops',3)
+        entry(m,'loops',1 if short and starter else 3)
         if files:
             v=cfg(cfg(s,'variables'),'loops');entry(v,'used_variable','input_count');entry(v,'exposed_variable','').set('isnull','true')
         entry(cfg(cfg(cfg(s,'node_creation_config'),'Pass through'),'port_0'),'object_class','org.knime.core.node.BufferedDataTable')
@@ -91,10 +91,10 @@ out_mean=sum/(rows.size()-1);
         out=[('K','out_k','Integer'),('score','out_score','Double')];outvars=[('score','score','Double')];text='out_k + "," + out_score'
     code+='\nFiles.writeString(Paths.get('+json.dumps((evidence/'visits.csv').as_posix())+'), '+text+' + "\\n", StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);'
     snippet(m,code,in_vars=[('currentIteration','iteration','Integer')],out_cols=out,out_vars=outvars,replace=['filename' if files else 'K']);write(p,s)
-    if not starter:
-        if task=='adapt':
+    if not starter or (short and not files):
+        if task=='adapt' or (short and not files):
             s,m,p=node('Variable Condition Loop End','org.knime.base.node.meta.looper.condition.LoopEndConditionDynamicNodeFactory')
-            for k,v in [('variableName','score'),('variableType','DOUBLE'),('value',str(target)),('operator','GE'),('propagateLoopVariables',False)]:entry(m,k,v)
+            for k,v in [('variableName','score'),('variableType','DOUBLE'),('value',str(target if task=='adapt' else 0.0)),('operator','GE'),('propagateLoopVariables',False)]:entry(m,k,v)
             for k,v in [('addLastRows',True),('addLastRowsOnly',False),('addIterationColumn',False)]:array(m,k,[v])
         else:
             s,m,p=node('Loop End','org.knime.base.node.meta.looper.LoopEndDynamicNodeFactory')

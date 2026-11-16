@@ -3,7 +3,7 @@ from pathlib import Path
 import uuid
 
 
-def graph(data, evidence, task, target):
+def graph(data, evidence, task, target, short=False):
     nodes, links = [], []
     files, starter = task.startswith('files'), task.endswith('starter')
 
@@ -59,7 +59,7 @@ class LabelAndAudit(UDFOperatorV2):
         node('Filename and audit - prepared','PythonUDFV2',udf(code,fields))
     else:
         node('Read points','CSVFileScan',dict(fileName=data.joinpath('points.csv').as_posix(),hasHeader=True,customDelimiter=',',fileEncoding='UTF_8'),True)
-        if not starter:
+        if not starter or short:
             node('Loop Start','LoopStart',dict(initialization='K = 2',output='D'))
         # There is no built-in K-means descriptor in the tested Texera revision.
         # The prepared UDF accepts native-reader rows and only does clustering.
@@ -87,8 +87,9 @@ class LabelAndAudit(UDFOperatorV2):
         yield self.result_row()
 '''
         node('K-means and score - prepared','PythonUDFV2',udf(code,fields))
-    if not starter:
+    if not starter or (short and not files):
         condition='i < len(D)' if files else ('K <= 4 and score < '+repr(target) if task=='adapt' else 'K <= 4')
+        if short and starter and not files:condition='False'
         node('Loop End','LoopEnd',dict(update='i += 1' if files else 'K += 1',condition=condition))
     node('Results','Sort',dict(attributes=[dict(attribute='filename' if files else 'K',sortPreference='ASC')]))
     return dict(operators=nodes,links=links,

@@ -1,0 +1,783 @@
+{
+  "protocol": "35-minute",
+  "passed": true,
+  "changed_inputs": [],
+  "runs": [
+    {
+      "id": "knime-A-sweep-starter-visible",
+      "tool": "knime",
+      "pack": "A",
+      "task": "sweep-starter",
+      "case": "visible",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -343.5633333333333
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -343.5633333333333
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "knime-A-sweep-visible",
+      "tool": "knime",
+      "pack": "A",
+      "task": "sweep",
+      "case": "visible",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -343.5633333333333
+        },
+        {
+          "K": 3,
+          "score": -130.23
+        },
+        {
+          "K": 4,
+          "score": -2.23
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -343.5633333333333
+        },
+        {
+          "K": 3,
+          "score": -130.23
+        },
+        {
+          "K": 4,
+          "score": -2.23
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "knime-A-sweep-first",
+      "tool": "knime",
+      "pack": "A",
+      "task": "sweep",
+      "case": "first",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -3.435633333333334
+        },
+        {
+          "K": 3,
+          "score": -1.3023000000000002
+        },
+        {
+          "K": 4,
+          "score": -0.022300000000000014
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -3.435633333333334
+        },
+        {
+          "K": 3,
+          "score": -1.3023000000000002
+        },
+        {
+          "K": 4,
+          "score": -0.022300000000000014
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "knime-A-adapt-visible",
+      "tool": "knime",
+      "pack": "A",
+      "task": "adapt",
+      "case": "visible",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -343.5633333333333
+        },
+        {
+          "K": 3,
+          "score": -130.23
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -343.5633333333333
+        },
+        {
+          "K": 3,
+          "score": -130.23
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "knime-A-adapt-first",
+      "tool": "knime",
+      "pack": "A",
+      "task": "adapt",
+      "case": "first",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -3.435633333333334
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -3.435633333333334
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "knime-A-adapt-cap",
+      "tool": "knime",
+      "pack": "A",
+      "task": "adapt",
+      "case": "cap",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -34356.333333333336
+        },
+        {
+          "K": 3,
+          "score": -13023.0
+        },
+        {
+          "K": 4,
+          "score": -223.0
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -34356.333333333336
+        },
+        {
+          "K": 3,
+          "score": -13023.0
+        },
+        {
+          "K": 4,
+          "score": -223.0
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "knime-B-sweep-starter-visible",
+      "tool": "knime",
+      "pack": "B",
+      "task": "sweep-starter",
+      "case": "visible",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -434.22999999999996
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -434.22999999999996
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "knime-B-sweep-visible",
+      "tool": "knime",
+      "pack": "B",
+      "task": "sweep",
+      "case": "visible",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -434.22999999999996
+        },
+        {
+          "K": 3,
+          "score": -164.23000000000005
+        },
+        {
+          "K": 4,
+          "score": -2.2300000000000004
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -434.22999999999996
+        },
+        {
+          "K": 3,
+          "score": -164.23000000000005
+        },
+        {
+          "K": 4,
+          "score": -2.2300000000000004
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "knime-B-sweep-first",
+      "tool": "knime",
+      "pack": "B",
+      "task": "sweep",
+      "case": "first",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -3.2623
+        },
+        {
+          "K": 3,
+          "score": -1.6423000000000005
+        },
+        {
+          "K": 4,
+          "score": -0.022299999999999993
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -3.2623
+        },
+        {
+          "K": 3,
+          "score": -1.6423000000000005
+        },
+        {
+          "K": 4,
+          "score": -0.022299999999999993
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "knime-B-adapt-visible",
+      "tool": "knime",
+      "pack": "B",
+      "task": "adapt",
+      "case": "visible",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -434.22999999999996
+        },
+        {
+          "K": 3,
+          "score": -164.23000000000005
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -434.22999999999996
+        },
+        {
+          "K": 3,
+          "score": -164.23000000000005
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "knime-B-adapt-first",
+      "tool": "knime",
+      "pack": "B",
+      "task": "adapt",
+      "case": "first",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -3.2623
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -3.2623
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "knime-B-adapt-cap",
+      "tool": "knime",
+      "pack": "B",
+      "task": "adapt",
+      "case": "cap",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -43423.0
+        },
+        {
+          "K": 3,
+          "score": -16423.0
+        },
+        {
+          "K": 4,
+          "score": -223.0
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -43423.0
+        },
+        {
+          "K": 3,
+          "score": -16423.0
+        },
+        {
+          "K": 4,
+          "score": -223.0
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-A-sweep-starter-visible",
+      "tool": "waffle",
+      "pack": "A",
+      "task": "sweep-starter",
+      "case": "visible",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -343.56333333333333
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -343.56333333333333
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-A-sweep-visible",
+      "tool": "waffle",
+      "pack": "A",
+      "task": "sweep",
+      "case": "visible",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -343.56333333333333
+        },
+        {
+          "K": 3,
+          "score": -130.23000000000002
+        },
+        {
+          "K": 4,
+          "score": -2.2300000000000004
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -343.56333333333333
+        },
+        {
+          "K": 3,
+          "score": -130.23000000000002
+        },
+        {
+          "K": 4,
+          "score": -2.2300000000000004
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-A-sweep-first",
+      "tool": "waffle",
+      "pack": "A",
+      "task": "sweep",
+      "case": "first",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -3.4356333333333335
+        },
+        {
+          "K": 3,
+          "score": -1.3023000000000002
+        },
+        {
+          "K": 4,
+          "score": -0.022300000000000018
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -3.4356333333333335
+        },
+        {
+          "K": 3,
+          "score": -1.3023000000000002
+        },
+        {
+          "K": 4,
+          "score": -0.022300000000000018
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-A-adapt-visible",
+      "tool": "waffle",
+      "pack": "A",
+      "task": "adapt",
+      "case": "visible",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -343.56333333333333
+        },
+        {
+          "K": 3,
+          "score": -130.23000000000002
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -343.56333333333333
+        },
+        {
+          "K": 3,
+          "score": -130.23000000000002
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-A-adapt-first",
+      "tool": "waffle",
+      "pack": "A",
+      "task": "adapt",
+      "case": "first",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -3.4356333333333335
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -3.4356333333333335
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-A-adapt-cap",
+      "tool": "waffle",
+      "pack": "A",
+      "task": "adapt",
+      "case": "cap",
+      "target": -236.89666666666665,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -34356.333333333336
+        },
+        {
+          "K": 3,
+          "score": -13023.0
+        },
+        {
+          "K": 4,
+          "score": -223.0
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -34356.333333333336
+        },
+        {
+          "K": 3,
+          "score": -13023.0
+        },
+        {
+          "K": 4,
+          "score": -223.0
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-B-sweep-starter-visible",
+      "tool": "waffle",
+      "pack": "B",
+      "task": "sweep-starter",
+      "case": "visible",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -434.23
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -434.23
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-B-sweep-visible",
+      "tool": "waffle",
+      "pack": "B",
+      "task": "sweep",
+      "case": "visible",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -434.23
+        },
+        {
+          "K": 3,
+          "score": -164.23000000000002
+        },
+        {
+          "K": 4,
+          "score": -2.2300000000000004
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -434.23
+        },
+        {
+          "K": 3,
+          "score": -164.23000000000002
+        },
+        {
+          "K": 4,
+          "score": -2.2300000000000004
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-B-sweep-first",
+      "tool": "waffle",
+      "pack": "B",
+      "task": "sweep",
+      "case": "first",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -3.2623
+        },
+        {
+          "K": 3,
+          "score": -1.6423
+        },
+        {
+          "K": 4,
+          "score": -0.022299999999999993
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -3.2623
+        },
+        {
+          "K": 3,
+          "score": -1.6423
+        },
+        {
+          "K": 4,
+          "score": -0.022299999999999993
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-B-adapt-visible",
+      "tool": "waffle",
+      "pack": "B",
+      "task": "adapt",
+      "case": "visible",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -434.23
+        },
+        {
+          "K": 3,
+          "score": -164.23000000000002
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -434.23
+        },
+        {
+          "K": 3,
+          "score": -164.23000000000002
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-B-adapt-first",
+      "tool": "waffle",
+      "pack": "B",
+      "task": "adapt",
+      "case": "first",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -3.2623
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -3.2623
+        }
+      ],
+      "error": ""
+    },
+    {
+      "id": "waffle-B-adapt-cap",
+      "tool": "waffle",
+      "pack": "B",
+      "task": "adapt",
+      "case": "cap",
+      "target": -299.23,
+      "exit_code": 0,
+      "passed": true,
+      "visits": [
+        {
+          "K": 2,
+          "score": -43423.0
+        },
+        {
+          "K": 3,
+          "score": -16423.0
+        },
+        {
+          "K": 4,
+          "score": -223.0
+        }
+      ],
+      "results": [
+        {
+          "K": 2,
+          "score": -43423.0
+        },
+        {
+          "K": 3,
+          "score": -16423.0
+        },
+        {
+          "K": 4,
+          "score": -223.0
+        }
+      ],
+      "error": ""
+    }
+  ]
+}
