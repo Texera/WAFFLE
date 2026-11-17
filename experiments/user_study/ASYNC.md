@@ -24,6 +24,8 @@ The two packs use the same task and different coordinates/targets. Assign KNIME/
 
 ## Single Google Form
 
+The optional [shared start-link service](start_link) assigns a participant ID and one of the four balanced orders before opening the form. Give everyone that same link once its live prefill check passes. Participants should return in the same browser to keep their assignment. This changes entry to the study, not its tasks or timing.
+
 The organizer owns the form in the user's UCI Google account. Seven sections: welcome, first-tool configuration, first-tool adaptation, first-tool saving, second-tool configuration, second-tool adaptation/saving, final feedback. All response items are optional so an interrupted participant can skip ahead and submit. Next is navigation, not submission. Submit once at the end. Do not treat an online saved draft as a researcher-visible response.
 
 Collect participant ID, assigned sequence, prior KNIME/Texera/Python experience and involvement in WAFFLE development. For each task collect outcome (completed/time limit/stopped/technical problem/not attempted), elapsed seconds or not recorded, the requested result, and ease from 1 (very difficult) to 7 (very easy). For adaptation also record own workflow versus supplied fallback. Save the sweep before editing it; do not overwrite it. In KNIME, press Ctrl+S before every Export so it contains the latest controls. Upload both exports per tool, including incomplete work; an upload failure can be described instead. Collect outside help, waits and interruptions once per tool. Final questions compare ease for the two activities, with Same and Cannot judge options, and an optional reason.
