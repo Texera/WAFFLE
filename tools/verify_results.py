@@ -35,6 +35,7 @@ def main():
         assert sum(r['rows'] for r in summary['cases']) == 241
         assert summary == read(case / 'results/comparison.json')
         print('Case study: 8/8 matches; 241 output rows verified')
+        print(run(ROOT / 'experiments/control_messages/verify.py').strip())
         execution = ROOT / 'experiments/loop_execution'
         run(execution / 'analyze.py', execution / 'results', temp / 'execution')
         assert read(temp / 'execution/summary.json') == read(execution / 'results/summary.json')

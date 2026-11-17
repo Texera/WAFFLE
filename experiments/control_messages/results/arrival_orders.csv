@@ -1,0 +1,31 @@
+branches,copies_before_update,identity,delivered_K,callback_K,callbacks,final_K
+1,1,publication,2 3,2 3,2,3
+1,1,per_copy,2 3,2 3,2,3
+2,1,publication,2 3 2,2 3,2,3
+2,1,per_copy,2 3 2,2 3 2,3,2
+2,2,publication,2 2 3,2 3,2,3
+2,2,per_copy,2 2 3,2 2 3,3,3
+4,1,publication,2 3 2 2 2,2 3,2,3
+4,1,per_copy,2 3 2 2 2,2 3 2 2 2,5,2
+4,2,publication,2 2 3 2 2,2 3,2,3
+4,2,per_copy,2 2 3 2 2,2 2 3 2 2,5,2
+4,3,publication,2 2 2 3 2,2 3,2,3
+4,3,per_copy,2 2 2 3 2,2 2 2 3 2,5,2
+4,4,publication,2 2 2 2 3,2 3,2,3
+4,4,per_copy,2 2 2 2 3,2 2 2 2 3,5,3
+8,1,publication,2 3 2 2 2 2 2 2 2,2 3,2,3
+8,1,per_copy,2 3 2 2 2 2 2 2 2,2 3 2 2 2 2 2 2 2,9,2
+8,2,publication,2 2 3 2 2 2 2 2 2,2 3,2,3
+8,2,per_copy,2 2 3 2 2 2 2 2 2,2 2 3 2 2 2 2 2 2,9,2
+8,3,publication,2 2 2 3 2 2 2 2 2,2 3,2,3
+8,3,per_copy,2 2 2 3 2 2 2 2 2,2 2 2 3 2 2 2 2 2,9,2
+8,4,publication,2 2 2 2 3 2 2 2 2,2 3,2,3
+8,4,per_copy,2 2 2 2 3 2 2 2 2,2 2 2 2 3 2 2 2 2,9,2
+8,5,publication,2 2 2 2 2 3 2 2 2,2 3,2,3
+8,5,per_copy,2 2 2 2 2 3 2 2 2,2 2 2 2 2 3 2 2 2,9,2
+8,6,publication,2 2 2 2 2 2 3 2 2,2 3,2,3
+8,6,per_copy,2 2 2 2 2 2 3 2 2,2 2 2 2 2 2 3 2 2,9,2
+8,7,publication,2 2 2 2 2 2 2 3 2,2 3,2,3
+8,7,per_copy,2 2 2 2 2 2 2 3 2,2 2 2 2 2 2 2 3 2,9,2
+8,8,publication,2 2 2 2 2 2 2 2 3,2 3,2,3
+8,8,per_copy,2 2 2 2 2 2 2 2 3,2 2 2 2 2 2 2 2 3,9,3

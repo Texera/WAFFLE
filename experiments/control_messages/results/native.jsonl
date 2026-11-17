@@ -1,0 +1,8 @@
+{"warmup":false,"execution_ns":17694174500,"strategy":"copies","sample":0,"pair":0,"case":"width-1-copies","rows":[{"K":2,"callbacks":1,"rows_seen":1}],"compilation_ns":168514200,"execution_id":976271793}
+{"warmup":false,"execution_ns":13188120500,"strategy":"update","sample":1,"pair":0,"case":"width-1-update","rows":[{"K":3,"callbacks":2,"rows_seen":1}],"compilation_ns":6154900,"execution_id":976271794}
+{"warmup":false,"execution_ns":15081275000,"strategy":"copies","sample":2,"pair":0,"case":"width-2-copies","rows":[{"K":2,"callbacks":1,"rows_seen":2}],"compilation_ns":7136200,"execution_id":976271795}
+{"warmup":false,"execution_ns":14614960400,"strategy":"update","sample":3,"pair":0,"case":"width-2-update","rows":[{"K":3,"callbacks":2,"rows_seen":2}],"compilation_ns":6113400,"execution_id":976271796}
+{"warmup":false,"execution_ns":19514620300,"strategy":"copies","sample":4,"pair":0,"case":"width-4-copies","rows":[{"K":2,"callbacks":1,"rows_seen":4}],"compilation_ns":11313700,"execution_id":976271797}
+{"warmup":false,"execution_ns":20509129100,"strategy":"update","sample":5,"pair":0,"case":"width-4-update","rows":[{"K":3,"callbacks":2,"rows_seen":4}],"compilation_ns":7837000,"execution_id":976271798}
+{"warmup":false,"execution_ns":30241342200,"strategy":"copies","sample":6,"pair":0,"case":"width-8-copies","rows":[{"K":2,"callbacks":1,"rows_seen":8}],"compilation_ns":11266100,"execution_id":976271799}
+{"warmup":false,"execution_ns":29265669000,"strategy":"update","sample":7,"pair":0,"case":"width-8-update","rows":[{"K":3,"callbacks":2,"rows_seen":8}],"compilation_ns":9344900,"execution_id":976271800}
