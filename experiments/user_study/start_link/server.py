@@ -40,7 +40,6 @@ class Assignment:
 class Config:
     origin: str
     form_url: str
-    id_field: str
     order_field: str
 
     def __post_init__(self):
@@ -50,13 +49,12 @@ class Config:
             raise ValueError('origin must be an HTTPS origin without a path')
         if not re.fullmatch(r'https://docs\.google\.com/forms/d/e/[A-Za-z0-9_-]+/viewform', self.form_url):
             raise ValueError('form_url must be a Google Forms respondent URL without a query')
-        if (any(not re.fullmatch(r'entry\.[0-9]+', field) for field in (self.id_field, self.order_field))
-                or self.id_field == self.order_field):
-            raise ValueError('Use two distinct entry fields from Get pre-filled link')
+        if not re.fullmatch(r'entry\.[0-9]+', self.order_field):
+            raise ValueError('Use the sequence entry field from Get pre-filled link')
 
-    def prefill(self, participant, sequence):
+    def prefill(self, sequence):
         return self.form_url + '?' + urlencode({
-            'usp': 'pp_url', self.id_field: participant, self.order_field: sequence})
+            'usp': 'pp_url', self.order_field: sequence})
 
 
 class Allocator:
@@ -151,7 +149,7 @@ def make_server(address, config, allocator):
 
         def redirect(self, assignment):
             self.respond(303, headers={'Location': config.prefill(
-                assignment.participant, assignment.sequence)})
+                assignment.sequence)})
 
         def do_HEAD(self):
             self.respond(200 if urlsplit(self.path).path in ('/study', '/study/') else 404)
@@ -175,7 +173,7 @@ def make_server(address, config, allocator):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>WAFFLE study</title><style>body{font:18px/1.5 system-ui;max-width:40rem;margin:12vh auto;padding:1.5rem}button{font:inherit;padding:.6rem 1.2rem}</style>
 <h1>Opening the study form…</h1>
-<p>Your participant ID and task order will be filled in automatically.</p>
+<p>Your task order will be filled in automatically.</p>
 <p>Use this browser if you return, so your assignment stays the same.</p>
 <form method="post" action="/study/start" id="start"><input type="hidden" name="start" value="1"><button>Continue to the form</button></form>
 <noscript><p>Select Continue to open the form.</p></noscript>

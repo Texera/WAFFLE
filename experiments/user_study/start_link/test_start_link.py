@@ -19,7 +19,7 @@ class StartLinkTests(unittest.TestCase):
         self.db = Path(self.temp.name) / 'assignments.sqlite3'
         self.config = Config('https://study.example',
                              'https://docs.google.com/forms/d/e/TEST/viewform',
-                             'entry.123', 'entry.456')
+                             'entry.456')
         self.allocator = Allocator(self.db)
 
     def tearDown(self):
@@ -50,11 +50,11 @@ class StartLinkTests(unittest.TestCase):
 
     def test_prefill_uses_exact_order_and_fixed_destination(self):
         for sequence in SEQUENCES:
-            url = self.config.prefill('W0001', sequence)
+            url = self.config.prefill(sequence)
             parts = urlsplit(url)
             self.assertEqual(parts.netloc, 'docs.google.com')
             self.assertEqual(parse_qs(parts.query), {
-                'usp': ['pp_url'], 'entry.123': ['W0001'], 'entry.456': [sequence]})
+                'usp': ['pp_url'], 'entry.456': [sequence]})
 
     def test_config_rejects_invalid_targets_and_fields(self):
         for kwargs in [dict(origin='http://study.example'),
@@ -62,18 +62,19 @@ class StartLinkTests(unittest.TestCase):
                        dict(form_url='https://evil.example/forms/d/e/TEST/viewform'),
                        dict(form_url='https://docs.google.com/forms/d/e/TEST/formResponse'),
                        dict(form_url='https://docs.google.com/forms/d/e/TEST/viewform?next=bad'),
-                       dict(id_field='123'), dict(order_field='entry.123')]:
+                       dict(order_field='123'), dict(order_field='entry.invalid')]:
             args = dict(origin=self.config.origin, form_url=self.config.form_url,
-                        id_field=self.config.id_field, order_field=self.config.order_field)
+                        order_field=self.config.order_field)
             args.update(kwargs)
             with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
                 Config(**args)
 
     def test_config_from_observed_prefill_link(self):
-        link = self.config.prefill('TEST-LINK', SEQUENCES[0])
+        link = self.config.prefill(SEQUENCES[0])
         self.assertEqual(from_prefilled_link(link, self.config.origin), self.config)
-        for bad in [link.replace('TEST-LINK', 'someone'), link + '&entry.789=extra',
-                    link + '&entry.123=duplicate', link.replace('KNIME+A+then+Texera+B', 'choose')]:
+        for bad in [self.config.form_url, link + '&entry.789=extra',
+                    link + '&entry.456=duplicate', link.replace('KNIME+A+then+Texera+B', 'choose'),
+                    link + '&entry.123=TEST-LINK']:
             with self.subTest(link=bad), self.assertRaises(ValueError):
                 from_prefilled_link(bad, self.config.origin)
 
@@ -92,6 +93,7 @@ class StartLinkTests(unittest.TestCase):
             status, headers, body = request('GET', '/study')
             self.assertEqual(status, 200)
             self.assertIn(b'Opening the study form', body)
+            self.assertNotIn(b'participant ID', body)
             self.assertIn("form-action 'self' https://docs.google.com", headers['Content-Security-Policy'])
             # no-referrer makes a browser's HTML form POST send Origin: null.
             self.assertEqual(headers['Referrer-Policy'], 'same-origin')
@@ -106,7 +108,9 @@ class StartLinkTests(unittest.TestCase):
             status, headers, _ = request('POST', '/study/start', 'start=1', good)
             self.assertEqual(status, 303)
             destination = headers['Location']
-            self.assertIn('entry.123=W0001', destination)
+            fields = parse_qs(urlsplit(destination).query)
+            self.assertEqual(set(fields), {'usp', 'entry.456'})
+            self.assertIn(fields['entry.456'][0], SEQUENCES)
             # Existing Texera/browser cookies must not break our cookie parsing.
             mixed = {'Cookie': 'unrelated={"value":"x"}; ' + cookie}
             self.assertEqual(request('GET', '/study', headers=mixed)[1]['Location'], destination)

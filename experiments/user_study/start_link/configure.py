@@ -11,14 +11,13 @@ def from_prefilled_link(link, origin):
     parts = urlsplit(link.strip())
     query = parse_qs(parts.query, keep_blank_values=True)
     fields = {key: values for key, values in query.items() if key.startswith('entry.')}
-    if len(fields) != 2 or any(len(values) != 1 for values in fields.values()):
-        raise ValueError('Prefill only Participant ID and Assigned sequence')
-    ids = [key for key, values in fields.items() if values == ['TEST-LINK']]
+    if len(fields) != 1 or any(len(values) != 1 for values in fields.values()):
+        raise ValueError('Prefill only Assigned sequence')
     orders = [key for key, values in fields.items() if values[0] in SEQUENCES]
-    if len(ids) != 1 or len(orders) != 1:
-        raise ValueError('Use TEST-LINK for the ID and one of the four exact study sequences')
+    if len(orders) != 1:
+        raise ValueError('Use one of the four exact study sequences')
     return Config(origin, urlunsplit((parts.scheme, parts.netloc, parts.path, '', '')),
-                  ids[0], orders[0])
+                  orders[0])
 
 
 def main():
