@@ -20,7 +20,7 @@ Each tool block includes two minutes to run the unchanged connected-loop starter
 1. The supplied loop runs K=2 once. Change it to try K=2,3,4, return every K and score, and identify the best K.
 2. Adapt that saved workflow to stop when the score first reaches the supplied target, including that row; otherwise finish after K=4. Return every K and score actually tried.
 
-The two packs use the same task and different coordinates/targets. Assign KNIME/A→Texera/B, KNIME/B→Texera/A, Texera/A→KNIME/B, Texera/B→KNIME/A evenly. Do not let participants choose their order. Both tools start with connected loop controls and prepared computation. KNIME uses Counting Loop Start and Variable Condition Loop End from the outset. Texera uses CSV File Scan, Loop Start, the prepared clustering body, Loop End and Sort. There is no native K-means descriptor in the tested Texera version. See SHORT_REFERENCE.md for matched field guides.
+Task A and Task B use the same two steps with different coordinates and score targets. Assign KNIME/A→Texera/B, KNIME/B→Texera/A, Texera/A→KNIME/B, Texera/B→KNIME/A evenly. Do not let participants choose their order. Both tools start with connected loop controls and prepared computation. KNIME uses Counting Loop Start and Variable Condition Loop End from the outset. Texera uses CSV File Scan, Loop Start, the prepared clustering body, Loop End and Sort. There is no native K-means descriptor in the tested Texera version. See SHORT_REFERENCE.md for matched field guides.
 
 ## Single Google Form
 
@@ -42,4 +42,4 @@ Primary outcome: correct independent configure-and-adapt completion within eight
 
 ## Readiness
 
-Generate with `study.py prepare <fresh-folder> --short`. The native check set contains 24 runs: two platforms, two packs, and six cases (single-iteration scaffold; visible/changed-input sweep; visible/immediate-stop/unreached-target adaptation). Historical 36-run captures remain the old three-task design. GUI rehearsal and a teammate timing pilot are separate checks. Repeat setup/import/run/export on the hosted Texera server before recruiting; a localhost check does not validate that deployment.
+Generate with `study.py prepare <fresh-folder> --short`. The native check set contains 24 runs: two platforms, two tasks, and six cases (single-iteration scaffold; visible/changed-input sweep; visible/immediate-stop/unreached-target adaptation). Historical 36-run captures remain the old three-task design. GUI rehearsal and a teammate timing pilot are separate checks. Repeat setup/import/run/export on the hosted Texera server before recruiting; a localhost check does not validate that deployment.

@@ -48,6 +48,19 @@ class StartLinkTests(unittest.TestCase):
             with self.subTest(token=token), self.assertRaises(ValueError):
                 self.allocator.assign(token)
 
+    def test_existing_sequence_indices_keep_their_task_and_tool_order(self):
+        expected = (
+            'Task A on KNIME, then Task B on Texera',
+            'Task B on KNIME, then Task A on Texera',
+            'Task A on Texera, then Task B on KNIME',
+            'Task B on Texera, then Task A on KNIME',
+        )
+        for index, label in enumerate(expected):
+            assigned = Allocator.result((1, index))
+            self.assertEqual(assigned.sequence, label)
+            fields = parse_qs(urlsplit(self.config.prefill(assigned.sequence)).query)
+            self.assertEqual(fields['entry.456'], [label])
+
     def test_prefill_uses_exact_order_and_fixed_destination(self):
         for sequence in SEQUENCES:
             url = self.config.prefill(sequence)
@@ -73,7 +86,7 @@ class StartLinkTests(unittest.TestCase):
         link = self.config.prefill(SEQUENCES[0])
         self.assertEqual(from_prefilled_link(link, self.config.origin), self.config)
         for bad in [self.config.form_url, link + '&entry.789=extra',
-                    link + '&entry.456=duplicate', link.replace('KNIME+A+then+Texera+B', 'choose'),
+                    link + '&entry.456=duplicate', self.config.prefill('choose'),
                     link + '&entry.123=TEST-LINK']:
             with self.subTest(link=bad), self.assertRaises(ValueError):
                 from_prefilled_link(bad, self.config.origin)

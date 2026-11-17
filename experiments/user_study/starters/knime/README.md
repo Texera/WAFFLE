@@ -1,9 +1,9 @@
 # KNIME study starters
 
-Download the pack assigned by the organizer:
+Download the starter for your assigned task.
 
-- [Pack A](https://raw.githubusercontent.com/Texera/WAFFLE/main/experiments/user_study/starters/knime/KNIME-Pack-A-starter.knwf)
-- [Pack B](https://raw.githubusercontent.com/Texera/WAFFLE/main/experiments/user_study/starters/knime/KNIME-Pack-B-starter.knwf)
+- [Task A](https://raw.githubusercontent.com/Texera/WAFFLE/main/experiments/user_study/starters/knime/KNIME-Task-A-starter.knwf)
+- [Task B](https://raw.githubusercontent.com/Texera/WAFFLE/main/experiments/user_study/starters/knime/KNIME-Task-B-starter.knwf)
 
 Import the `.knwf` archive into KNIME Local space. Each archive contains its input
 data and starts with one iteration at K=2. Use the organizer's task instructions

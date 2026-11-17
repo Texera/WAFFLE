@@ -19,10 +19,10 @@ from urllib.parse import urlencode, urlsplit
 
 COOKIE = '__Host-waffle-study'
 SEQUENCES = (
-    'KNIME A then Texera B',
-    'KNIME B then Texera A',
-    'Texera A then KNIME B',
-    'Texera B then KNIME A',
+    'Task A on KNIME, then Task B on Texera',
+    'Task B on KNIME, then Task A on Texera',
+    'Task A on Texera, then Task B on KNIME',
+    'Task B on Texera, then Task A on KNIME',
 )
 
 

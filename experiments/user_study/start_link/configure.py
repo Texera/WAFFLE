@@ -12,7 +12,7 @@ def from_prefilled_link(link, origin):
     query = parse_qs(parts.query, keep_blank_values=True)
     fields = {key: values for key, values in query.items() if key.startswith('entry.')}
     if len(fields) != 1 or any(len(values) != 1 for values in fields.values()):
-        raise ValueError('Prefill only Assigned sequence')
+        raise ValueError('Prefill only Your assigned task order')
     orders = [key for key, values in fields.items() if values[0] in SEQUENCES]
     if len(orders) != 1:
         raise ValueError('Use one of the four exact study sequences')
