@@ -7,7 +7,6 @@ import argparse
 from contextlib import closing, contextmanager
 import hashlib
 import html
-import http.cookies
 import http.server
 import json
 import os
@@ -126,9 +125,10 @@ def make_server(address, config, allocator):
             self.send_header('Content-Type', 'text/html; charset=utf-8')
             self.send_header('Content-Length', str(len(data)))
             self.send_header('Cache-Control', 'no-store')
-            self.send_header('Referrer-Policy', 'no-referrer')
+            # Keep Origin on our same-origin form POST, but omit referrers to Google.
+            self.send_header('Referrer-Policy', 'same-origin')
             self.send_header('X-Content-Type-Options', 'nosniff')
-            csp = "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'"
+            csp = "default-src 'none'; style-src 'unsafe-inline'; form-action 'self' https://docs.google.com; frame-ancestors 'none'; base-uri 'none'"
             if nonce:
                 csp += "; script-src 'nonce-" + nonce + "'"
             self.send_header('Content-Security-Policy', csp)
@@ -139,13 +139,15 @@ def make_server(address, config, allocator):
                 self.wfile.write(data)
 
         def token(self):
-            cookie = http.cookies.SimpleCookie()
-            try:
-                cookie.load(self.headers.get('Cookie', ''))
-                token = cookie[COOKIE].value if COOKIE in cookie else None
-                return token if valid_token(token) else None
-            except http.cookies.CookieError:
-                return None
+            # Parse only our fixed-format token. An unrelated JSON-valued cookie
+            # can make SimpleCookie silently discard the entire request header.
+            values = []
+            for header in self.headers.get_all('Cookie', []):
+                for pair in header.split(';'):
+                    name, separator, value = pair.strip().partition('=')
+                    if name == COOKIE and separator:
+                        values.append(value)
+            return values[0] if len(values) == 1 and valid_token(values[0]) else None
 
         def redirect(self, assignment):
             self.respond(303, headers={'Location': config.prefill(

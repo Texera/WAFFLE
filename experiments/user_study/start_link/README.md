@@ -22,6 +22,8 @@ python server.py --config /PRIVATE_CONFIG/start-link.json --database /PRIVATE_DA
 
 The server listens only on `127.0.0.1`. Place it behind HTTPS and proxy only `/study`, `/study/`, and `/study/start`. Preserve the existing Texera access gate for all other paths. The redirect destination comes only from the verified configuration, never from a request parameter. It never needs the study password, Google login credentials, or Texera API credentials.
 
+Keep the service's `Referrer-Policy: same-origin` header: `no-referrer` makes an HTML form POST send a null Origin and fail the origin check. Its CSP permits the form's redirect to Google. The assignment cookie is parsed independently of unrelated cookies on the same host.
+
 Suggested Caddy route, before the existing catch-all route:
 
 ```caddyfile

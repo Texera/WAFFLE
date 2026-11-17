@@ -92,6 +92,9 @@ class StartLinkTests(unittest.TestCase):
             status, headers, body = request('GET', '/study')
             self.assertEqual(status, 200)
             self.assertIn(b'Opening the study form', body)
+            self.assertIn("form-action 'self' https://docs.google.com", headers['Content-Security-Policy'])
+            # no-referrer makes a browser's HTML form POST send Origin: null.
+            self.assertEqual(headers['Referrer-Policy'], 'same-origin')
             self.assertIn('HttpOnly', headers['Set-Cookie'])
             self.assertIn('Secure', headers['Set-Cookie'])
             cookie = headers['Set-Cookie'].split(';', 1)[0]
@@ -104,6 +107,13 @@ class StartLinkTests(unittest.TestCase):
             self.assertEqual(status, 303)
             destination = headers['Location']
             self.assertIn('entry.123=W0001', destination)
+            # Existing Texera/browser cookies must not break our cookie parsing.
+            mixed = {'Cookie': 'unrelated={"value":"x"}; ' + cookie}
+            self.assertEqual(request('GET', '/study', headers=mixed)[1]['Location'], destination)
+            duplicate = dict(good, Cookie=cookie + '; ' + cookie)
+            self.assertEqual(request('POST', '/study/start', 'start=1', duplicate)[0], 409)
+            malformed = dict(good, Cookie=COOKIE + '=invalid')
+            self.assertEqual(request('POST', '/study/start', 'start=1', malformed)[0], 409)
             self.assertEqual(request('POST', '/study/start', 'start=1', good)[1]['Location'], destination)
             self.assertEqual(request('GET', '/study?next=https://evil.example', headers={'Cookie': cookie})[1]['Location'], destination)
             self.assertEqual(request('GET', '/api/config')[0], 404)
@@ -111,6 +121,7 @@ class StartLinkTests(unittest.TestCase):
             self.assertEqual(request('POST', '/study/start', 'start=1', {'Origin': self.config.origin})[0], 409)
             bad = dict(good, Origin='https://evil.example')
             self.assertEqual(request('POST', '/study/start', 'start=1', bad)[0], 403)
+            self.assertEqual(request('POST', '/study/start', 'start=1', dict(good, Origin='null'))[0], 403)
             self.assertEqual(request('POST', '/study/start', 'x'*65, good)[0], 400)
             self.assertEqual(request('POST', '/study/start', 'start=wrong', good)[0], 400)
             with closing(sqlite3.connect(self.db)) as db:
