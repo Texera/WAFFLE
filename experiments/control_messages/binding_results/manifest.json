@@ -1,0 +1,53 @@
+{
+  "rows": 4096,
+  "runs": [
+    {
+      "workers": 1,
+      "repeat": 0
+    },
+    {
+      "workers": 2,
+      "repeat": 0
+    },
+    {
+      "workers": 4,
+      "repeat": 0
+    },
+    {
+      "workers": 8,
+      "repeat": 0
+    },
+    {
+      "workers": 1,
+      "repeat": 1
+    },
+    {
+      "workers": 2,
+      "repeat": 1
+    },
+    {
+      "workers": 4,
+      "repeat": 1
+    },
+    {
+      "workers": 8,
+      "repeat": 1
+    },
+    {
+      "workers": 1,
+      "repeat": 2
+    },
+    {
+      "workers": 2,
+      "repeat": 2
+    },
+    {
+      "workers": 4,
+      "repeat": 2
+    },
+    {
+      "workers": 8,
+      "repeat": 2
+    }
+  ]
+}

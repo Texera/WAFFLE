@@ -6,7 +6,7 @@ Experimental scripts, data, recorded results, and figure generation for the WAFF
 | --- | --- | --- |
 | §7.2: translate KNIME loop examples | [case_study](experiments/case_study) | Eight examples; all 241 scalar output rows match |
 | §7.3: create and adapt loops | [user_study](experiments/user_study) | Proposed protocol only; no participant results |
-| §7.4: control messages at a merge | [control_messages](experiments/control_messages) | Eight workflow outputs and 15 arrival orders checked under two identifier policies |
+| §7.4: control-variable delivery and binding | [control_messages](experiments/control_messages) | Eight merge workflows, 15 arrival orders under two policies, and 90 first-tuple bindings in 12 multiworker runs |
 | §§7.5–7.6: global (X) versus modular (Y) planning | [xy_planning](experiments/xy_planning) | Six compiled workflows, three JVMs, 3,600 measured plans; equal minimum costs |
 | §§7.7–7.8: loop versus explicit body copies | [loop_execution](experiments/loop_execution) | 72 native executions, including 12 warm-ups; all outputs checked |
 | Scheduling supplement | [scheduling_oracle](experiments/scheduling_oracle) | Independent scheduling model |

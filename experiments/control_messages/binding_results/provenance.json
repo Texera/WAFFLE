@@ -1,0 +1,31 @@
+{
+  "runtime_revision": "a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6",
+  "runtime_tree": "7cb877ac9ebdc8d829ba59b1fb1e20a870e4a344",
+  "execution_mode": "MATERIALIZED",
+  "machines": 1,
+  "jvm_version": "17.0.14",
+  "suite": "MultiworkerBindingSpec",
+  "runs": 12,
+  "iterations_per_run": 2,
+  "expected_K": [
+    2,
+    3
+  ],
+  "rows_per_iteration": 4096,
+  "worker_counts": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "test_result": "12 passed",
+  "observer": "Read inherited native Filter descriptor at the first tuple callback; delegate filtering unchanged.",
+  "sha256": {
+    "native.jsonl": "6e7c047955b43f31d04e8941cd51c7e5fc9ebe97048078b205ebd41140c0183f",
+    "workflow.json": "079326bfb53cf941e64142c6bbc25b6d1ad87013bc11f061321bbb499c8549b7",
+    "manifest.json": "081e9885b6f1e5c8ce76a46a4ef7394da8c49507fde6ee5c9a85f1ce508e548d",
+    "../MultiworkerBindingSpec.scala": "95fac9140051a5a9f7f6472234057b495427254de5f7170ea2d5a57086f9bf1a",
+    "../prepare_binding.py": "6465b1032785b6fd724df62a9938c7bcc14825ded357bee4ab4decb578b4d251",
+    "../verify_binding.py": "0ef7898282b2aef48edd927c85973e4197b327ca62c52c5e3b026f5f56e052e9"
+  }
+}

@@ -18,6 +18,7 @@ def main():
     p.add_argument('--sbt-launch', type=Path, default=os.environ.get('SBT_LAUNCH'))
     p.add_argument('--only')
     p.add_argument('--case-study', action='store_true')
+    p.add_argument('--binding', action='store_true')
     p.add_argument('--dry-run', action='store_true')
     a = p.parse_args()
     a.package, a.repo, a.python = a.package.resolve(), a.repo.resolve(), a.python.resolve()
@@ -43,6 +44,9 @@ def main():
     if a.case_study:
         source = Path(__file__).resolve().parents[1] / 'case_study/CaseExecutionSpec.scala'
         test_name = 'CaseExecutionSpec'
+    if a.binding:
+        source = Path(__file__).resolve().parents[1] / 'control_messages/MultiworkerBindingSpec.scala'
+        test_name = 'MultiworkerBindingSpec'
     test = f'WorkflowExecutionService/testOnly *{test_name} -- -oD'
     if a.only:
         test += ' -z ' + a.only

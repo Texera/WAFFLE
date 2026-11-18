@@ -36,6 +36,7 @@ def main():
         assert summary == read(case / 'results/comparison.json')
         print('Case study: 8/8 matches; 241 output rows verified')
         print(run(ROOT / 'experiments/control_messages/verify.py').strip())
+        print(run(ROOT / 'experiments/control_messages/verify_binding.py').strip())
         execution = ROOT / 'experiments/loop_execution'
         run(execution / 'analyze.py', execution / 'results', temp / 'execution')
         assert read(temp / 'execution/summary.json') == read(execution / 'results/summary.json')
@@ -51,7 +52,9 @@ def main():
         spec.loader.exec_module(module)
         assert module.summarize() == read(planning / 'summary.json')
         print('Planning: all 3,600 measured plans reproduce equal X/Y minima and timing summaries')
-        for folder, test in [(case, 'test_check.py'), (execution, 'test_experiment.py'),
+        for folder, test in [(case, 'test_check.py'),
+                             (ROOT / 'experiments/control_messages', 'test_verify_binding.py'),
+                             (execution, 'test_experiment.py'),
                              (planning / 'runner', 'test_module_oracle.py')]:
             run(folder / test, cwd=folder)
             print('PASS', test)
