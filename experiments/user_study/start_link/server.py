@@ -19,10 +19,10 @@ from urllib.parse import urlencode, urlsplit
 
 COOKIE = '__Host-waffle-study'
 SEQUENCES = (
-    'Task A on KNIME, then Task B on Texera',
-    'Task B on KNIME, then Task A on Texera',
-    'Task A on Texera, then Task B on KNIME',
-    'Task B on Texera, then Task A on KNIME',
+    'Workflow A on KNIME, then Workflow B on Texera',
+    'Workflow B on KNIME, then Workflow A on Texera',
+    'Workflow A on Texera, then Workflow B on KNIME',
+    'Workflow B on Texera, then Workflow A on KNIME',
 )
 
 
@@ -173,7 +173,7 @@ def make_server(address, config, allocator):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>WAFFLE study</title><style>body{font:18px/1.5 system-ui;max-width:40rem;margin:12vh auto;padding:1.5rem}button{font:inherit;padding:.6rem 1.2rem}</style>
 <h1>Opening the study form…</h1>
-<p>Your task order will be filled in automatically.</p>
+<p>Your workflow order will be filled in automatically. In each tool, complete Task 1 (configure the loop) and Task 2 (change the stopping rule).</p>
 <p>Use this browser if you return, so your assignment stays the same.</p>
 <form method="post" action="/study/start" id="start"><input type="hidden" name="start" value="1"><button>Continue to the form</button></form>
 <noscript><p>Select Continue to open the form.</p></noscript>

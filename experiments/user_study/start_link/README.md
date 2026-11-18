@@ -1,6 +1,6 @@
 # One shared study link
 
-This small service assigns one of the four task orders, then redirects to the existing Google Form with the order filled in. Google Forms collects the participant's verified account email; there is no Participant ID question. The service does not collect email, submit responses or change the form. Python 3.12 is the only dependency.
+This small service assigns one of the four workflow orders, then redirects to the existing Google Form with the order filled in. Google Forms collects the participant's verified account email; there is no Participant ID question. The service does not collect email, submit responses or change the form. Python 3.12 is the only dependency.
 
 ## Behavior
 
@@ -13,7 +13,7 @@ This small service assigns one of the four task orders, then redirects to the ex
 
 ## Configure
 
-In the Form editor, choose **Get pre-filled link**. Select `Task A on KNIME, then Task B on Texera` for Your assigned task order, leaving the other fields blank. Generate and save that URL in a local text file. This is not a response submission. Enable **Collect email addresses: Verified** in the form; do not add a separate email or ID question.
+In the Form editor, choose **Get pre-filled link**. Select `Workflow A on KNIME, then Workflow B on Texera` for Your assigned workflow order, leaving the other fields blank. Generate and save that URL in a local text file. This is not a response submission. Enable **Collect email addresses: Verified** in the form; do not add a separate email or ID question.
 
 ```sh
 python configure.py prefilled-link.txt --origin https://YOUR_HOST:8080 --output start-link.json

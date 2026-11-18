@@ -17,10 +17,10 @@ Each tool block includes two minutes to run the unchanged connected-loop starter
 
 ## Tasks
 
-1. The supplied loop runs K=2 once. Change it to try K=2,3,4, return every K and score, and identify the best K.
-2. Adapt that saved workflow to stop when the score first reaches the supplied target, including that row; otherwise finish after K=4. Return every K and score actually tried.
+1. **Task 1: Configure the loop.** The supplied loop runs K=2 once. Change it to try K=2,3,4, return every K and score, and identify the best K.
+2. **Task 2: Change the stopping rule.** Adapt that saved workflow to stop when the score first reaches the supplied target, including that row; otherwise finish after K=4. Return every K and score actually tried.
 
-Task A and Task B use the same two steps with different coordinates and score targets. Assign KNIME/A→Texera/B, KNIME/B→Texera/A, Texera/A→KNIME/B, Texera/B→KNIME/A evenly. Do not let participants choose their order. Both tools start with connected loop controls and prepared computation. KNIME uses Counting Loop Start and Variable Condition Loop End from the outset. Texera uses CSV File Scan, Loop Start, the prepared clustering body, Loop End and Sort. There is no native K-means descriptor in the tested Texera version. See SHORT_REFERENCE.md for matched field guides.
+Workflow A and Workflow B use the same two tasks with different coordinates and score targets. Assign KNIME/A→Texera/B, KNIME/B→Texera/A, Texera/A→KNIME/B, Texera/B→KNIME/A evenly. Do not let participants choose their order. Both tools start with connected loop controls and prepared computation. KNIME uses Counting Loop Start and Variable Condition Loop End from the outset. Texera uses CSV File Scan, Loop Start, the prepared clustering body, Loop End and Sort. There is no native K-means descriptor in the tested Texera version. See SHORT_REFERENCE.md for matched field guides.
 
 ## Single Google Form
 

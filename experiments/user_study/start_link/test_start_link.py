@@ -50,10 +50,10 @@ class StartLinkTests(unittest.TestCase):
 
     def test_existing_sequence_indices_keep_their_task_and_tool_order(self):
         expected = (
-            'Task A on KNIME, then Task B on Texera',
-            'Task B on KNIME, then Task A on Texera',
-            'Task A on Texera, then Task B on KNIME',
-            'Task B on Texera, then Task A on KNIME',
+            'Workflow A on KNIME, then Workflow B on Texera',
+            'Workflow B on KNIME, then Workflow A on Texera',
+            'Workflow A on Texera, then Workflow B on KNIME',
+            'Workflow B on Texera, then Workflow A on KNIME',
         )
         for index, label in enumerate(expected):
             assigned = Allocator.result((1, index))

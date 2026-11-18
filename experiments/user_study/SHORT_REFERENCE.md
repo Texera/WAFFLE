@@ -1,6 +1,6 @@
 # Field guide: 35-minute study
 
-Use only the section for your current tool. The organizer supplies the starter for your assigned task. Keep the prepared calculation unchanged. Higher scores are better; the negative sign is expected. Save a different workflow copy for each task.
+Use only the section for your current tool. The organizer supplies the starter for your assigned workflow. Keep the prepared calculation unchanged. Higher scores are better; the negative sign is expected. Save a different workflow copy for each task.
 
 ## KNIME
 
