@@ -15,7 +15,7 @@ The original six workflows retain their 20 warm-up and 100 measured pairs per JV
 
 In the original branching trials from 52 through 100 operators, each planner had 120 seconds per search after compilation and three warm-ups on the 36-operator graph. Every timed search used a fresh JVM and the same compiled graph as the other planner. The inventories and outcomes are under `intermediate/branch/` (52–92 operators) and `dense/` (100 operators).
 
-We retried X with a 900-second limit, starting at its first original timeout (68 operators) and advancing eight operators after each completed search. This sweep stopped at its first timeout (76 operators). The raw retries are in `extended-x/`. We then gave X 3,600 seconds on the 76-operator graph alone, keeping the same benchmark and warm-up. That trial is in `hour-x76/`. At larger sizes the arrows retain the original 120-second limit. A timeout supplies only a lower bound on elapsed time.
+We retried X with a 900-second limit, starting at its first original timeout (68 operators) and advancing eight operators after each completed search. This sweep stopped at its first timeout (76 operators). The raw retries are in `extended-x/`. We then gave X 3,600 seconds on the 76-operator graph alone, keeping the same benchmark and warm-up. That trial is in `hour-x76/`. A further trial gave X 21,600 seconds on the 84-operator graph alone. Its raw files are in `six-hour-x84/`. A timeout supplies only a lower bound on elapsed time.
 
 In each figure the left panel grows a balanced pair of branch groups at a time; isolated crosses mark the two unequal 24-operator layouts. The right panel adds one filter per group at each step. In the timing figure filled points are pooled medians and whiskers span the three JVM medians. Open points and dotted segments identify the single-trial series. Arrows mark the deadline at sizes that timed out. No timing or state count is imputed.
 
@@ -23,7 +23,7 @@ The verifier reconstructs each returned plan from its cuts and independently che
 
 At 44 operators with five branch groups per side, X visited 1,024 states and Y visited 64. At four groups per side, adding filters increased the graph from 36 to 100 operators while the state counts stayed at 256 and 32. On that 100-operator graph the median planning times were 1.18 seconds for X and 297 milliseconds for Y. On the separate 100-operator graph with 12 groups per side, Y reached the verified minimum cost of 51 in 36.2 seconds and X reached the 120-second limit.
 
-With the 15-minute limit X completed the 68-operator graph in 8.91 minutes, visiting 65,536 states. Y visited 512 states in 1.34 seconds. Both plans attained the verified minimum cost of 35. X timed out at 76 operators after 15 minutes. In the one-hour retry it completed that graph in 2,974.745 seconds and visited 262,144 states. Y took 3.389 seconds and visited 1,024 states on the same graph. Both returned plans with verified minimum cost 39. Sizes above 76 retain their original two-minute trials.
+With the 15-minute limit X completed the 68-operator graph in 8.91 minutes, visiting 65,536 states. Y visited 512 states in 1.34 seconds. Both plans attained the verified minimum cost of 35. X timed out at 76 operators after 15 minutes. In the one-hour retry it completed that graph in 2,974.745 seconds and visited 262,144 states. Y took 3.389 seconds and visited 1,024 states on the same graph. Both returned plans with verified minimum cost 39. The separate six-hour run at 84 operators timed out. The figures retain the previously published two-minute observations above 76 operators.
 
 ## Reproduce
 
@@ -35,7 +35,8 @@ Prepare the pinned planning checkout and prerequisites as described in the [plan
     python run.py PLANNING_CHECKOUT NEW_FILTER_GAPS --filter-gaps --java JAVA17 --sbt-launch SBT_LAUNCH_JAR --python TEXERA_PYTHON
     python run.py PLANNING_CHECKOUT NEW_EXTENDED_X --extend-x 900 --java JAVA17 --sbt-launch SBT_LAUNCH_JAR --python TEXERA_PYTHON
     python run.py PLANNING_CHECKOUT NEW_X76 --extend-x 3600 --operators 76 --java JAVA17 --sbt-launch SBT_LAUNCH_JAR --python TEXERA_PYTHON
+    python run.py PLANNING_CHECKOUT NEW_X84 --extend-x 21600 --operators 84 --java JAVA17 --sbt-launch SBT_LAUNCH_JAR --python TEXERA_PYTHON
     python verify.py NEW_RUN --write NEW_SUMMARY.json
-    python verify.py NEW_RUN --branches NEW_BRANCH_GAPS --filters NEW_FILTER_GAPS --dense NEW_DENSE_RUN --extended NEW_EXTENDED_X --single-x NEW_X76 --write-intermediate NEW_INTERMEDIATE.json
+    python verify.py NEW_RUN --branches NEW_BRANCH_GAPS --filters NEW_FILTER_GAPS --dense NEW_DENSE_RUN --extended NEW_EXTENDED_X --single-x NEW_X76 --single-x NEW_X84 --write-intermediate NEW_INTERMEDIATE.json
 
 For the published observations, run `python verify.py` and `python charts.py` in this directory. The runner applies the fixture patch to a copy of the pinned source and supplies it to the benchmark build. The planner implementation is unchanged.

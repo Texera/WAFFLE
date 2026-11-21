@@ -1,0 +1,11 @@
+{
+  "revision": "ddc04792511838d06f982ced01641e7d06ce6524",
+  "pruning": true,
+  "java": "openjdk version \"17.0.14\" 2025-01-21\nOpenJDK Runtime Environment JBR-17.0.14+1-1367.22-nomod (build 17.0.14+1-b1367.22)\nOpenJDK 64-Bit Server VM JBR-17.0.14+1-1367.22-nomod (build 17.0.14+1-b1367.22, mixed mode, sharing)",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "fresh_jvms_per_method": 1,
+  "trials_per_method": 1,
+  "warmup_per_method": 3,
+  "limit_s": 21600
+}

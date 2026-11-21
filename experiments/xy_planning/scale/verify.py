@@ -223,10 +223,12 @@ def verify_intermediate(branches, filters, endpoint, extended=None, single_x=Non
             if trial["X"]["status"] == "timeout":
                 break
         assert tested == {d.name for d in extended.glob("groups-*")}
-    if single_x is not None:
-        [folder] = single_x.glob("groups-*")
+    if isinstance(single_x, Path):
+        single_x = [single_x]
+    for run in single_x or ():
+        [folder] = run.glob("groups-*")
         baseline = json.loads((branches / "metadata.json").read_text())
-        metadata = json.loads((single_x / "metadata.json").read_text())
+        metadata = json.loads((run / "metadata.json").read_text())
         limit = metadata["limit_s"]
         assert metadata == {**baseline, "limit_s": limit}
         [trial] = [r for r in trials if folder.name == f"groups-{r['inside']}"]
@@ -254,7 +256,12 @@ if __name__ == "__main__":
     )
     parser.add_argument("--write-intermediate", type=Path)
     parser.add_argument("--extended", type=Path, default=HERE / "extended-x")
-    parser.add_argument("--single-x", type=Path, default=HERE / "hour-x76")
+    parser.add_argument(
+        "--single-x",
+        action="append",
+        type=Path,
+        help="One targeted X retry directory; repeat in trial order",
+    )
     args = parser.parse_args()
     data = verify(args.raw)
     if args.write:
@@ -265,7 +272,11 @@ if __name__ == "__main__":
         assert json.loads((HERE / "summary.json").read_text()) == data
     if args.write_intermediate or not args.write:
         intermediate = verify_intermediate(
-            args.branches, args.filters, args.dense, args.extended, args.single_x
+            args.branches,
+            args.filters,
+            args.dense,
+            args.extended,
+            args.single_x or [HERE / "hour-x76", HERE / "six-hour-x84"],
         )
         if args.write_intermediate:
             args.write_intermediate.write_text(
