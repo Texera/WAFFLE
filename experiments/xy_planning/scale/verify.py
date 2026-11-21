@@ -196,7 +196,7 @@ def verify_dense(root, groups=12, metadata_dir=None, x_retry=None, retry_limit=N
     return entry
 
 
-def verify_intermediate(branches, filters, endpoint, extended=None):
+def verify_intermediate(branches, filters, endpoint, extended=None, single_x=None):
     trials = [verify_dense(branches / f"groups-{g}", g, branches) for g in range(6, 12)]
     trials.append(verify_dense(endpoint))
     if extended is not None:
@@ -223,6 +223,21 @@ def verify_intermediate(branches, filters, endpoint, extended=None):
             if trial["X"]["status"] == "timeout":
                 break
         assert tested == {d.name for d in extended.glob("groups-*")}
+    if single_x is not None:
+        [folder] = single_x.glob("groups-*")
+        baseline = json.loads((branches / "metadata.json").read_text())
+        metadata = json.loads((single_x / "metadata.json").read_text())
+        limit = metadata["limit_s"]
+        assert metadata == {**baseline, "limit_s": limit}
+        [trial] = [r for r in trials if folder.name == f"groups-{r['inside']}"]
+        assert trial["X"]["status"] == "timeout" and trial["X"]["limit_s"] < limit
+        groups = trial["inside"]
+        root = endpoint if groups == 12 else branches / folder.name
+        meta = endpoint if groups == 12 else branches
+        result = verify_dense(root, groups, meta, folder / "X", limit)
+        assert result["Y"] == trial["Y"]
+        if result["X"]["status"] == "completed":
+            trial["X"] = result["X"]
     return {"branch": trials, "filter": verify(filters, FILTER_GAPS)}
 
 
@@ -239,6 +254,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("--write-intermediate", type=Path)
     parser.add_argument("--extended", type=Path, default=HERE / "extended-x")
+    parser.add_argument("--single-x", type=Path, default=HERE / "hour-x76")
     args = parser.parse_args()
     data = verify(args.raw)
     if args.write:
@@ -249,7 +265,7 @@ if __name__ == "__main__":
         assert json.loads((HERE / "summary.json").read_text()) == data
     if args.write_intermediate or not args.write:
         intermediate = verify_intermediate(
-            args.branches, args.filters, args.dense, args.extended
+            args.branches, args.filters, args.dense, args.extended, args.single_x
         )
         if args.write_intermediate:
             args.write_intermediate.write_text(

@@ -66,7 +66,7 @@ def draw(metric, output):
         fig, (branch_ax, filter_ax) = plt.subplots(
             1, 2, sharey=True, figsize=(3.35, 2.12)
         )
-        fig.subplots_adjust(left=0.17, right=0.98, bottom=0.23, top=0.76, wspace=0.13)
+        fig.subplots_adjust(left=0.20, right=0.98, bottom=0.23, top=0.76, wspace=0.13)
         handles = []
         for method, _, color, marker, size in METHODS:
             handle = plot_runs(
@@ -123,7 +123,7 @@ def draw(metric, output):
             ax.set_axisbelow(True)
             ax.tick_params(labelsize=6.6, length=2.4, pad=2)
             ax.spines[["right", "top"]].set_visible(False)
-        branch_ax.set_xticks([12, 36, 60, 84, 100])
+        branch_ax.set_xticks([12, 36, 60, 76, 100])
         filter_ax.set_xticks([36, 52, 68, 84, 100])
         if timing:
             # Reserve space above the highest observed time or timeout arrow.
@@ -145,9 +145,7 @@ def draw(metric, output):
                 for method, *_ in METHODS
             )
             branch_ax.set_ylim(2.8, max(1024, highest) * 1.65)
-            ticks = [
-                n for n in (4, 32, 256, 2048, 16384, 131072) if n <= max(1024, highest)
-            ]
+            ticks = [n for n in (4, 32, 256, 2048, 16384) if n <= max(1024, highest)]
             if highest >= 4 * ticks[-1]:
                 ticks.append(highest)
             branch_ax.set_yticks(ticks, [f"{n:,}" for n in ticks])

@@ -32,6 +32,12 @@ def main():
         metavar="SECONDS",
         help="Retry X at 68 through 100 operators, stopping at the first timeout",
     )
+    parser.add_argument(
+        "--operators",
+        type=int,
+        choices=range(68, 101, 8),
+        help="With --extend-x, retry only the selected balanced branching workflow",
+    )
     series.add_argument(
         "--branch-gaps",
         action="store_true",
@@ -46,6 +52,8 @@ def main():
         "--dense", action="store_true", help="Run the separately capped 12/12 graph"
     )
     args = parser.parse_args()
+    if args.operators is not None and args.extend_x is None:
+        parser.error("--operators requires --extend-x")
     if args.extend_x is not None and args.extend_x <= 120:
         parser.error("--extend-x must exceed the original 120-second limit")
     repo, out = args.repo.resolve(), args.output.resolve()
@@ -126,7 +134,9 @@ def main():
             f"set WorkflowExecutionService / Test / run / javaOptions ++= Seq({java_opts})",
         ]
         if args.extend_x:
-            for groups in range(8, 13):
+            sizes = (args.operators,) if args.operators else range(68, 101, 8)
+            for size in sizes:
+                groups = (size - 4) // 8
                 folder = out / f"groups-{groups}" / "X"
                 folder.mkdir(parents=True)
                 command = f"WorkflowExecutionService/Test/runMain {entry} {folder.as_posix()} X {groups} {args.extend_x}"

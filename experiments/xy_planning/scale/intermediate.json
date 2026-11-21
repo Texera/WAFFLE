@@ -62,8 +62,11 @@
       "inside": 9,
       "outside": 9,
       "X": {
-        "status": "timeout",
-        "limit_s": 900
+        "status": "completed",
+        "limit_s": 3600,
+        "search_states": 262144,
+        "total_ms": 2974745.0024,
+        "cost": 39
       },
       "Y": {
         "status": "completed",
