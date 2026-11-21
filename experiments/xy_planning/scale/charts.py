@@ -1,8 +1,8 @@
-"""Draw the two planning figures from the baseline and scale-extension summaries."""
+"""Plot the branching and fixed-branch filter experiments against physical operator count."""
 
-from pathlib import Path
-import json
 import csv
+import json
+from pathlib import Path
 
 import matplotlib
 
@@ -11,129 +11,132 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import NullLocator
 
 HERE = Path(__file__).resolve().parent
+METHODS = (("X", "global", "#1761a0", "o", 4.0), ("Y", "modular", "#aa4800", "s", 2.9))
+
+
+def plot_runs(ax, rows, method, metric, color, marker, size, line):
+    counts = [row["operators"] for row in rows]
+    stats = [row[method] for row in rows]
+    values = [s[metric] for s in stats]
+    if metric == "pooled_median_ms":
+        low = [v - s["jvm_median_min_ms"] for v, s in zip(values, stats)]
+        high = [s["jvm_median_max_ms"] - v for v, s in zip(values, stats)]
+        ax.errorbar(
+            counts,
+            values,
+            yerr=[low, high],
+            fmt="none",
+            ecolor=color,
+            elinewidth=0.65,
+            capsize=1.4,
+        )
+    (handle,) = ax.plot(
+        counts,
+        values,
+        linestyle=line,
+        marker=marker,
+        markersize=size,
+        color=color,
+        linewidth=1.1,
+        markeredgewidth=0.75,
+    )
+    return handle
 
 
 def draw(metric, output):
     baseline = json.loads((HERE.parent / "summary.json").read_text())
     extended = json.loads((HERE / "summary.json").read_text())
-    branch = sorted(
-        [*baseline, extended[1]], key=lambda r: (r["operators"], r["inside"])
+    balanced = [r for r in baseline if r["inside"] == r["outside"]]
+    balanced += [r for r in extended if r["filters_per_group"] == 0 and r["inside"] > 4]
+    balanced.sort(key=lambda r: r["operators"])
+    unequal = [r for r in baseline if r["inside"] != r["outside"]]
+    filters = sorted(
+        (r for r in extended if r["inside"] == r["outside"] == 4),
+        key=lambda r: r["operators"],
     )
-    serial = [extended[i] for i in (0, 2, 3)]
-    data = [*branch, *serial]
-    labels = [f"{r['operators']}   ({r['inside']}/{r['outside']})" for r in branch]
-    labels.append("100   (12/12)*")
-    labels += [f"{r['operators']}   (+{8 * r['filters_per_group']})" for r in serial]
-    y = [*range(7), 9.5, 10.5, 11.5]
+    timing = metric == "pooled_median_ms"
     with plt.rc_context(
         {"font.family": "DejaVu Serif", "font.size": 7.5, "pdf.fonttype": 42}
     ):
-        fig, ax = plt.subplots(figsize=(3.35, 2.75))
-        fig.subplots_adjust(left=0.27, right=0.97, top=0.90, bottom=0.19)
-        ax.set_xscale("log")
-        ax.set_axisbelow(True)
-        ax.grid(axis="x", color="#dedede", lw=0.5)
-        for name, color, marker, shift in (
-            ("X", "#1761a0", "o", -0.14),
-            ("Y", "#aa4800", "s", 0.14),
-        ):
-            values = [r[name][metric] for r in data]
-            positions = [v + shift for v in y]
-            if metric == "pooled_median_ms":
-                lower = [v - r[name]["jvm_median_min_ms"] for v, r in zip(values, data)]
-                upper = [r[name]["jvm_median_max_ms"] - v for v, r in zip(values, data)]
-                ax.errorbar(
-                    values,
-                    positions,
-                    xerr=[lower, upper],
-                    fmt="none",
-                    ecolor=color,
-                    lw=0.85,
-                    capsize=2,
-                )
-            ax.plot(
-                values,
-                positions,
-                ls="none",
-                marker=marker,
-                markersize=4,
-                color=color,
-                label="X (global)" if name == "X" else "Y (modular)",
+        fig, (branch_ax, filter_ax) = plt.subplots(
+            1, 2, sharey=True, figsize=(3.35, 2.12)
+        )
+        fig.subplots_adjust(left=0.17, right=0.98, bottom=0.23, top=0.76, wspace=0.13)
+        handles = []
+        for method, _, color, marker, size in METHODS:
+            handle = plot_runs(
+                branch_ax, balanced, method, metric, color, marker, size, "-"
             )
-            with (HERE / "dense" / name / "outcome.csv").open(newline="") as stream:
+            handles.append(handle)
+            plot_runs(branch_ax, unequal, method, metric, color, "x", 4, "none")
+            plot_runs(filter_ax, filters, method, metric, color, marker, size, "-")
+            with (HERE / "dense" / method / "outcome.csv").open(newline="") as stream:
                 (trial,) = csv.DictReader(stream)
             if trial["status"] == "completed":
-                value = (
-                    int(trial["states"])
-                    if metric == "search_states"
-                    else int(trial["total_ns"]) / 1e6
+                value = int(trial["total_ns"]) / 1e6 if timing else int(trial["states"])
+                last = balanced[-1]
+                branch_ax.plot(
+                    [last["operators"], 100],
+                    [last[method][metric], value],
+                    linestyle=":",
+                    linewidth=0.9,
+                    color=color,
+                    zorder=1,
                 )
-                ax.plot(
+                branch_ax.plot(
+                    100,
                     value,
-                    7 + shift,
                     marker=marker,
+                    color=color,
                     markerfacecolor="white",
-                    markeredgecolor=color,
-                    markersize=4,
+                    markersize=4.4,
                     linestyle="none",
                 )
-            elif metric == "pooled_median_ms":
-                limit = int(trial["limit_s"]) * 1000
-                ax.annotate(
+            elif timing and trial["status"] == "timeout":
+                limit_ms = int(trial["limit_s"]) * 1000
+                branch_ax.plot(100, limit_ms, marker="_", markersize=4.5, color=color)
+                branch_ax.annotate(
                     "",
-                    xy=(limit * 1.42, 7 + shift),
-                    xytext=(limit, 7 + shift),
+                    xy=(100, limit_ms),
+                    xytext=(0, 8),
+                    textcoords="offset points",
                     arrowprops=dict(
-                        arrowstyle="->", color=color, lw=1.1, shrinkA=0, shrinkB=0
+                        arrowstyle="<-", color=color, lw=0.9, shrinkA=0, shrinkB=0
                     ),
                 )
-        ax.set_ylim(12.15, -0.7)
-        ax.set_yticks([*range(8), *y[-3:]], labels)
-        ax.tick_params(axis="y", length=0, pad=4)
-        ax.axhline(8.25, color="#aaa", lw=0.6)
-        ax.text(
-            -0.035,
-            8.76,
-            "Ops (+filters)",
-            ha="right",
-            va="center",
-            transform=ax.get_yaxis_transform(),
-            fontsize=6.7,
-            fontstyle="italic",
-        )
-        ax.text(
-            -0.035,
-            1.045,
-            "Ops (in/out)",
-            ha="right",
-            va="center",
-            transform=ax.transAxes,
-            fontsize=6.7,
-            fontstyle="italic",
-        )
-        ax.legend(
-            loc="lower left",
-            bbox_to_anchor=(0, 1.005),
-            frameon=False,
-            ncol=2,
-            fontsize=7,
-            handlelength=1,
-            handletextpad=0.3,
-            columnspacing=1.4,
-            borderaxespad=0,
-        )
-        if metric == "search_states":
-            ticks = [4, 16, 64, 256, 1024, 8192]
-            ax.set_xlim(2.4, 13500)
-            ax.set_xlabel("Visited states (log scale)")
-            ax.set_xticks(ticks, [str(i) for i in ticks], fontsize=6.8)
-        else:
+        for ax, title in ((branch_ax, "Add branch groups"), (filter_ax, "Add filters")):
+            ax.set_title(title, fontsize=7.6, pad=4)
+            ax.set_xlim(7, 108)
+            ax.set_yscale("log")
+            ax.yaxis.set_minor_locator(NullLocator())
+            ax.grid(axis="y", color="#dddddd", linewidth=0.5)
+            ax.set_axisbelow(True)
+            ax.tick_params(labelsize=6.6, length=2.4, pad=2)
+            ax.spines[["right", "top"]].set_visible(False)
+        branch_ax.set_xticks([12, 24, 44, 68, 100])
+        filter_ax.set_xticks([36, 68, 100])
+        if timing:
+            branch_ax.set_ylim(1.7, 800000)
             ticks = [3, 30, 300, 3000, 30000, 120000]
-            ax.set_xlim(1.8, 205000)
-            ax.set_xlabel("Planning time (s, log scale)")
-            ax.set_xticks(ticks, [f"{i / 1000:g}" for i in ticks], fontsize=6.8)
-        ax.xaxis.set_minor_locator(NullLocator())
-        ax.spines[["top", "right", "left"]].set_visible(False)
+            branch_ax.set_yticks(ticks, [f"{ms / 1000:g}" for ms in ticks])
+            branch_ax.set_ylabel("Planning time (s, log scale)")
+        else:
+            branch_ax.set_ylim(2.8, 14500)
+            ticks = [4, 16, 64, 256, 1024, 8192]
+            branch_ax.set_yticks(ticks, [f"{n:,}" for n in ticks])
+            branch_ax.set_ylabel("Visited states (log scale)")
+        fig.legend(
+            handles,
+            [f"{name} ({label})" for name, label, *_ in METHODS],
+            loc="upper center",
+            ncol=2,
+            frameon=False,
+            fontsize=7.3,
+            bbox_to_anchor=(0.56, 1.015),
+            handlelength=1.6,
+            columnspacing=1.25,
+        )
+        fig.text(0.575, 0.055, "Physical operators", ha="center")
         fig.savefig(output, metadata={"CreationDate": None, "ModDate": None})
         plt.close(fig)
 
