@@ -1,0 +1,24 @@
+{
+  "case": 16,
+  "version": "2.48.7",
+  "image": "n8nio/n8n@sha256:fabce3e9678a07d2dde83bd8f5124017f3ec457d0a3fc6b63bb4cec465d63861",
+  "iterations": 5,
+  "workflow_sha256": "1985256e4f261551b465117c3f0bfd191e115ceb98cba0fa37d55df36c8d9843",
+  "rows": [
+    {
+      "currentIteration": 0
+    },
+    {
+      "currentIteration": 1
+    },
+    {
+      "currentIteration": 2
+    },
+    {
+      "currentIteration": 3
+    },
+    {
+      "currentIteration": 4
+    }
+  ]
+}

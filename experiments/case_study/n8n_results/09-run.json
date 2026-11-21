@@ -1,0 +1,29 @@
+{
+  "case": 9,
+  "version": "2.48.7",
+  "image": "n8nio/n8n@sha256:fabce3e9678a07d2dde83bd8f5124017f3ec457d0a3fc6b63bb4cec465d63861",
+  "iterations": 4,
+  "workflow_sha256": "32939f50c8f978b43c3c70428140a8470c65ae7a8d960d983e9dec4240baebe4",
+  "rows": [
+    {
+      "value": "A",
+      "count": 3,
+      "Iteration": 0
+    },
+    {
+      "value": "A",
+      "count": 3,
+      "Iteration": 1
+    },
+    {
+      "value": "A",
+      "count": 3,
+      "Iteration": 2
+    },
+    {
+      "value": "A",
+      "count": 1,
+      "Iteration": 3
+    }
+  ]
+}

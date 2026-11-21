@@ -1,0 +1,34 @@
+{
+  "case": 10,
+  "version": "2.48.7",
+  "image": "n8nio/n8n@sha256:fabce3e9678a07d2dde83bd8f5124017f3ec457d0a3fc6b63bb4cec465d63861",
+  "iterations": 5,
+  "workflow_sha256": "e58702485d98dd8e6f20360d2d17c916335046fa7e2dfed444d40298e7e6f398",
+  "rows": [
+    {
+      "Text": "1",
+      "Counting Column": 0,
+      "Iteration": 0
+    },
+    {
+      "Text": "1",
+      "Counting Column": 1,
+      "Iteration": 1
+    },
+    {
+      "Text": "1",
+      "Counting Column": 2,
+      "Iteration": 2
+    },
+    {
+      "Text": "1",
+      "Counting Column": 3,
+      "Iteration": 3
+    },
+    {
+      "Text": "1",
+      "Counting Column": 4,
+      "Iteration": 4
+    }
+  ]
+}

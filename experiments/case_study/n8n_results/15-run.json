@@ -1,0 +1,16 @@
+{
+  "case": 15,
+  "version": "2.48.7",
+  "image": "n8nio/n8n@sha256:fabce3e9678a07d2dde83bd8f5124017f3ec457d0a3fc6b63bb4cec465d63861",
+  "iterations": 5,
+  "workflow_sha256": "b381dff1a9d0fc0732bf98c7145d7d707282feca605612d0846d6be28587ccf3",
+  "rows": [
+    {
+      "Counting Column": 0,
+      "Counting Column (Iter #1)": 1,
+      "Counting Column (Iter #2)": 2,
+      "Counting Column (Iter #3)": 3,
+      "Counting Column (Iter #4)": 4
+    }
+  ]
+}

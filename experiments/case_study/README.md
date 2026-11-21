@@ -33,3 +33,13 @@ python -m unittest test_check.py
 ```
 
 The native harness records real compiled workflow output in `native.jsonl`. `check.py` refuses to classify an unsuccessful KNIME run or absent native result as a match. Each package is immutable evidence: use a new output directory for a rerun.
+
+## n8n comparison
+
+The eight importable graphs in [n8n_results](n8n_results) use the same saved input tables and bounds. Seven run the body with a Loop Over Items node. The condition workflow uses an If node with a feedback edge and tests the updated counter after each body execution. JavaScript Code nodes implement the table computations. In case 15 a final Code node turns the five iteration results into columns.
+
+Run the following command from this directory with Python 3.12 and Docker. Use a new output directory. The generator embeds only the input rows in each workflow. Docker runs the pinned n8n image with networking disabled and mounts only that workflow. The host reads the executed body's iteration count and final output rows, then compares the rows with the saved KNIME output using the same checker as the Texera runs.
+
+    python n8n_cases.py n8n-rerun
+
+The recorded run used n8n 2.48.7. All eight translations matched (241 scalar output rows). Each run file records the workflow hash, image digest, body execution count, and final rows. The comparison covers these inputs, iteration bounds, and scalar columns.

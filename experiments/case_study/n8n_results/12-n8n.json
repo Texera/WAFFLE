@@ -1,0 +1,127 @@
+{
+  "id": "knimeCase12",
+  "name": "KNIME loop example 12",
+  "active": false,
+  "nodes": [
+    {
+      "id": "Start",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "Input",
+      "name": "Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const rows = [{\"Number\": 10.0}, {\"Number\": 20.0}, {\"Number\": 30.0}, {\"Number\": 40.0}, {\"Number\": 50.0}];\nreturn rows.map(row => ({number: row.Number}));"
+      }
+    },
+    {
+      "id": "Body",
+      "name": "Body",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        120
+      ],
+      "parameters": {
+        "jsCode": "const points = [{\"X\": -5.140997830802603, \"Y\": 3.916666666666666, \"Class\": 3.0}, {\"X\": -3.969631236442517, \"Y\": -1.291666666666666, \"Class\": 3.0}, {\"X\": 3.665943600867678, \"Y\": 3.5, \"Class\": 3.0}, {\"X\": 5.488069414316703, \"Y\": -4.5, \"Class\": 3.0}];\nconst input = $input.first().json;\nreturn [{rows: points.map(r => ({...r, 'Appended Number': input.number}))}];"
+      }
+    },
+    {
+      "id": "Loop",
+      "name": "Loop",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        450,
+        0
+      ],
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      }
+    },
+    {
+      "id": "Result",
+      "name": "Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        -100
+      ],
+      "parameters": {
+        "jsCode": "const rows = $input.all().flatMap(item => item.json.rows);\nreturn rows;"
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop": {
+      "main": [
+        [
+          {
+            "node": "Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Body": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

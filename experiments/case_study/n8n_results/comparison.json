@@ -1,0 +1,50 @@
+[
+  {
+    "case": 9,
+    "iterations": 4,
+    "rows": 4,
+    "status": "match"
+  },
+  {
+    "case": 10,
+    "iterations": 5,
+    "rows": 5,
+    "status": "match"
+  },
+  {
+    "case": 11,
+    "iterations": 13,
+    "rows": 26,
+    "status": "match"
+  },
+  {
+    "case": 12,
+    "iterations": 5,
+    "rows": 20,
+    "status": "match"
+  },
+  {
+    "case": 13,
+    "iterations": 5,
+    "rows": 5,
+    "status": "match"
+  },
+  {
+    "case": 14,
+    "iterations": 5,
+    "rows": 175,
+    "status": "match"
+  },
+  {
+    "case": 15,
+    "iterations": 5,
+    "rows": 1,
+    "status": "match"
+  },
+  {
+    "case": 16,
+    "iterations": 5,
+    "rows": 5,
+    "status": "match"
+  }
+]
