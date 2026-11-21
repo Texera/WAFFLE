@@ -43,3 +43,13 @@ Run the following command from this directory with Python 3.12 and Docker. Use a
     python n8n_cases.py n8n-rerun
 
 The recorded run used n8n 2.48.7. All eight translations matched (241 scalar output rows). Each run file records the workflow hash, image digest, body execution count, and final rows. The comparison covers these inputs, iteration bounds, and scalar columns.
+
+## RapidMiner comparison
+
+The [RapidMiner processes and recorded outputs](rapidminer_results) cover the same eight inputs and iteration bounds. Seven processes use RapidMiner's Loop operator. The conditional process uses Loop Until to stop after the counter reaches four, including that iteration's row. Groovy scripts implement the body computations. For column collection, a final script turns five iteration values into one row with five columns.
+
+Run this command from this directory with Python 3.12 and Docker, using a new output directory:
+
+    python rapidminer/run.py rapidminer-rerun
+
+The runner builds RapidMiner Studio Core 10.1.0 and runs each process with networking disabled. The container receives the process and its input data. The host checks the executed body's iteration count and compares the returned rows with the saved KNIME output. All eight processes matched across 241 scalar output rows.

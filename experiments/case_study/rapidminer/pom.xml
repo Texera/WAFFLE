@@ -1,0 +1,20 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.texera.waffle</groupId>
+  <artifactId>rapidminer-case-study</artifactId>
+  <version>1</version>
+  <repositories>
+    <repository><id>central</id><url>https://repo.maven.apache.org/maven2</url></repository>
+    <repository><id>rapidminer</id><url>https://maven.rapidminer.com/content/groups/public/</url></repository>
+  </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>com.rapidminer.studio</groupId><artifactId>rapidminer-studio-core</artifactId><version>10.1.0</version>
+      <!-- Groovy 3 publishes its aggregate as a POM. The Studio POM requests a JAR. -->
+      <exclusions><exclusion><groupId>org.codehaus.groovy</groupId><artifactId>groovy-all</artifactId></exclusion></exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId><artifactId>groovy-all</artifactId><version>3.0.12</version><type>pom</type>
+    </dependency>
+  </dependencies>
+</project>

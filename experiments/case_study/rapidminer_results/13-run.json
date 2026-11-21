@@ -1,0 +1,31 @@
+{
+  "version": "10.1.000",
+  "iterations": 5,
+  "rows": [
+    {
+      "Text": "1",
+      "Counting Column": 0,
+      "Iteration": 0
+    },
+    {
+      "Text": "1",
+      "Counting Column": 1,
+      "Iteration": 1
+    },
+    {
+      "Text": "1",
+      "Counting Column": 2,
+      "Iteration": 2
+    },
+    {
+      "Text": "1",
+      "Counting Column": 3,
+      "Iteration": 3
+    },
+    {
+      "Text": "1",
+      "Counting Column": 4,
+      "Iteration": 4
+    }
+  ]
+}

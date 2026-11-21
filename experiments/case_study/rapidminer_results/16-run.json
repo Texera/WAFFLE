@@ -1,0 +1,21 @@
+{
+  "version": "10.1.000",
+  "iterations": 5,
+  "rows": [
+    {
+      "currentIteration": 0
+    },
+    {
+      "currentIteration": 1
+    },
+    {
+      "currentIteration": 2
+    },
+    {
+      "currentIteration": 3
+    },
+    {
+      "currentIteration": 4
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "case": 9,
+    "process_sha256": "92f66e9f23b8c905a9be7c87c2c0767c55545d5fe9f83ff127866e4f520bb7f8",
+    "version": "10.1.000",
+    "iterations": 4,
+    "rows": 4,
+    "status": "match"
+  },
+  {
+    "case": 10,
+    "process_sha256": "4ead8469ea958a34b4383185f9c44ab5b297e7ecbd60d619adb72ff951bc2e63",
+    "version": "10.1.000",
+    "iterations": 5,
+    "rows": 5,
+    "status": "match"
+  },
+  {
+    "case": 11,
+    "process_sha256": "475f502187810dba3187e2af9fe16da740cc5e902d88668617479091aa4b8f87",
+    "version": "10.1.000",
+    "iterations": 13,
+    "rows": 26,
+    "status": "match"
+  },
+  {
+    "case": 12,
+    "process_sha256": "5d985b3c6cd25c61b5b6d4e1286874746a8e8eace6241e8777adf622ff77a0b5",
+    "version": "10.1.000",
+    "iterations": 5,
+    "rows": 20,
+    "status": "match"
+  },
+  {
+    "case": 13,
+    "process_sha256": "4c0a673c419d82c213cf88b1c58aa2dbf5d7ae52adfd006717350296708b2f26",
+    "version": "10.1.000",
+    "iterations": 5,
+    "rows": 5,
+    "status": "match"
+  },
+  {
+    "case": 14,
+    "process_sha256": "60bd48cbc279e4e9ad75f52da3b9e7133b76db6270c69082b44724e5a6abf029",
+    "version": "10.1.000",
+    "iterations": 5,
+    "rows": 175,
+    "status": "match"
+  },
+  {
+    "case": 15,
+    "process_sha256": "751eeb535b12a5c4b83455362dc07c4d569d55e3afd9f8ce552d6ebf47836915",
+    "version": "10.1.000",
+    "iterations": 5,
+    "rows": 1,
+    "status": "match"
+  },
+  {
+    "case": 16,
+    "process_sha256": "c89ef7f5048724c49d0e7315a20c7c582c4db8cbb5dddedd0520e30d71a38cb0",
+    "version": "10.1.000",
+    "iterations": 5,
+    "rows": 5,
+    "status": "match"
+  }
+]

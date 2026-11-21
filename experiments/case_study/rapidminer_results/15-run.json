@@ -1,0 +1,13 @@
+{
+  "version": "10.1.000",
+  "iterations": 5,
+  "rows": [
+    {
+      "Counting Column": 0,
+      "Counting Column (Iter #1)": 1,
+      "Counting Column (Iter #2)": 2,
+      "Counting Column (Iter #3)": 3,
+      "Counting Column (Iter #4)": 4
+    }
+  ]
+}
