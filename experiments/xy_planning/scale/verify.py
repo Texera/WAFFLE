@@ -35,7 +35,10 @@ def lower_bound(weights, edges):
     return max(depth.values())
 
 
-def verify(root):
+FILTER_GAPS = [(4, f) for f in (1, 2, 3, 5, 6, 7)]
+
+
+def verify(root, layouts=LAYOUTS):
     meta = json.loads((root / "metadata.json").read_text())
     assert (
         meta["forks"],
@@ -51,8 +54,8 @@ def verify(root):
             rows(directory, key)
             for key in ("operators", "edges", "compilation", "results")
         ]
-        assert len(times) == len(LAYOUTS) * 2 * 7 and len(comp) == len(LAYOUTS)
-        for groups, filters in LAYOUTS:
+        assert len(times) == len(layouts) * 2 * 7 and len(comp) == len(layouts)
+        for groups, filters in layouts:
             name = f"groups-{groups}-filters-{filters}"
             ops = [r for r in op_rows if r["case"] == name]
             links = [r for r in edge_rows if r["case"] == name]
@@ -103,7 +106,7 @@ def verify(root):
                     assert int(r["total_ns"]) > 0 and int(r["search_states"]) > 0
                 observations[name, method].extend(runs)
     summary = []
-    for groups, filters in LAYOUTS:
+    for groups, filters in layouts:
         name = f"groups-{groups}-filters-{filters}"
         size = 4 + 2 * groups * (4 + filters)
         entry = dict(
@@ -131,47 +134,68 @@ def verify(root):
     return summary
 
 
-def verify_dense(root):
-    metadata = json.loads((root / "metadata.json").read_text())
+def verify_dense(root, groups=12, metadata_dir=None):
+    metadata = json.loads(((metadata_dir or root) / "metadata.json").read_text())
     assert metadata["revision"] == "ddc04792511838d06f982ced01641e7d06ce6524"
     assert metadata["limit_s"] == 120 and metadata["warmup_per_method"] == 3
     assert metadata["fresh_jvms_per_method"] == metadata["trials_per_method"] == 1
+    size = 4 + 8 * groups
+    entry = dict(operators=size, inside=groups, outside=groups)
     manifest = None
     for method in ("X", "Y"):
         folder = root / method
-        weights = {
-            r["operator"]: float(r["estimate"]) for r in rows(folder, "operators")
-        }
+        operators = rows(folder, "operators")
+        weights = {r["operator"]: float(r["estimate"]) for r in operators}
+        inside = {r["operator"] for r in operators if r["inside"] == "true"}
+        assert len(operators) == len(weights) == size and len(inside) == size // 2
         edges = [
             (r["from"], r["to"], r["required"] == "true") for r in rows(folder, "edges")
         ]
-        assert len(weights) == 100 and len(edges) == 123
+        assert len(edges) == 3 + 10 * groups and len(set(edges)) == len(edges)
         required = {i for i, e in enumerate(edges) if e[2]}
-        assert len(required) == 50
-        graph = (weights, set(edges))
+        boundary = {
+            i for i, (a, b, _) in enumerate(edges) if (a in inside) != (b in inside)
+        }
+        assert (
+            len(boundary) == 2
+            and boundary <= required
+            and len(required) == 4 * groups + 2
+        )
+        graph = (weights, inside, set(edges))
         if manifest is not None:
             assert manifest == graph
         manifest = graph
         minimum = lower_bound(weights, edges)
-        assert minimum == 51
+        assert minimum == 4 * groups + 3
         [r] = rows(folder, "outcome")
         assert r["method"] == method and int(r["limit_s"]) == 120
+        observation = dict(status=r["status"], limit_s=int(r["limit_s"]))
         if r["status"] == "completed":
             cuts = {int(i) for i in r["cuts"].split(";") if i}
             assert required <= cuts
             assert float(r["cost"]) == cost_of(weights, weights, edges, cuts) == minimum
             assert 0 < int(r["total_ns"]) <= int(r["wall_ns"])
             assert int(r["states"]) > 0
+            observation.update(
+                search_states=int(r["states"]),
+                total_ms=int(r["total_ns"]) / 1e6,
+                cost=minimum,
+            )
         else:
             assert r["status"] == "timeout" and int(r["wall_ns"]) >= 120_000_000_000
             assert all(r[k] == "" for k in ("total_ns", "states", "cost", "cuts"))
-        print(
-            "Separate 100-operator branching trial:",
-            method,
-            r["status"],
-            r["total_ns"],
-            r["states"],
-        )
+        entry[method] = observation
+    return entry
+
+
+def verify_intermediate(branches, filters, endpoint):
+    return {
+        "branch": [
+            verify_dense(branches / f"groups-{g}", g, branches) for g in range(6, 12)
+        ]
+        + [verify_dense(endpoint)],
+        "filter": verify(filters, FILTER_GAPS),
+    }
 
 
 if __name__ == "__main__":
@@ -179,6 +203,13 @@ if __name__ == "__main__":
     parser.add_argument("raw", nargs="?", type=Path, default=HERE / "raw")
     parser.add_argument("--write", type=Path)
     parser.add_argument("--dense", type=Path, default=HERE / "dense")
+    parser.add_argument(
+        "--branches", type=Path, default=HERE / "intermediate" / "branch"
+    )
+    parser.add_argument(
+        "--filters", type=Path, default=HERE / "intermediate" / "filter"
+    )
+    parser.add_argument("--write-intermediate", type=Path)
     args = parser.parse_args()
     data = verify(args.raw)
     if args.write:
@@ -187,7 +218,18 @@ if __name__ == "__main__":
         )
     else:
         assert json.loads((HERE / "summary.json").read_text()) == data
-        verify_dense(args.dense)
+        intermediate = verify_intermediate(args.branches, args.filters, args.dense)
+        if args.write_intermediate:
+            args.write_intermediate.write_text(
+                json.dumps(intermediate, indent=2) + "\n",
+                encoding="utf-8",
+                newline="\n",
+            )
+        else:
+            assert json.loads((HERE / "intermediate.json").read_text()) == intermediate
+        print(
+            "Verified 252 repeated filter plans and the capped branch outcomes at all seven sizes."
+        )
     for row in data:
         print(
             row["case"],

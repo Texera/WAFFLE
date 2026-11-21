@@ -23,10 +23,12 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.{Files, Paths}
 import java.util.concurrent.{Callable, FutureTask, TimeUnit, TimeoutException}
 
-/** One separately capped trial per method on the original 100-operator branching graph. */
+/** One separately capped search on a balanced branching graph. */
 object DenseXYBenchmark {
   def main(args: Array[String]): Unit = {
-    require(args.length == 2)
+    require(args.length == 2 || args.length == 3)
+    val groups = if (args.length == 3) args(2).toInt else 12
+    require(groups >= 6 && groups <= 12)
     val folder = Paths.get(args(0))
     val method = args(1)
     require(Set("X", "Y").contains(method))
@@ -36,9 +38,9 @@ object DenseXYBenchmark {
       else XYPlanningComparison.searchY(input, pruning = true)
     val warmup = NativeBranchXYFixtures.compileScale(4, 4, 0).input
     for (_ <- 1 to 3) require(search(warmup).cost == 19)
-    val compiled = NativeBranchXYFixtures.compileScale(12, 12, 0)
+    val compiled = NativeBranchXYFixtures.compileScale(groups, groups, 0)
     val input = compiled.input
-    require(input.plan.operators.size == 100 && compiled.original.getBlockingAndDependeeLinks.size == 48)
+    require(input.plan.operators.size == 4 + 8 * groups && compiled.original.getBlockingAndDependeeLinks.size == 4 * groups)
     val edges = input.plan.links.toVector.sortBy(_.toString)
     val required = input.plan.getBlockingAndDependeeLinks
     val names = CompiledXYBenchmark.operatorKey _

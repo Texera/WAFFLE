@@ -24,7 +24,18 @@ def main():
     parser.add_argument("--java", required=True, type=Path)
     parser.add_argument("--sbt-launch", required=True, type=Path)
     parser.add_argument("--python", type=Path, default=Path(sys.executable))
-    parser.add_argument(
+    series = parser.add_mutually_exclusive_group()
+    series.add_argument(
+        "--branch-gaps",
+        action="store_true",
+        help="Capped trials at 52 to 92 operators in steps of eight",
+    )
+    series.add_argument(
+        "--filter-gaps",
+        action="store_true",
+        help="Repeated trials at the six intermediate filter counts",
+    )
+    series.add_argument(
         "--dense", action="store_true", help="Run the separately capped 12/12 graph"
     )
     args = parser.parse_args()
@@ -86,7 +97,7 @@ def main():
         cpu=platform.processor(),
     )
     (out / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
-    if args.dense:
+    if args.dense or args.branch_gaps:
         java_opts = ", ".join(json.dumps(s) for s in [*jvm, "-Xmx6g"])
         extra_source = (HERE / "DenseXYBenchmark.scala").as_posix()
         entry = ENTRY.replace("NativeScaleXYBenchmark", "DenseXYBenchmark")
@@ -99,27 +110,36 @@ def main():
             limit_s=120,
         )
         (out / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
-        for method in ("Y", "X"):
-            folder = out / method
-            folder.mkdir()
-            commands = [
-                setting,
-                f'set WorkflowExecutionService / Test / unmanagedSources += file("{extra_source}")',
-                "set WorkflowExecutionService / Test / run / fork := true",
-                f"set WorkflowExecutionService / Test / run / javaOptions ++= Seq({java_opts})",
-                f"WorkflowExecutionService/Test/runMain {entry} {folder.as_posix()} {method}",
-            ]
-            with (folder / "run.log").open("w", encoding="utf-8") as log:
-                subprocess.run(
-                    [*sbt, *commands],
-                    cwd=repo,
-                    env=env,
-                    stdout=log,
-                    stderr=subprocess.STDOUT,
-                    check=True,
+        commands = [
+            setting,
+            f'set WorkflowExecutionService / Test / unmanagedSources += file("{extra_source}")',
+            "set WorkflowExecutionService / Test / run / fork := true",
+            f"set WorkflowExecutionService / Test / run / javaOptions ++= Seq({java_opts})",
+        ]
+        groups_to_run = range(6, 12) if args.branch_gaps else (12,)
+        folders = []
+        for groups in groups_to_run:
+            order = ("Y", "X") if groups % 2 == 0 else ("X", "Y")
+            for method in order:
+                parent = out / f"groups-{groups}" if args.branch_gaps else out
+                folder = parent / method
+                folder.mkdir(parents=True)
+                folders.append(folder)
+                commands.append(
+                    f"WorkflowExecutionService/Test/runMain {entry} {folder.as_posix()} {method} {groups}"
                 )
+        with (out / "run.log").open("w", encoding="utf-8") as log:
+            subprocess.run(
+                [*sbt, *commands],
+                cwd=repo,
+                env=env,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                check=True,
+            )
+        for folder in folders:
             if not (folder / "outcome.csv").is_file():
-                raise RuntimeError(f"No outcome for {method}")
+                raise RuntimeError(f"No outcome in {folder}")
         return
     for fork in range(metadata["forks"]):
         folder = out / f"fork-{fork}"
@@ -128,6 +148,8 @@ def main():
             f"WorkflowExecutionService/Test/runMain {ENTRY} {folder.as_posix()} "
             f"{metadata['measured_pairs']} {metadata['warmup_pairs']} {fork}"
         )
+        if args.filter_gaps:
+            command += " filter-gaps"
         with (folder / "run.log").open("w", encoding="utf-8") as log:
             subprocess.run(
                 [*sbt, setting, command],

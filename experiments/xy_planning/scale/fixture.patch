@@ -32,14 +32,17 @@
 @@ -92 +112 @@
 -        link(previous, join, 1)
 +        link(filtered, join, 1)
-@@ -124,0 +145,16 @@
+@@ -124,0 +145,20 @@
 +
 +/** Increase branching and serial length separately while retaining real compiler port types. */
 +object NativeScaleXYBenchmark {
 +  val layouts = Vector((4, 0), (5, 0), (4, 4), (4, 8))
 +
-+  def main(args: Array[String]): Unit =
-+    CompiledXYBenchmark.run(args, layouts.map { case (groups, filters) =>
++  def main(args: Array[String]): Unit = {
++    val filterGaps = args.length == 5 && args.last == "filter-gaps"
++    require(args.length == 4 || filterGaps)
++    val cases = if (filterGaps) Vector(1, 2, 3, 5, 6, 7).map(f => (4, f)) else layouts
++    CompiledXYBenchmark.run(args.take(4), cases.map { case (groups, filters) =>
 +      val name = s"groups-$groups-filters-$filters"
 +      (name, name, () => {
 +        val compiled = NativeBranchXYFixtures.compileScale(groups, groups, filters)
@@ -48,4 +51,5 @@
 +        compiled
 +      })
 +    }, exhaustiveLimit = 8)
++  }
 +}

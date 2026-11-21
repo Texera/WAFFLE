@@ -2,19 +2,20 @@
 
 The two figures extend the original six graphs with new measurements on the same Windows Ryzen 9 9950X workstation, Texera planner revision and JBR 17.0.14. The compiler expands a group into four physical operators, two for aggregation and two for the hash join. Counts of 44, 68 and 100 refer to compiled physical operators.
 
-| Groups inside / outside | Filters per group | Physical operators | What varies |
-| --- | ---: | ---: | --- |
-| 4 / 4 | 0 | 36 | Repeat the original balanced graph as a timing reference |
-| 5 / 5 | 0 | 44 | Add one branch group on each side |
-| 4 / 4 | 4 | 68 | Add 32 native serial filters |
-| 4 / 4 | 8 | 100 | Add 64 native serial filters |
-| 12 / 12 | 0 | 100 | Continue the original branch-only series, with a time limit |
+| Groups inside / outside | Filters per group | Physical operators | Measurement |
+| --- | ---: | --- | --- |
+| 1 / 1 through 5 / 5 | 0 | 12, 20, 28, 36, 44 | Repeated pairs, equal branch counts |
+| 1 / 4 and 4 / 1 | 0 | 24 | Repeated pairs, unequal branch counts |
+| 4 / 4 | 0 through 8 | 36 to 100 in steps of 8 | Repeated pairs, fixed branch counts |
+| 6 / 6 through 12 / 12 | 0 | 52 to 100 in steps of 8 | One separately capped search per method and size |
 
 Each serial filter excludes a distinct value before its group's aggregate and join branches. The compiler's mandatory ports, the two fixed loop-boundary cuts, pruning flags and unit operator estimates match the original experiment. The filter series isolates graph length at fixed branching. Compilation and workflow execution are outside the planning timers. Y's timer includes decomposition and composition.
 
-For the first four rows, the original timing harness runs three warm-up pairs and seven measured X/Y pairs per graph in each of three fresh JVMs, shuffling graph order and alternating method order. All 168 measured plans and their cuts are in `raw/`. Points are pooled medians, and bars span the three JVM medians. The original six graphs retain their published 20 warm-ups and 100 measured pairs per JVM.
+The original six workflows retain their 20 warm-up and 100 measured pairs per JVM. The 44-operator branching workflow and all nine filter lengths use three warm-up and seven timed pairs per graph in each of three fresh JVMs. Graph order is shuffled and planner order alternates. The 36-operator graph was independently rerun as the filter-series anchor. The earlier 168 measured plans are in `raw/`. The 252 plans for one, two, three, five, six and seven filters per group are in `intermediate/filter/`.
 
-The last row uses one fresh forked JVM per planner, three warm-ups of that planner on the 36-operator graph, then one trial with 120 seconds for the search. Each method receives the identical 100-operator graph. The deadline starts after compilation and warm-up. A timeout has no returned cost or completed state count. The separate trial records are in `dense/`. The charts plot physical operator count on the horizontal axis. The left panel connects balanced branch layouts and marks the two unequal layouts with crosses. The right panel connects the three filter-chain sizes at fixed branching. The separate 100-operator trial appears as an open marker for a completed search and an upward arrow at the timeout in the timing figure.
+Each branching workflow from 52 through 100 operators receives one timed search per planner, with a separate JVM for each size and planner. Each JVM first runs three warm-ups on the 36-operator graph. The 120-second limit applies to the search after compilation and warm-up. Each planner receives the same compiled graph. The inventories and outcomes are under `intermediate/branch/` (52–92 operators) and `dense/` (100 operators). A timeout returns neither a plan nor a completed state count.
+
+In each figure the left panel grows a balanced pair of branch groups at a time; isolated crosses mark the two unequal 24-operator layouts. The right panel adds one filter per group at each step. In the timing figure filled points are pooled medians and whiskers span the three JVM medians. Open points and dotted segments identify the single-trial series. Arrows mark the deadline at sizes that timed out. No timing or state count is imputed.
 
 The verifier reconstructs each returned plan from its cuts and independently checks its cost. Along a directed path, every mandatory cut forces a new region. With unit weights, one plus the largest number of mandatory cuts along any path is a lower bound on the total cost. In every completed run the chosen plan attains this bound, proving its cost is minimal. The check also compares compiled port inventories, graph sizes and timed sample keys.
 
@@ -26,7 +27,9 @@ Prepare the pinned planning checkout and prerequisites as described in the [plan
 
     python run.py PLANNING_CHECKOUT NEW_RUN --java JAVA17 --sbt-launch SBT_LAUNCH_JAR --python TEXERA_PYTHON
     python run.py PLANNING_CHECKOUT NEW_DENSE_RUN --dense --java JAVA17 --sbt-launch SBT_LAUNCH_JAR --python TEXERA_PYTHON
+    python run.py PLANNING_CHECKOUT NEW_BRANCH_GAPS --branch-gaps --java JAVA17 --sbt-launch SBT_LAUNCH_JAR --python TEXERA_PYTHON
+    python run.py PLANNING_CHECKOUT NEW_FILTER_GAPS --filter-gaps --java JAVA17 --sbt-launch SBT_LAUNCH_JAR --python TEXERA_PYTHON
     python verify.py NEW_RUN --write NEW_SUMMARY.json
-    python -c "from pathlib import Path; from verify import verify_dense; verify_dense(Path('NEW_DENSE_RUN'))"
+    python -c "from pathlib import Path; from verify import verify_intermediate; print(verify_intermediate(Path('NEW_BRANCH_GAPS'), Path('NEW_FILTER_GAPS'), Path('NEW_DENSE_RUN')))"
 
 For the published observations, run `python verify.py` and `python charts.py` in this directory. The runner applies the fixture patch to a copy of the pinned source and supplies it to the benchmark build. The planner implementation is unchanged.

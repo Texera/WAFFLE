@@ -12,7 +12,7 @@ Revision ddc04792511838d06f982ced01641e7d06ce6524; November 6, 2026 UTC. Three f
 
 All 3,600 measured plans are retained, including 234 that overlap garbage collection. total_ns includes decomposition, search/cost evaluation/pruning, and composition. Compilation and workflow execution are excluded.
 
-The figure shows pooled medians over 300 measurements per graph/strategy. Whiskers span the three JVM medians, not confidence intervals. Markers on the logarithmic axis represent categories.
+For the original six graphs the timing figure shows pooled medians over 300 measurements per graph and planner. Whiskers span the three JVM medians, not confidence intervals. The line charts use physical operator count on the horizontal axis, with separate panels for balanced branch groups and serial filters.
 
 ## Files and verification
 
