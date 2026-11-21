@@ -1,0 +1,38 @@
+[
+  {
+    "rule": "sweep",
+    "fixed_range": true,
+    "fixed_range_and_score_threshold": true,
+    "waffle": 4,
+    "knime": 4,
+    "n8n": 4,
+    "rapidminer": 4
+  },
+  {
+    "rule": "target",
+    "fixed_range": false,
+    "fixed_range_and_score_threshold": true,
+    "waffle": 4,
+    "knime": 4,
+    "n8n": 4,
+    "rapidminer": 4
+  },
+  {
+    "rule": "adaptive",
+    "fixed_range": false,
+    "fixed_range_and_score_threshold": false,
+    "waffle": 4,
+    "knime": 4,
+    "n8n": 4,
+    "rapidminer": 4
+  },
+  {
+    "rule": "history",
+    "fixed_range": false,
+    "fixed_range_and_score_threshold": false,
+    "waffle": 4,
+    "knime": 4,
+    "n8n": 4,
+    "rapidminer": 4
+  }
+]
