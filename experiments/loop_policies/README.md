@@ -1,6 +1,6 @@
 # Which K-means loop rules can one workflow express?
 
-The [comparison without separate script nodes](native_controls/README.md) reports the native operators used for the same four rules in Table 2 of the paper.
+Table 2 compares [four loop rules implemented with native operators](native_controls/README.md) and [two workflows that call an existing Python function](supplied_policies/README.md). The second experiment also checks native translations of both functions.
 
 We tested four rules for choosing the next number of clusters, K. Every rule starts at K=2, stops before K would exceed 4, and retains the score of the last K tested. The body runs Lloyd's algorithm on 16 points and reports the negative sum of squared distances to the nearest center. A higher score indicates a better fit. We scaled the same 16 points by 0.1, 0.7, 1 and 10 to exercise different decisions with the same rule. These are four constructed cases with known answers.
 
