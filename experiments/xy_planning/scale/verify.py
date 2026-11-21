@@ -134,16 +134,22 @@ def verify(root, layouts=LAYOUTS):
     return summary
 
 
-def verify_dense(root, groups=12, metadata_dir=None):
+def verify_dense(root, groups=12, metadata_dir=None, x_retry=None, retry_limit=None):
     metadata = json.loads(((metadata_dir or root) / "metadata.json").read_text())
     assert metadata["revision"] == "ddc04792511838d06f982ced01641e7d06ce6524"
-    assert metadata["limit_s"] == 120 and metadata["warmup_per_method"] == 3
+    assert (
+        metadata["pruning"]
+        and metadata["limit_s"] == 120
+        and metadata["warmup_per_method"] == 3
+    )
     assert metadata["fresh_jvms_per_method"] == metadata["trials_per_method"] == 1
     size = 4 + 8 * groups
     entry = dict(operators=size, inside=groups, outside=groups)
     manifest = None
     for method in ("X", "Y"):
-        folder = root / method
+        retried = method == "X" and x_retry is not None
+        folder = x_retry if retried else root / method
+        limit = retry_limit if retried else metadata["limit_s"]
         operators = rows(folder, "operators")
         weights = {r["operator"]: float(r["estimate"]) for r in operators}
         inside = {r["operator"] for r in operators if r["inside"] == "true"}
@@ -168,7 +174,7 @@ def verify_dense(root, groups=12, metadata_dir=None):
         minimum = lower_bound(weights, edges)
         assert minimum == 4 * groups + 3
         [r] = rows(folder, "outcome")
-        assert r["method"] == method and int(r["limit_s"]) == 120
+        assert r["method"] == method and int(r["limit_s"]) == limit
         observation = dict(status=r["status"], limit_s=int(r["limit_s"]))
         if r["status"] == "completed":
             cuts = {int(i) for i in r["cuts"].split(";") if i}
@@ -182,20 +188,42 @@ def verify_dense(root, groups=12, metadata_dir=None):
                 cost=minimum,
             )
         else:
-            assert r["status"] == "timeout" and int(r["wall_ns"]) >= 120_000_000_000
+            assert (
+                r["status"] == "timeout" and int(r["wall_ns"]) >= limit * 1_000_000_000
+            )
             assert all(r[k] == "" for k in ("total_ns", "states", "cost", "cuts"))
         entry[method] = observation
     return entry
 
 
-def verify_intermediate(branches, filters, endpoint):
-    return {
-        "branch": [
-            verify_dense(branches / f"groups-{g}", g, branches) for g in range(6, 12)
-        ]
-        + [verify_dense(endpoint)],
-        "filter": verify(filters, FILTER_GAPS),
-    }
+def verify_intermediate(branches, filters, endpoint, extended=None):
+    trials = [verify_dense(branches / f"groups-{g}", g, branches) for g in range(6, 12)]
+    trials.append(verify_dense(endpoint))
+    if extended is not None:
+        metadata = json.loads((extended / "metadata.json").read_text())
+        baseline = json.loads((branches / "metadata.json").read_text())
+        limit = metadata["limit_s"]
+        assert limit > baseline["limit_s"]
+        assert metadata == {**baseline, "limit_s": limit}
+        tested = set()
+        for trial in trials:
+            if trial["X"]["status"] != "timeout":
+                continue
+            groups = trial["inside"]
+            folder = extended / f"groups-{groups}"
+            root, meta = (
+                (endpoint, endpoint)
+                if groups == 12
+                else (branches / folder.name, branches)
+            )
+            verified = verify_dense(root, groups, meta, folder / "X", limit)
+            assert verified["Y"] == trial["Y"]
+            trial["X"] = verified["X"]
+            tested.add(folder.name)
+            if trial["X"]["status"] == "timeout":
+                break
+        assert tested == {d.name for d in extended.glob("groups-*")}
+    return {"branch": trials, "filter": verify(filters, FILTER_GAPS)}
 
 
 if __name__ == "__main__":
@@ -210,15 +238,19 @@ if __name__ == "__main__":
         "--filters", type=Path, default=HERE / "intermediate" / "filter"
     )
     parser.add_argument("--write-intermediate", type=Path)
+    parser.add_argument("--extended", type=Path, default=HERE / "extended-x")
     args = parser.parse_args()
     data = verify(args.raw)
     if args.write:
         args.write.write_text(
             json.dumps(data, indent=2) + "\n", encoding="utf-8", newline="\n"
         )
-    else:
+    elif not args.write_intermediate:
         assert json.loads((HERE / "summary.json").read_text()) == data
-        intermediate = verify_intermediate(args.branches, args.filters, args.dense)
+    if args.write_intermediate or not args.write:
+        intermediate = verify_intermediate(
+            args.branches, args.filters, args.dense, args.extended
+        )
         if args.write_intermediate:
             args.write_intermediate.write_text(
                 json.dumps(intermediate, indent=2) + "\n",
@@ -228,7 +260,7 @@ if __name__ == "__main__":
         else:
             assert json.loads((HERE / "intermediate.json").read_text()) == intermediate
         print(
-            "Verified 252 repeated filter plans and the capped branch outcomes at all seven sizes."
+            "Verified 252 repeated filter plans, the original capped trials and the longer X trials."
         )
     for row in data:
         print(

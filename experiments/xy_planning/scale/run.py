@@ -1,6 +1,7 @@
 """Run the scale extension with the pinned planner and the original benchmark timer."""
 
 import argparse
+import csv
 import json
 import os
 from pathlib import Path
@@ -26,6 +27,12 @@ def main():
     parser.add_argument("--python", type=Path, default=Path(sys.executable))
     series = parser.add_mutually_exclusive_group()
     series.add_argument(
+        "--extend-x",
+        type=int,
+        metavar="SECONDS",
+        help="Retry X at 68 through 100 operators, stopping at the first timeout",
+    )
+    series.add_argument(
         "--branch-gaps",
         action="store_true",
         help="Capped trials at 52 to 92 operators in steps of eight",
@@ -39,6 +46,8 @@ def main():
         "--dense", action="store_true", help="Run the separately capped 12/12 graph"
     )
     args = parser.parse_args()
+    if args.extend_x is not None and args.extend_x <= 120:
+        parser.error("--extend-x must exceed the original 120-second limit")
     repo, out = args.repo.resolve(), args.output.resolve()
     revision = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=repo, text=True
@@ -97,7 +106,7 @@ def main():
         cpu=platform.processor(),
     )
     (out / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
-    if args.dense or args.branch_gaps:
+    if args.dense or args.branch_gaps or args.extend_x:
         java_opts = ", ".join(json.dumps(s) for s in [*jvm, "-Xmx6g"])
         extra_source = (HERE / "DenseXYBenchmark.scala").as_posix()
         entry = ENTRY.replace("NativeScaleXYBenchmark", "DenseXYBenchmark")
@@ -107,7 +116,7 @@ def main():
             fresh_jvms_per_method=1,
             trials_per_method=1,
             warmup_per_method=3,
-            limit_s=120,
+            limit_s=args.extend_x or 120,
         )
         (out / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
         commands = [
@@ -116,6 +125,28 @@ def main():
             "set WorkflowExecutionService / Test / run / fork := true",
             f"set WorkflowExecutionService / Test / run / javaOptions ++= Seq({java_opts})",
         ]
+        if args.extend_x:
+            for groups in range(8, 13):
+                folder = out / f"groups-{groups}" / "X"
+                folder.mkdir(parents=True)
+                command = f"WorkflowExecutionService/Test/runMain {entry} {folder.as_posix()} X {groups} {args.extend_x}"
+                with (folder / "run.log").open("w", encoding="utf-8") as log:
+                    subprocess.run(
+                        [*sbt, *commands, command],
+                        cwd=repo,
+                        env=env,
+                        stdout=log,
+                        stderr=subprocess.STDOUT,
+                        check=True,
+                    )
+                with (folder / "outcome.csv").open(newline="") as stream:
+                    [result] = csv.DictReader(stream)
+                print(f"{4 + 8 * groups} operators: {result}", flush=True)
+                if result["status"] == "timeout":
+                    break
+                if result["status"] != "completed":
+                    raise ValueError(f"Unexpected status in {folder}")
+            return
         groups_to_run = range(6, 12) if args.branch_gaps else (12,)
         folders = []
         for groups in groups_to_run:

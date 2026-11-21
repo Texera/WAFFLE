@@ -26,8 +26,10 @@ import java.util.concurrent.{Callable, FutureTask, TimeUnit, TimeoutException}
 /** One separately capped search on a balanced branching graph. */
 object DenseXYBenchmark {
   def main(args: Array[String]): Unit = {
-    require(args.length == 2 || args.length == 3)
-    val groups = if (args.length == 3) args(2).toInt else 12
+    require(args.length >= 2 && args.length <= 4)
+    val groups = if (args.length >= 3) args(2).toInt else 12
+    val limit = if (args.length == 4) args(3).toInt else 120
+    require(limit > 0)
     require(groups >= 6 && groups <= 12)
     val folder = Paths.get(args(0))
     val method = args(1)
@@ -55,7 +57,6 @@ object DenseXYBenchmark {
     })
     val worker = new Thread(task)
     worker.setDaemon(true)
-    val limit = 120
     val start = System.nanoTime()
     worker.start()
     val row = try {

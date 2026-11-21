@@ -126,8 +126,16 @@ def draw(metric, output):
         branch_ax.set_xticks([12, 36, 60, 84, 100])
         filter_ax.set_xticks([36, 52, 68, 84, 100])
         if timing:
-            branch_ax.set_ylim(1.7, 800000)
-            ticks = [3, 30, 300, 3000, 30000, 120000]
+            # Reserve space above the highest observed time or timeout arrow.
+            highest_ms = max(
+                r[m]["total_ms"]
+                if r[m]["status"] == "completed"
+                else 1000 * r[m]["limit_s"]
+                for r in trials
+                for m, *_ in METHODS
+            )
+            branch_ax.set_ylim(1.7, highest_ms * 6)
+            ticks = [10**i for i in range(1, 9) if 10**i <= highest_ms * 2]
             branch_ax.set_yticks(ticks, [f"{ms / 1000:g}" for ms in ticks])
             branch_ax.set_ylabel("Planning time (s, log scale)")
         else:
@@ -140,6 +148,8 @@ def draw(metric, output):
             ticks = [
                 n for n in (4, 32, 256, 2048, 16384, 131072) if n <= max(1024, highest)
             ]
+            if highest >= 4 * ticks[-1]:
+                ticks.append(highest)
             branch_ax.set_yticks(ticks, [f"{n:,}" for n in ticks])
             branch_ax.set_ylabel("Visited states (log scale)")
         fig.legend(
