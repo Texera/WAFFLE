@@ -1,6 +1,22 @@
 # Which K-means loop rules can one workflow express?
 
-Table 2 compares [four loop rules implemented with native operators](native_controls/README.md) and [two workflows that call an existing Python function](supplied_policies/README.md). The second experiment also checks native translations of both functions.
+Table 2 groups the measured tasks by what the loop must do. **Yes** means the tested loop operators perform the named task directly. **No** means its implementation uses an additional node for some part of the task. A node used only to supply input, perform the body computation, or export results does not count.
+
+| Task | WAFFLE | KNIME | n8n | RapidMiner |
+| --- | --- | --- | --- | --- |
+| **Choose the next cluster count** | | | | |
+| Try every K in order | Yes | Yes | Yes | Yes |
+| Double K after a low score | Yes | No | No | No |
+| Call a supplied Python selector | Yes | No | No | No |
+| **Decide when to stop** | | | | |
+| Stop at a target score | Yes | Yes | No | No |
+| Stop when the gain is small | Yes | No | No | No |
+| Call a supplied Python stop rule | Yes | No | No | No |
+| **Collect results across iterations** | | | | |
+| Append results as rows | Yes | Yes | Yes | No |
+| Add one column per iteration | No | Yes | No | No |
+
+The [native rule comparison](native_controls/README.md) identifies the control nodes used in the 64 runs. The [supplied policies](supplied_policies/README.md) distinguish calling a Python file from translating its logic. The Python routes for the three comparison systems come from their documentation. For collection, the [public examples](../case_study/README.md) include KNIME's row-appending and column-appending loop ends. WAFFLE appends rows at LoopEnd. The n8n sweep returns the body items directly from Loop Over Items. RapidMiner returns a collection of iteration results that the tested workflow flattens into rows. The three translations of the column-append example all pivot after the loop.
 
 We tested four rules for choosing the next number of clusters, K. Every rule starts at K=2, stops before K would exceed 4, and retains the score of the last K tested. The body runs Lloyd's algorithm on 16 points and reports the negative sum of squared distances to the nearest center. A higher score indicates a better fit. We scaled the same 16 points by 0.1, 0.7, 1 and 10 to exercise different decisions with the same rule. These are four constructed cases with known answers.
 
