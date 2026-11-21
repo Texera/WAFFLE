@@ -1,5 +1,7 @@
 # Global (X) versus modular (Y) planning
 
+Sections 7.5 and 7.6 now include two 100-operator workflows. The [scale experiment](scale/README.md) records the added graph layouts, direct X/Y measurements, time limit and independent cost checks. The original six-workflow experiment is documented below.
+
 Six compiled native workflows contain aggregation/join groups inside and before one loop. Group counts are 1/1, 2/2, 3/3, 4/4, 1/4 and 4/1, giving 12, 20, 28, 36, 24 and 24 physical operators. The compiler supplies actual blocking ports; the research adapter adds the two loop-boundary cuts.
 
 Pruning is on. Every original operator has estimate 1, each region costs its maximum operator estimate, and Y's collapsed macro costs zero. X and Y find the same minimum costs: 7, 11, 15, 19, 13 and 13. These are model estimates, not runtime measurements.

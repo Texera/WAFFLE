@@ -1,0 +1,51 @@
+--- a/NativeBranchXYFixtures.scala
++++ b/NativeBranchXYFixtures.scala
+@@ -28,0 +29 @@
++import org.apache.texera.amber.operator.filter.{ComparisonType, FilterPredicate, SpecializedFilterOpDesc}
+@@ -46,0 +48,10 @@
++    compileScale(inside, outside, 0, aggregateAttribute)
++  }
++
++  def compileScale(
++      inside: Int,
++      outside: Int,
++      filtersPerGroup: Int,
++      aggregateAttribute: String = "value"
++  ): CompiledXYFixtures.Compiled = {
++    require(inside > 0 && outside > 0 && filtersPerGroup >= 0)
+@@ -79,0 +91,9 @@
++        val filtered = (0 until filtersPerGroup).foldLeft(previous) { (upstream, j) =>
++          val filter = named(new SpecializedFilterOpDesc, s"$prefix-exclude-$i-$j")
++          val groupIndex = if (prefix == "in") outside + i else i
++          val excludedValue = -(1 + groupIndex * filtersPerGroup + j)
++          filter.predicates = List(new FilterPredicate(
++            "value", ComparisonType.NOT_EQUAL_TO, excludedValue.toString))
++          link(upstream, filter)
++          filter
++        }
+@@ -82 +102 @@
+-        operation.aggFunction = functions(i)
++        operation.aggFunction = functions(i % functions.size)
+@@ -90 +110 @@
+-        link(previous, agg)
++        link(filtered, agg)
+@@ -92 +112 @@
+-        link(previous, join, 1)
++        link(filtered, join, 1)
+@@ -124,0 +145,16 @@
++
++/** Increase branching and serial length separately while retaining real compiler port types. */
++object NativeScaleXYBenchmark {
++  val layouts = Vector((4, 0), (5, 0), (4, 4), (4, 8))
++
++  def main(args: Array[String]): Unit =
++    CompiledXYBenchmark.run(args, layouts.map { case (groups, filters) =>
++      val name = s"groups-$groups-filters-$filters"
++      (name, name, () => {
++        val compiled = NativeBranchXYFixtures.compileScale(groups, groups, filters)
++        require(compiled.input.plan.operators.size == 4 + 2 * groups * (4 + filters))
++        require(compiled.original.getBlockingAndDependeeLinks.size == 4 * groups)
++        compiled
++      })
++    }, exhaustiveLimit = 8)
++}

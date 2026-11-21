@@ -8,10 +8,6 @@ import csv
 import json
 from statistics import median
 
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-from matplotlib.ticker import FixedLocator, FuncFormatter, NullLocator
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
@@ -59,39 +55,9 @@ def summarize():
 def main():
     summary = summarize()
     (HERE / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n', encoding='utf-8')
-    plt.rcParams.update({'font.family': 'DejaVu Serif', 'font.size': 8,
-                         'pdf.fonttype': 42, 'ps.fonttype': 42})
-    fig, ax = plt.subplots(figsize=(3.35, 2.45), layout='constrained')
-    for strategy, offset, color, marker, label in (
-            ('X', -0.13, '#1761A0', 'o', 'X: global'),
-            ('Y', 0.13, '#B34E00', 's', 'Y: modular')):
-        values = [r[strategy]['pooled_median_ms'] for r in summary]
-        lower = [v-r[strategy]['jvm_median_min_ms'] for v, r in zip(values, summary)]
-        upper = [r[strategy]['jvm_median_max_ms']-v for v, r in zip(values, summary)]
-        ax.errorbar([i+offset for i in range(len(summary))], values,
-                    yerr=[lower, upper], fmt=marker, linestyle='none', color=color,
-                    markersize=4.5, elinewidth=1, capsize=2.5, label=label)
-    ax.set_yscale('log')
-    ax.set_ylim(2, 1000)
-    ax.set_xlim(-0.5, 5.5)
-    ax.yaxis.set_major_locator(FixedLocator([3, 10, 30, 100, 300, 1000]))
-    ax.yaxis.set_major_formatter(FuncFormatter(lambda value, _: f'{value:g}'))
-    ax.yaxis.set_minor_locator(NullLocator())
-    ax.set_ylabel('Planning time (ms, log scale)')
-    ax.set_xticks(range(len(summary)),
-                  [f"{r['inside']} / {r['outside']}\n{r['operators']} ops" for r in summary])
-    ax.tick_params(axis='x', labelsize=7, length=0, pad=5)
-    ax.set_xlabel('Groups inside / outside the loop', labelpad=5)
-    ax.grid(axis='y', linewidth=0.5, color='#d4d4d4')
-    ax.set_axisbelow(True)
-    ax.spines[['top', 'right']].set_visible(False)
-    ax.legend(loc='upper left', frameon=False, fontsize=7.5)
-    destination = ROOT / 'figures/xy-planning-time.pdf'
-    destination.parent.mkdir(exist_ok=True)
-    fig.savefig(destination, metadata={'CreationDate': None, 'ModDate': None})
-    plt.close(fig)
-    print(destination)
-    print('3600 measured plans; all six cases; no samples excluded')
+    from scale.charts import draw
+    draw("pooled_median_ms", ROOT / "figures/xy-planning-time.pdf")
+    draw("search_states", ROOT / "figures/xy-search-states.pdf")
     for r in summary:
         print(f"{r['case']}: X={r['X']['pooled_median_ms']:.6f} ms, "
               f"Y={r['Y']['pooled_median_ms']:.6f} ms; cost={r['minimum_estimated_cost']}")

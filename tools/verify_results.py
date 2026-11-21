@@ -52,6 +52,7 @@ def main():
         spec.loader.exec_module(module)
         assert module.summarize() == read(planning / 'summary.json')
         print('Planning: all 3,600 measured plans reproduce equal X/Y minima and timing summaries')
+        print(run(planning / 'scale/verify.py').strip())
         for folder, test in [(case, 'test_check.py'),
                              (ROOT / 'experiments/control_messages', 'test_verify_binding.py'),
                              (execution, 'test_experiment.py'),
