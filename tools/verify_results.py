@@ -35,6 +35,7 @@ def main():
         assert sum(r['rows'] for r in summary['cases']) == 241
         assert summary == read(case / 'results/comparison.json')
         print('Case study: 8/8 matches; 241 output rows verified')
+        print(run(ROOT / 'experiments/generated_loops/verify.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify_binding.py').strip())
         execution = ROOT / 'experiments/loop_execution'
@@ -54,6 +55,7 @@ def main():
         print('Planning: all 3,600 measured plans reproduce equal X/Y minima and timing summaries')
         print(run(planning / 'scale/verify.py').strip())
         for folder, test in [(case, 'test_check.py'),
+                             (case / 'published_loops', 'test_analyze.py'),
                              (ROOT / 'experiments/control_messages', 'test_verify_binding.py'),
                              (execution, 'test_experiment.py'),
                              (planning / 'runner', 'test_module_oracle.py')]:

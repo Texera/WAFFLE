@@ -53,21 +53,21 @@ class GeneratedLoopSpec extends TestKit(ActorSystem("GeneratedLoopSpec", AmberRu
   }
 
   "WAFFLE strict compiler" should "build a physical workflow for each generated graph" in {
-    (0 until 399).foreach { i =>
+    (0 until 2000).foreach { i =>
       val (_, _, sha) = compileGraph(i, base + i)
       record("compiled.jsonl", Map("index" -> i, "graph_sha256" -> sha))
     }
   }
 
   // First of each family, plus a depth-three aggregation with two nonempty
-  // transform arms at its final union. Selection does not use result rows.
-  for (i <- List(0, 1, 2, 59)) {
+  // transform arms at its final union, and the first four-stage graph.
+  for (i <- List(0, 1, 2, 59, 399)) {
     "WAFFLE coordinator" should s"execute sentinel $i and read its materialized sink" in {
-      val id = base + 400 + i
+      val id = base + 2000 + i
       setUpWorkflowExecutionData(id)
       try {
         val (workflow, sink, sha) = compileGraph(i, id)
-        val timeout = Duration.fromSeconds(if (i == 59) 300 else 120)
+        val timeout = Duration.fromSeconds(if (i >= 59) 300 else 120)
         val tuples = runWorkflowAndReadResults(system, workflow, List(sink), _.get().toList, timeout)(sink)
         val rows = tuples.map(t => List(t.getField[Int]("step"), t.getField[Int]("score")))
         record("executed.jsonl", Map("index" -> i, "graph_sha256" -> sha, "rows" -> rows))

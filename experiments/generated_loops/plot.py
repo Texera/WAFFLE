@@ -16,7 +16,7 @@ def draw(source, output):
     graphs = {row["graph"] for row in rows}
     keys = {(row["graph"], row["input"], row["fraction"]) for row in rows}
     expected = {(graph, fixture, fraction) for graph in graphs for fixture in INPUTS for fraction in FRACTIONS}
-    if len(graphs) != 133 or len(rows) != len(keys) or keys != expected:
+    if len(graphs) != 667 or len(rows) != len(keys) or keys != expected:
         raise ValueError("Incomplete or duplicate graph/input/fraction observations")
     cmap = LinearSegmentedColormap.from_list("count", ("#f1f4f6", "#195779"))
     with plt.rc_context({"font.family": "DejaVu Serif", "font.size": 8, "pdf.fonttype": 42}):
@@ -29,7 +29,7 @@ def draw(source, output):
                     counts[INPUTS.index(row["input"]), FRACTIONS.index(row["fraction"])] += 1
             ax.imshow(counts, vmin=0, vmax=len(graphs), cmap=cmap, aspect="auto")
             for (i, j), count in np.ndenumerate(counts):
-                ax.text(j, i, str(count), ha="center", va="center", color="white" if count > 80 else "#182329")
+                ax.text(j, i, str(count), ha="center", va="center", color="white" if count > 0.6 * len(graphs) else "#182329")
             for split in (0.5, 1.5):
                 ax.axvline(split, color="white", lw=1)
                 ax.axhline(split, color="white", lw=1)

@@ -5,6 +5,8 @@ Experimental scripts, data, recorded results, and figure generation for the WAFF
 | Experiment | Directory | Recorded evidence |
 | --- | --- | --- |
 | §7.2: translate KNIME loop examples | [case_study](experiments/case_study) | WAFFLE, n8n, and RapidMiner each match all 241 KNIME scalar output rows across eight examples |
+| §7.2: published loop plans | [published_loops](experiments/case_study/published_loops) | 500 distinct labeled structures, 36 boundary-type pairs, checked against the eight runnable examples |
+| §7.2: generated loop computations | [generated_loops](experiments/generated_loops) | 2,000 graphs on three inputs each, with every visited score and output row checked |
 | Supplemental K-means loop rules | [loop_policies](experiments/loop_policies) | Four control rules on four inputs across four engines, with fixed-range and score-threshold comparisons |
 | §7.3: create and adapt loops | [user_study](experiments/user_study) | Proposed protocol only; no participant results |
 | §7.4: control-variable delivery and binding | [control_messages](experiments/control_messages) | Eight merge workflows, 15 arrival orders under two policies, and 90 first-tuple bindings in 12 multiworker runs |

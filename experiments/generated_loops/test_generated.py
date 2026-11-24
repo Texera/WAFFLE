@@ -16,7 +16,7 @@ class CorpusTests(unittest.TestCase):
             signature = topology(g)
             self.assertEqual(signature, arms)
             signatures.add(signature)
-        self.assertEqual(len(signatures), 399)
+        self.assertEqual(len(signatures), 2000)
 
     def test_rewired_graph_rejected(self):
         family, policy, arms = next(cases())

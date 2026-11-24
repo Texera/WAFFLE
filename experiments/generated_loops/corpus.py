@@ -1,7 +1,7 @@
 """Deterministic generator for single-block Texera logical workflows."""
 import argparse
 import hashlib
-from itertools import product
+from itertools import chain, product
 import json
 from pathlib import Path
 
@@ -15,11 +15,11 @@ FIXTURES = {
 
 
 def cases():
-    index = 0
-    for depth in (1, 2, 3):
-        for arms in product(ARMS, repeat=depth):
-            yield FAMILIES[index % 3], (index // 3) % 3, arms
-            index += 1
+    shallow = chain.from_iterable(product(ARMS, repeat=depth) for depth in (1, 2, 3))
+    # Select four-stage bodies by a stable hash of the shape, independent of outcomes.
+    deep = sorted(product(ARMS, repeat=4), key=digest)[:1601]
+    for index, arms in enumerate(chain(shallow, deep)):
+        yield FAMILIES[index % 3], (index // 3) % 3, arms
 
 
 def encode(value):

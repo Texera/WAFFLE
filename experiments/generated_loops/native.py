@@ -1,4 +1,4 @@
-"""Strict-compile the mixed-input corpus and execute four coordinator sentinels."""
+"""Strict-compile the mixed-input corpus and execute five coordinator sentinels."""
 import argparse
 import os
 from pathlib import Path

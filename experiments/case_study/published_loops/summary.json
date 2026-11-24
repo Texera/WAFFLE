@@ -1,0 +1,196 @@
+{
+  "archive_members": 6191,
+  "classifications": {
+    "multiple named boundaries": 327,
+    "no connected pair": 5032,
+    "one connected pair": 832
+  },
+  "eligible_signatures": 798,
+  "matching_reference_pair": 267,
+  "missing_boundary_source": 500,
+  "pairs": [
+    {
+      "end": "boosting learner loop end",
+      "plans": 1,
+      "start": "boosting learner loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 56,
+      "start": "chunk loop start"
+    },
+    {
+      "end": "loop end column append",
+      "plans": 2,
+      "start": "chunk loop start"
+    },
+    {
+      "end": "variable condition loop end",
+      "plans": 2,
+      "start": "chunk loop start"
+    },
+    {
+      "end": "variable loop end",
+      "plans": 8,
+      "start": "chunk loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 9,
+      "start": "column list loop start"
+    },
+    {
+      "end": "loop end column append",
+      "plans": 24,
+      "start": "column list loop start"
+    },
+    {
+      "end": "variable loop end",
+      "plans": 2,
+      "start": "column list loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 27,
+      "start": "counting loop start"
+    },
+    {
+      "end": "loop end column append",
+      "plans": 4,
+      "start": "counting loop start"
+    },
+    {
+      "end": "variable loop end",
+      "plans": 7,
+      "start": "counting loop start"
+    },
+    {
+      "end": "feature selection loop end",
+      "plans": 1,
+      "start": "feature selection loop start"
+    },
+    {
+      "end": "feature selection loop end",
+      "plans": 12,
+      "start": "feature selection loop start 1 1"
+    },
+    {
+      "end": "variable condition loop end",
+      "plans": 6,
+      "start": "generic loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 71,
+      "start": "group loop start"
+    },
+    {
+      "end": "loop end 2 ports",
+      "plans": 1,
+      "start": "group loop start"
+    },
+    {
+      "end": "loop end column append",
+      "plans": 7,
+      "start": "group loop start"
+    },
+    {
+      "end": "loop end deprecated",
+      "plans": 1,
+      "start": "group loop start"
+    },
+    {
+      "end": "variable loop end",
+      "plans": 32,
+      "start": "group loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 1,
+      "start": "h2o cross validation loop start"
+    },
+    {
+      "end": "loop end deprecated",
+      "plans": 1,
+      "start": "h2o cross validation loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 2,
+      "start": "parameter optimization loop start"
+    },
+    {
+      "end": "parameter optimization loop end",
+      "plans": 28,
+      "start": "parameter optimization loop start"
+    },
+    {
+      "end": "parameter optimization loop end",
+      "plans": 1,
+      "start": "parameter optimization loop start table"
+    },
+    {
+      "end": "recursive loop end",
+      "plans": 39,
+      "start": "recursive loop start"
+    },
+    {
+      "end": "recursive loop end 2 ports",
+      "plans": 8,
+      "start": "recursive loop start 2 ports"
+    },
+    {
+      "end": "shapley values loop end",
+      "plans": 1,
+      "start": "shapley values loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 96,
+      "start": "table row to variable loop start"
+    },
+    {
+      "end": "loop end 2 ports",
+      "plans": 2,
+      "start": "table row to variable loop start"
+    },
+    {
+      "end": "loop end column append",
+      "plans": 13,
+      "start": "table row to variable loop start"
+    },
+    {
+      "end": "variable loop end",
+      "plans": 30,
+      "start": "table row to variable loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 1,
+      "start": "table row to variable loop start deprecated"
+    },
+    {
+      "end": "timedelay loop end",
+      "plans": 1,
+      "start": "timedelay loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 1,
+      "start": "tuning loop start"
+    },
+    {
+      "end": "tuning loop end",
+      "plans": 1,
+      "start": "tuning loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 1,
+      "start": "window loop start"
+    }
+  ],
+  "path_regions_without_side_links": 297,
+  "sample": 500,
+  "sampled_pairs": 36
+}

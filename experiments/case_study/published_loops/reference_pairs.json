@@ -1,0 +1,50 @@
+[
+  {
+    "example": "09",
+    "archive_sha256": "3d82f6cb6a9e37a8a4864720f511d55f033ebbbe434c7b6628fe83e1fe00e740",
+    "start": "Chunk Loop Start",
+    "end": "Loop End"
+  },
+  {
+    "example": "10",
+    "archive_sha256": "6365b17b1fe8272b3b51c97cd28f5d1afe08130b06094455d1394c3bfa8b12fe",
+    "start": "Counting Loop Start",
+    "end": "Loop End"
+  },
+  {
+    "example": "11",
+    "archive_sha256": "978ed3bb994bfa50fae7d88c0f847640f514a0af5c8bb9beb43dbd3b7f4c5944",
+    "start": "Group Loop Start",
+    "end": "Loop End"
+  },
+  {
+    "example": "12",
+    "archive_sha256": "fb0c853efc11aa7f3bdd739f2d63d7dcd417de011e07be01d7995838dba04a8a",
+    "start": "Table Row to Variable Loop Start",
+    "end": "Loop End"
+  },
+  {
+    "example": "13",
+    "archive_sha256": "9395eb5401e1dff02fe12c28a9552e369ac1ba5e6acce89a5e6e33857c09e7a0",
+    "start": "Generic Loop Start",
+    "end": "Variable Condition Loop End"
+  },
+  {
+    "example": "14",
+    "archive_sha256": "41f1c0cf08ce0483cabb9d60b68a9a50b91a3d9fc2389649cffb1da13565b5ee",
+    "start": "Interval Loop Start",
+    "end": "Loop End"
+  },
+  {
+    "example": "15",
+    "archive_sha256": "642fbe374c8e7c0a7a5306372d9295b36991b7adfa769e7e211985b5822f0584",
+    "start": "Counting Loop Start",
+    "end": "Loop End (Column Append)"
+  },
+  {
+    "example": "16",
+    "archive_sha256": "e3ec21c49123dd7a68467031b072a979db74cfbf1a6ecc0d4d25b465adca383c",
+    "start": "Counting Loop Start",
+    "end": "Variable Loop End"
+  }
+]
