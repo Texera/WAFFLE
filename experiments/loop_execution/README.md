@@ -18,7 +18,7 @@ The recorded machine used Windows 11 Pro, AMD Ryzen 9 9950X (16 cores), 192 GiB 
 
 A supplemental native run held the candidate count at one and raised the input from 2,000 to 20,000 rows. The twelve runs used one fresh JVM, one warm-up pair and five measured pairs. The median was 50.1 seconds for the loop and 26.1 seconds for explicit copies. The [captured evidence](large-input/) includes the native timings and outputs, fixture, and workflow files with portable input paths. To reproduce it, generate a new package with the additional arguments --counts 20000 --iterations 1 --pairs 5, then run the same native runner and analyzer. To plot both batches, pass --additional-summary experiments/loop_execution/large-input to the plotting command.
 
-The separate [workflow-size sweep](size_sweep.csv) constructs both representations at every candidate count from 1 through 1,024 and at 2,048, 4,096, 8,192 and 16,384. It checks every operator and link. At 16,384 candidates the explicit graph contains 16,386 operators and 32,768 links. The loop contains five operators and four links. These are construction measurements.
+The separate [workflow-size sweep](size_sweep.csv) constructs both representations at every candidate count from 1 through 1,024 and at successive doublings through 131,072. It checks every operator and link. At 131,072 candidates the explicit graph contains 131,074 operators and 262,144 links. The loop contains five operators and four links. These are construction measurements.
 
 ## Reproduce
 

@@ -7,6 +7,7 @@ from pathlib import Path
 from prepare import graph
 
 WORKERS = (1, 2, 4, 8)
+WIDE_WORKERS = (16, 32)
 ROWS = 4096
 REPEATS = 3
 
@@ -52,13 +53,13 @@ class Record(UDFTableOperator):
     return base
 
 
-def prepare(destination):
+def prepare(destination, widths=WORKERS):
     destination.mkdir(parents=True, exist_ok=False)
     (destination / "workflow.json").write_text(json.dumps(workflow(), indent=2) + "\n")
     manifest = {
         "rows": ROWS,
         "runs": [{"workers": workers, "repeat": repeat}
-                 for repeat in range(REPEATS) for workers in WORKERS]
+                 for repeat in range(REPEATS) for workers in widths]
     }
     (destination / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
 
@@ -66,4 +67,6 @@ def prepare(destination):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("destination", type=Path)
-    prepare(parser.parse_args().destination)
+    parser.add_argument("--wide", action="store_true", help="Use 16 and 32 filter workers")
+    args = parser.parse_args()
+    prepare(args.destination, WIDE_WORKERS if args.wide else WORKERS)

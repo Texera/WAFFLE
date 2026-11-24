@@ -1,0 +1,30 @@
+{
+  "runtime_revision": "a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6",
+  "runtime_tree": "7cb877ac9ebdc8d829ba59b1fb1e20a870e4a344",
+  "execution_mode": "MATERIALIZED",
+  "machines": 1,
+  "jvm_version": "17.0.14",
+  "suite": "MultiworkerBindingSpec",
+  "iterations_per_run": 2,
+  "expected_K": [
+    2,
+    3
+  ],
+  "rows_per_iteration": 4096,
+  "runs": 6,
+  "worker_counts": [
+    16,
+    32
+  ],
+  "repetitions_per_width": 3,
+  "measured_first_tuples": 288,
+  "output_rows_per_run": 8187,
+  "sha256": {
+    "native.jsonl": "7c2b109c8989f6882075698a9d3035d08cbfda14240649f95f61f26bb1e6d347",
+    "workflow.json": "079326bfb53cf941e64142c6bbc25b6d1ad87013bc11f061321bbb499c8549b7",
+    "manifest.json": "01a2b4cb564cbdf2d2a34deb40152f3fbf75316cbe741ecf218ba0c246953fa5",
+    "../MultiworkerBindingSpec.scala": "95fac9140051a5a9f7f6472234057b495427254de5f7170ea2d5a57086f9bf1a",
+    "../prepare_binding.py": "8e02aa95b376d357e1a7df935e1711277f943ee247211c0e3705d114c49ca055",
+    "../verify_binding.py": "2fabf32302404395557fe6b36fde3b4d13181312cb3d45991580f87eb7626bf3"
+  }
+}

@@ -22,16 +22,19 @@ For the public native runner, set JAVA_HOME and SBT_LAUNCH or supply its --java 
 
 ## Binding across workers
 
-The multiworker experiment runs a two-iteration loop with K=2 and then K=3. Each iteration supplies the integers 0 through 4095 to a native Filter with predicate x >= $K. The Filter uses 1, 2, 4, or 8 workers, with three complete workflow runs per count. All workers run on one machine, and all edges are materialized. A single upstream LoopStart supplies the common value on the data edge.
+The multiworker experiment runs a two-iteration loop with K=2 and then K=3. Each iteration supplies the integers 0 through 4095 to a native Filter with predicate x >= $K. The Filter uses 1, 2, 4, 8, 16, or 32 workers, with three complete workflow runs per count. All workers run on one machine, and all edges are materialized. A single upstream LoopStart supplies the common value on the data edge.
 
 The harness compiles the ordinary Filter graph and verifies that its descriptor references K. It then sets the Filter's worker count and installs an observing subclass of the native Filter executor. The subclass reads the inherited descriptor at entry to the first tuple callback and delegates filtering to the original implementation. The engine's normal ExecFactory and DataProcessor perform binding. Each observation contains the real worker index, worker count, received K, bound property and first tuple. Other operators keep the ordinary generated workflow configuration.
 
-The saved records include all first-tuple observations and all filtered output rows. The checker requires every worker index in both iterations and every expected output row, retaining duplicate counts. The number of machines and competing updates from multiple branches are separate experimental dimensions.
+The original [12 runs](binding_results/) contain 90 first-tuple observations. The [six additional runs](binding_wide_results/) contain 96 observations at 16 workers and 192 at 32 workers. All 378 bindings matched the expected K, and each run returned the expected 8,187 pairs of K and x. Both batches use the same workflow, native test harness, runtime tree, and inputs. The saved records include all first-tuple observations and all filtered output rows. The checker requires every worker index in both iterations and every expected output row, retaining duplicate counts. The number of machines and competing updates from multiple branches are separate experimental dimensions.
 
 ```sh
 python prepare_binding.py BINDING_RUN
 python ../loop_execution/run_native.py BINDING_RUN --repo /path/to/runtime --binding
 python verify_binding.py BINDING_RUN
+python prepare_binding.py WIDE_RUN --wide
+python ../loop_execution/run_native.py WIDE_RUN --repo /path/to/runtime --binding
+python verify_binding.py WIDE_RUN --wide
 ```
 
 Use `python verify_binding.py` and `python test_verify_binding.py` to check the saved binding records and the checker's rejection of incomplete or incorrect evidence. The setup and native runner options above also apply.

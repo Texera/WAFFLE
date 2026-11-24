@@ -44,11 +44,14 @@ def main():
         print(run(ROOT / 'experiments/generated_loops/verify.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify_binding.py').strip())
+        print(run(ROOT / 'experiments/control_messages/verify_binding.py',
+                  ROOT / 'experiments/control_messages/binding_wide_results', '--wide').strip())
+        run(ROOT / 'experiments/control_messages/topologies/loop_paths.py', '--check')
         execution = ROOT / 'experiments/loop_execution'
         size_file = temp / 'size.csv'
         run(execution / 'size_sweep.py', size_file)
         assert size_file.read_bytes() == (execution / 'size_sweep.csv').read_bytes()
-        print('Workflow construction: verified both graphs at 1,028 candidate counts.')
+        print('Workflow construction: verified both graphs at 1,031 candidate counts.')
         run(execution / 'analyze.py', execution / 'results', temp / 'execution')
         assert read(temp / 'execution/summary.json') == read(execution / 'results/summary.json')
         assert (temp / 'execution/measurements.csv').read_bytes() == (execution / 'results/measurements.csv').read_bytes()
@@ -74,6 +77,7 @@ def main():
         for folder, test in [(case, 'test_check.py'),
                              (case / 'published_loops', 'test_analyze.py'),
                              (ROOT / 'experiments/control_messages', 'test_verify_binding.py'),
+                             (ROOT / 'experiments/control_messages/topologies', 'test_topologies.py'),
                              (execution, 'test_experiment.py'),
                              (planning / 'runner', 'test_module_oracle.py')]:
             run(folder / test, cwd=folder)

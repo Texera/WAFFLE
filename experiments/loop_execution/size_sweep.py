@@ -1,4 +1,4 @@
-"""Verify graph size and wiring at dense small lengths and four larger powers of two."""
+"""Verify graph size and wiring at dense small lengths and larger powers of two through 131,072."""
 import argparse
 import csv
 from pathlib import Path
@@ -6,7 +6,7 @@ from experiment import graph
 
 
 def sweep():
-    for count in (*range(1, 1025), 2048, 4096, 8192, 16384):
+    for count in (*range(1, 1025), *(2**p for p in range(11, 18))):
         for method in ("loop", "copies"):
             workflow = graph(Path("points.csv"), count, method)
             names = [op["operatorID"] for op in workflow["operators"]]

@@ -1,0 +1,19 @@
+{
+  "distinct_projections": {
+    "no-eligible-scope": 1246,
+    "one-path": 1982,
+    "several-paths": 2697
+  },
+  "input_sha256": "f730655f0adc065b342284e90c13d0e556d3d4c0ec448b6b95626d8c08c5eb6d",
+  "scope_counts": {
+    "disconnected": 29,
+    "multiple-boundaries": 6476,
+    "one-path": 7936,
+    "several-paths": 10194
+  },
+  "workflow_items": {
+    "no-eligible-scope": 1684,
+    "one-path": 2983,
+    "several-paths": 4320
+  }
+}

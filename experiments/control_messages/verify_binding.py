@@ -3,16 +3,16 @@ import argparse
 import json
 from pathlib import Path
 
-from prepare_binding import REPEATS, ROWS, WORKERS
+from prepare_binding import REPEATS, ROWS, WORKERS, WIDE_WORKERS
 
 RESULTS = Path(__file__).with_name("binding_results")
 
 
-def check(path):
+def check(path, widths=WORKERS):
     records = [json.loads(line) for line in (path / "native.jsonl").read_text().splitlines()]
-    expected_runs = {(workers, repeat) for workers in WORKERS for repeat in range(REPEATS)}
+    expected_runs = {(workers, repeat) for workers in widths for repeat in range(REPEATS)}
     seen = set()
-    summary = {workers: {"observations": 0, "matched": 0} for workers in WORKERS}
+    summary = {workers: {"observations": 0, "matched": 0} for workers in widths}
     expected_rows = [[k, x] for k in (2, 3) for x in range(k, ROWS)]
     for record in records:
         workers, repeat = record["workers"], record["repeat"]
@@ -42,5 +42,7 @@ def check(path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("results", nargs="?", type=Path, default=RESULTS)
-    for workers, counts in check(parser.parse_args().results).items():
+    parser.add_argument("--wide", action="store_true", help="Expect all 16- and 32-worker runs")
+    args = parser.parse_args()
+    for workers, counts in check(args.results, WIDE_WORKERS if args.wide else WORKERS).items():
         print(f"{workers} workers: {counts['matched']}/{counts['observations']} first tuples use the expected K")

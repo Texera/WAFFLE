@@ -10,9 +10,9 @@ Experimental scripts, data, recorded results, and figure generation for the WAFF
 | §7.2: generated loop computations | [generated_loops](experiments/generated_loops) | 16,104 graphs on three inputs each, with every visited score and output row checked |
 | Supplemental K-means loop rules | [loop_policies](experiments/loop_policies) | Four control rules on four inputs across four engines, with fixed-range and score-threshold comparisons |
 | §7.3: create and adapt loops | [user_study](experiments/user_study) | Proposed protocol only; no participant results |
-| §7.4: control-variable delivery and binding | [control_messages](experiments/control_messages) | Eight merge workflows, 1,023 arrival orders under two policies, and 90 first-tuple bindings in 12 multiworker runs |
+| §7.4: control-variable delivery and binding | [control_messages](experiments/control_messages) | Eight merge workflows, 1,023 arrival orders under two policies, and 378 first-tuple bindings in 18 native runs with up to 32 workers |
 | §§7.5–7.6: global (X) versus modular (Y) planning | [xy_planning](experiments/xy_planning) | 3,600 measured plans on the original six workflows, extended tests up to 100 operators with increased branching and 164 with longer filter chains; all completed pairs attain the same verified minimum |
-| §§7.7–7.8: loop versus explicit body copies | [loop_execution](experiments/loop_execution) | 84 native executions, including 14 warm-ups; seven settings up to 20,000 tuples; all outputs checked |
+| §§7.7–7.8: loop versus explicit body copies | [loop_execution](experiments/loop_execution) | 84 native executions, including 14 warm-ups; seven settings up to 20,000 tuples; separate graph-construction checks through 131,072 candidates; all outputs checked |
 | Scheduling supplement | [scheduling_oracle](experiments/scheduling_oracle) | Independent scheduling model |
 
 The user-study protocol is included, but no participant measurements have been collected here. Source data, workflow definitions, raw outputs, checks, and plotting code for the other experiments are included.

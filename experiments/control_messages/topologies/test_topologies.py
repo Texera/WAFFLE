@@ -2,6 +2,7 @@ import unittest
 from graphlib import CycleError
 
 from analyze import count_reconvergence
+from loop_paths import classify
 
 
 def plan(nodes, links):
@@ -21,6 +22,21 @@ class RejoiningBranches(unittest.TestCase):
         self.assertEqual(count_reconvergence(plan("abc", ["ac", "bc"])), (3, 0))
         self.assertEqual(count_reconvergence(plan("ab", ["ab", "ab"])), (2, 0))
         self.assertEqual(count_reconvergence(plan("", [])), (0, 0))
+
+    def test_paths_between_one_boundary_pair(self):
+        scope = {"roles": {"a": "LoopStart", "e": "LoopEnd"}, "connected": True,
+                 "node_ids": list("abcde"), "edges": []}
+
+        def check(links, expected):
+            scope["edges"] = [(a, 0, b, 0) for a, b in links]
+            self.assertEqual(classify(scope), expected)
+
+        check(["ab", "ab", "be", "bc", "bd"], "one-path")
+        check(["ab", "bc", "ce", "be"], "several-paths")
+        check(["ab", "bc", "cb", "ce"], "cyclic-body")
+        check(["ab", "ce"], "disconnected")
+        scope["roles"]["d"] = "LoopStart"
+        check(["ab", "be"], "multiple-boundaries")
 
     def test_invalid_graphs(self):
         with self.assertRaises(CycleError):
