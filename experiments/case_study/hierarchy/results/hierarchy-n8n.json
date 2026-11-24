@@ -1,0 +1,134 @@
+{
+  "id": "recursiveHierarchy",
+  "name": "Parent-child hierarchy",
+  "active": false,
+  "nodes": [
+    {
+      "id": "Start",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "Input",
+      "name": "Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const edges = [[\"A\", \"B\"], [\"B\", \"C\"], [\"B\", \"D\"], [\"B\", \"E\"], [\"Z\", \"B\"], [\"B\", \"C\"], [\"B\", \"D\"], [\"B\", \"E\"], [\"Y\", \"C\"], [\"Y\", \"D\"], [\"Y\", \"E\"]];\nconst relation = Array.from(new Map(edges.map(e=>[JSON.stringify(e),e])).values());\nconst children = new Set(relation.map(e=>e[1]));\nreturn [{frontier:relation.filter(e=>!children.has(e[0])),relation,level:1,history:[]}];"
+      }
+    },
+    {
+      "id": "Body",
+      "name": "Body",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        120
+      ],
+      "parameters": {
+        "jsCode": "const {frontier,relation,level,history} = $input.first().json;\nconst emitted = Array.from(new Map(frontier.map(e=>[JSON.stringify(e),e])).values());\nconst expanded = emitted.flatMap(([root,tip])=>relation.filter(e=>e[0]===tip).map(e=>[root,e[1]]));\nconst tips = new Set(emitted.map(e=>e[1]));\nconst following = expanded.concat(relation.filter(e=>!tips.has(e[0])));\nconst trace = {level,incoming:frontier,relation,expanded,following,emitted};\nreturn [{frontier:expanded,relation:following,level:level+1,history:history.concat(trace),again:Number(expanded.length>0 && level<100)}];"
+      }
+    },
+    {
+      "id": "Continue",
+      "name": "Continue",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        120
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.again }}",
+              "operation": "equal",
+              "value2": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "Result",
+      "name": "Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        -100
+      ],
+      "parameters": {
+        "jsCode": "const {history} = $input.first().json;\nconst rows = history.flatMap(s=>s.emitted.map(([p,c])=>[p,c,s.level]));\nrows.sort((a,b)=>a[0].localeCompare(b[0]) || a[2]-b[2] || a[1].localeCompare(b[1]));\nreturn rows.map(row=>({row})).concat(history.map(trace=>({trace})));"
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input": {
+      "main": [
+        [
+          {
+            "node": "Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Body": {
+      "main": [
+        [
+          {
+            "node": "Continue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue": {
+      "main": [
+        [
+          {
+            "node": "Body",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

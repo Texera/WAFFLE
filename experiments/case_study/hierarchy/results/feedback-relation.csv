@@ -1,0 +1,23 @@
+"row ID","parent","child","Iteration"
+"Row0_Row1#0","A","C",0
+"Row4_Row1#0","Z","C",0
+"Row0_Row2#0","A","D",0
+"Row4_Row2#0","Z","D",0
+"Row0_Row3#0","A","E",0
+"Row4_Row3#0","Z","E",0
+"Row0#0","A","B",0
+"Row4#0","Z","B",0
+"Row8#0","Y","C",0
+"Row9#0","Y","D",0
+"Row10#0","Y","E",0
+"Row0_Row1#1","A","C",1
+"Row4_Row1#1","Z","C",1
+"Row0_Row2#1","A","D",1
+"Row4_Row2#1","Z","D",1
+"Row0_Row3#1","A","E",1
+"Row4_Row3#1","Z","E",1
+"Row0#1","A","B",1
+"Row4#1","Z","B",1
+"Row8#1","Y","C",1
+"Row9#1","Y","D",1
+"Row10#1","Y","E",1

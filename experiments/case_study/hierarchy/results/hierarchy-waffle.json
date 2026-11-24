@@ -1,0 +1,273 @@
+{
+  "operators": [
+    {
+      "operatorID": "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c",
+      "operatorType": "PythonUDFSourceV2",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "code": "from pytexera import *\nclass Edges(UDFSourceOperator):\n    def produce(self):\n        for parent, child in [['A', 'B'], ['B', 'C'], ['B', 'D'], ['B', 'E'], ['Z', 'B'], ['B', 'C'], ['B', 'D'], ['B', 'E'], ['Y', 'C'], ['Y', 'D'], ['Y', 'E']]:\n            yield dict(parent=parent, child=child)\n",
+        "workers": 1,
+        "defaultEnv": true,
+        "envName": "",
+        "columns": [
+          {
+            "attributeName": "parent",
+            "attributeType": "string"
+          },
+          {
+            "attributeName": "child",
+            "attributeType": "string"
+          }
+        ]
+      },
+      "inputPorts": [],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Points",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    },
+    {
+      "operatorID": "LoopStart-operator-4e307707-f16f-5c50-b839-9c940e33dd69",
+      "operatorType": "LoopStart",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "initialization": "level = 1\nrelation = D.drop_duplicates().to_json(orient='values')\nfrontier = D.loc[~D.parent.isin(D.child)].drop_duplicates().to_json(orient='values')",
+        "output": "__import__('pandas').DataFrame(__import__('json').loads(frontier), columns=['parent','child'])"
+      },
+      "inputPorts": [
+        {
+          "portID": "input-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Loop Start",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    },
+    {
+      "operatorID": "PythonUDFV2-operator-83753f75-cd0a-51d6-93a6-fec8c724afae",
+      "operatorType": "PythonUDFV2",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "code": "from pytexera import *\nimport json\nclass Expand(UDFOperatorV2):\n    def open(self):\n        self.incoming = []\n        self.trace = None\n\n    def process_state(self, state, port):\n        return None\n\n    def process_tuple(self, row, port):\n        self.incoming.append((row['parent'], row['child']))\n        yield None\n\n    def advance(self):\n        if self.trace is None:\n            current = list(dict.fromkeys(self.incoming))\n            relation = json.loads(self.state['relation'])\n            expanded = [(root, child) for root, tip in current for parent, child in relation if tip == parent]\n            tips = {tip for _, tip in current}\n            remaining = [edge for edge in relation if edge[0] not in tips]\n            self.trace = dict(level=int(self.state['level']), incoming=self.incoming, relation=relation,\n                              expanded=expanded, following=expanded + remaining, emitted=current)\n        return self.trace\n\n    def produce_state_on_finish(self, port):\n        step = self.advance()\n        return State(dict(self.state, next_frontier=json.dumps(step['expanded']), next_relation=json.dumps(step['following'])))\n\n    def on_finish(self, port):\n        yield dict(payload=json.dumps(self.advance()))\n",
+        "workers": 1,
+        "defaultEnv": true,
+        "envName": "",
+        "outputColumns": [
+          {
+            "attributeName": "payload",
+            "attributeType": "string"
+          }
+        ],
+        "retainInputColumns": false
+      },
+      "inputPorts": [
+        {
+          "portID": "input-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Cluster",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    },
+    {
+      "operatorID": "LoopEnd-operator-23b8a13d-6365-58af-a1c6-94dd3c5eca3a",
+      "operatorType": "LoopEnd",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "update": "frontier = next_frontier\nrelation = next_relation\nlevel += 1",
+        "condition": "bool(__import__('json').loads(frontier)) and level <= 100"
+      },
+      "inputPorts": [
+        {
+          "portID": "input-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Loop End",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    },
+    {
+      "operatorID": "PythonUDFV2-operator-49a728ea-45a6-5820-9d48-6c8687a73805",
+      "operatorType": "PythonUDFV2",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "code": "from pytexera import *\nimport json\nimport pandas as pd\nclass Collect(UDFTableOperator):\n    def process_table(self, table, port):\n        steps = [json.loads(value) for value in table['payload']]\n        rows = [(p,c,s['level']) for s in steps for p,c in s['emitted']]\n        rows.sort(key=lambda row: (row[0], row[2], row[1]))\n        records = [{'row': row} for row in rows] + [{'trace': s} for s in steps]\n        yield pd.DataFrame([{'payload':json.dumps(rec)} for rec in records])\n",
+        "workers": 1,
+        "defaultEnv": true,
+        "envName": "",
+        "outputColumns": [
+          {
+            "attributeName": "payload",
+            "attributeType": "string"
+          }
+        ],
+        "retainInputColumns": false
+      },
+      "inputPorts": [
+        {
+          "portID": "input-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": true,
+          "disallowMultiInputs": false,
+          "dependencies": []
+        }
+      ],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Results",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": true
+    }
+  ],
+  "links": [
+    {
+      "linkID": "link-0",
+      "source": {
+        "operatorID": "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "LoopStart-operator-4e307707-f16f-5c50-b839-9c940e33dd69",
+        "portID": "input-0"
+      }
+    },
+    {
+      "linkID": "link-1",
+      "source": {
+        "operatorID": "LoopStart-operator-4e307707-f16f-5c50-b839-9c940e33dd69",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "PythonUDFV2-operator-83753f75-cd0a-51d6-93a6-fec8c724afae",
+        "portID": "input-0"
+      }
+    },
+    {
+      "linkID": "link-2",
+      "source": {
+        "operatorID": "PythonUDFV2-operator-83753f75-cd0a-51d6-93a6-fec8c724afae",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "LoopEnd-operator-23b8a13d-6365-58af-a1c6-94dd3c5eca3a",
+        "portID": "input-0"
+      }
+    },
+    {
+      "linkID": "link-3",
+      "source": {
+        "operatorID": "LoopEnd-operator-23b8a13d-6365-58af-a1c6-94dd3c5eca3a",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "PythonUDFV2-operator-49a728ea-45a6-5820-9d48-6c8687a73805",
+        "portID": "input-0"
+      }
+    }
+  ],
+  "operatorPositions": {
+    "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c": {
+      "x": 0,
+      "y": 100
+    },
+    "LoopStart-operator-4e307707-f16f-5c50-b839-9c940e33dd69": {
+      "x": 180,
+      "y": 100
+    },
+    "PythonUDFV2-operator-83753f75-cd0a-51d6-93a6-fec8c724afae": {
+      "x": 360,
+      "y": 100
+    },
+    "LoopEnd-operator-23b8a13d-6365-58af-a1c6-94dd3c5eca3a": {
+      "x": 540,
+      "y": 100
+    },
+    "PythonUDFV2-operator-49a728ea-45a6-5820-9d48-6c8687a73805": {
+      "x": 720,
+      "y": 100
+    }
+  },
+  "commentBoxes": [],
+  "settings": {
+    "dataTransferBatchSize": 400,
+    "executionMode": "MATERIALIZED"
+  }
+}

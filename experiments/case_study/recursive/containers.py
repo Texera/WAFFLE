@@ -9,8 +9,8 @@ N8N = "n8nio/n8n@sha256:fabce3e9678a07d2dde83bd8f5124017f3ec457d0a3fc6b63bb4cec4
 RAPIDMINER = "waffle-rapidminer:10.1.0"
 
 
-def run(directory, system):
-    for kind in ("sum", "fib"):
+def run(directory, system, kinds=("sum", "fib")):
+    for kind in kinds:
         out = directory / (kind + "-" + system + "-run.json")
         if out.exists():
             raise FileExistsError(out)

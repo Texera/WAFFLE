@@ -1,0 +1,12 @@
+"row ID","parent","child","Iteration"
+"Row0#0","A","B",0
+"Row4#0","Z","B",0
+"Row8#0","Y","C",0
+"Row9#0","Y","D",0
+"Row10#0","Y","E",0
+"Row0_Row1#1","A","C",1
+"Row4_Row1#1","Z","C",1
+"Row0_Row2#1","A","D",1
+"Row4_Row2#1","Z","D",1
+"Row0_Row3#1","A","E",1
+"Row4_Row3#1","Z","E",1

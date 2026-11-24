@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf8'?>
+<process version="10.1.000">
+  <operator class="process" compatibility="10.1.000" name="Process" activated="true" expanded="true" x="0" y="0">
+    <process>
+      <operator class="execute_script" compatibility="10.1.000" name="Seed" activated="true" expanded="true" x="45" y="35">
+        <parameter key="script" value="&#10;import com.rapidminer.example.table.AttributeFactory&#10;import com.rapidminer.example.table.DoubleArrayDataRow&#10;import com.rapidminer.example.table.MemoryExampleTable&#10;import com.rapidminer.tools.Ontology&#10;import groovy.json.JsonOutput&#10;import groovy.json.JsonSlurper&#10;def table(rows) {&#10;    def col = AttributeFactory.createAttribute(&quot;payload&quot;, Ontology.STRING)&#10;    def t = new MemoryExampleTable([col])&#10;    for (row in rows) {&#10;        double value = col.mapping.mapString(JsonOutput.toJson(row))&#10;        t.addDataRow(new DoubleArrayDataRow([value] as double[]))&#10;    }&#10;    return t.createExampleSet()&#10;}&#10;def unpack(set) {&#10;    def col = set.attributes.get(&quot;payload&quot;)&#10;    return set.collect { new JsonSlurper().parseText(it.getValueAsString(col)) }&#10;}&#10;def relation = new JsonSlurper().parseText('''[[&quot;A&quot;, &quot;B&quot;], [&quot;B&quot;, &quot;C&quot;], [&quot;B&quot;, &quot;D&quot;], [&quot;B&quot;, &quot;E&quot;], [&quot;Z&quot;, &quot;B&quot;], [&quot;B&quot;, &quot;C&quot;], [&quot;B&quot;, &quot;D&quot;], [&quot;B&quot;, &quot;E&quot;], [&quot;Y&quot;, &quot;C&quot;], [&quot;Y&quot;, &quot;D&quot;], [&quot;Y&quot;, &quot;E&quot;]]''').unique(false)&#10;def children = relation.collect { it[1] }.toSet()&#10;def frontier = relation.findAll { !children.contains(it[0]) }&#10;def h = operator.process.macroHandler&#10;h.addMacro('frontier',JsonOutput.toJson(frontier))&#10;h.addMacro('relation',JsonOutput.toJson(relation))&#10;return table([[ready:true]])" />
+        <parameter key="standard_imports" value="false" />
+      </operator>
+      <operator class="loop_until" compatibility="10.1.000" name="Repeat" activated="true" expanded="true" x="245" y="35">
+        <parameter key="set_iteration_macro" value="true" />
+        <parameter key="macro_name" value="level" />
+        <parameter key="macro_start_value" value="1" />
+        <parameter key="condition_on_data" value="true" />
+        <parameter key="condition_on_performance" value="false" />
+        <parameter key="condition_before" value="false" />
+        <parameter key="min_examples" value="1" />
+        <parameter key="max_examples" value="1" />
+        <parameter key="min_attributes" value="1" />
+        <parameter key="max_attributes" value="1" />
+        <parameter key="max_iterations" value="100" />
+        <process>
+          <operator class="execute_script" compatibility="10.1.000" name="Body" activated="true" expanded="true" x="180" y="60">
+            <parameter key="script" value="&#10;import com.rapidminer.example.table.AttributeFactory&#10;import com.rapidminer.example.table.DoubleArrayDataRow&#10;import com.rapidminer.example.table.MemoryExampleTable&#10;import com.rapidminer.tools.Ontology&#10;import groovy.json.JsonOutput&#10;import groovy.json.JsonSlurper&#10;def table(rows) {&#10;    def col = AttributeFactory.createAttribute(&quot;payload&quot;, Ontology.STRING)&#10;    def t = new MemoryExampleTable([col])&#10;    for (row in rows) {&#10;        double value = col.mapping.mapString(JsonOutput.toJson(row))&#10;        t.addDataRow(new DoubleArrayDataRow([value] as double[]))&#10;    }&#10;    return t.createExampleSet()&#10;}&#10;def unpack(set) {&#10;    def col = set.attributes.get(&quot;payload&quot;)&#10;    return set.collect { new JsonSlurper().parseText(it.getValueAsString(col)) }&#10;}&#10;def h = operator.process.macroHandler&#10;int level = h.getMacro('level').toInteger()&#10;def frontier = new JsonSlurper().parseText(h.getMacro('frontier'))&#10;def relation = new JsonSlurper().parseText(h.getMacro('relation'))&#10;def emitted = frontier.unique(false)&#10;def expanded = emitted.collectMany { row -&gt; relation.findAll { it[0]==row[1] }.collect { [row[0],it[1]] } }&#10;def tips = emitted.collect { it[1] }.toSet()&#10;def following = expanded + relation.findAll { !tips.contains(it[0]) }&#10;h.addMacro('frontier',JsonOutput.toJson(expanded))&#10;h.addMacro('relation',JsonOutput.toJson(following))&#10;def trace = [level:level,incoming:frontier,relation:relation,expanded:expanded,following:following,emitted:emitted]&#10;return [table([trace]),table(expanded.isEmpty() ? [[done:true]] : [])]" />
+            <parameter key="standard_imports" value="false" />
+          </operator>
+          <connect from_port="input 1" to_port="input 1" to_op="Body" />
+          <connect from_port="output 1" to_port="output 1" from_op="Body" />
+          <connect from_port="output 2" to_port="example set" from_op="Body" />
+        </process>
+      </operator>
+      <operator class="execute_script" compatibility="10.1.000" name="Collect" activated="true" expanded="true" x="445" y="35">
+        <parameter key="script" value="&#10;import com.rapidminer.example.table.AttributeFactory&#10;import com.rapidminer.example.table.DoubleArrayDataRow&#10;import com.rapidminer.example.table.MemoryExampleTable&#10;import com.rapidminer.tools.Ontology&#10;import groovy.json.JsonOutput&#10;import groovy.json.JsonSlurper&#10;def table(rows) {&#10;    def col = AttributeFactory.createAttribute(&quot;payload&quot;, Ontology.STRING)&#10;    def t = new MemoryExampleTable([col])&#10;    for (row in rows) {&#10;        double value = col.mapping.mapString(JsonOutput.toJson(row))&#10;        t.addDataRow(new DoubleArrayDataRow([value] as double[]))&#10;    }&#10;    return t.createExampleSet()&#10;}&#10;def unpack(set) {&#10;    def col = set.attributes.get(&quot;payload&quot;)&#10;    return set.collect { new JsonSlurper().parseText(it.getValueAsString(col)) }&#10;}&#10;def history = input[0].getObjects().collectMany { unpack(it) }&#10;def rows = history.collectMany { s -&gt; s.emitted.collect { [it[0],it[1],s.level] } }&#10;rows.sort { a,b -&gt; (a[0]&lt;=&gt;b[0]) ?: (a[2]&lt;=&gt;b[2]) ?: (a[1]&lt;=&gt;b[1]) }&#10;return table(rows.collect { [row:it] } + history.collect { [trace:it] })" />
+        <parameter key="standard_imports" value="false" />
+      </operator>
+      <connect from_port="output 1" to_port="input 1" from_op="Seed" to_op="Repeat" />
+      <connect from_port="output 1" to_port="input 1" from_op="Repeat" to_op="Collect" />
+      <connect from_port="output 1" to_port="result 1" from_op="Collect" />
+    </process>
+  </operator>
+</process>

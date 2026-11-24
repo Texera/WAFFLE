@@ -4,7 +4,7 @@ Experimental scripts, data, recorded results, and figure generation for the WAFF
 
 | Experiment | Directory | Recorded evidence |
 | --- | --- | --- |
-| §7.2: translate KNIME loop examples | [case_study](experiments/case_study) | WAFFLE, n8n, and RapidMiner each match all 241 KNIME scalar output rows across eight examples; the [recursive example](experiments/case_study/recursive) adds 40 checked rows across two result tables |
+| §7.2: translate KNIME loop examples | [case_study](experiments/case_study) | WAFFLE, n8n, and RapidMiner each match all 241 KNIME scalar output rows across eight examples; the [recursive example](experiments/case_study/recursive) adds 40 rows and the [hierarchy workflow](experiments/case_study/hierarchy) adds 11 rows with changing feedback tables (292 final rows in ten workflows) |
 | §7.2: published loop plans | [published_loops](experiments/case_study/published_loops) | 798 distinct labeled structures, 39 boundary-type pairs, compared with nine runnable examples |
 | §7.2: generated loop computations | [generated_loops](experiments/generated_loops) | 2,800 graphs on three inputs each, with every visited score and output row checked |
 | Supplemental K-means loop rules | [loop_policies](experiments/loop_policies) | Four control rules on four inputs across four engines, with fixed-range and score-threshold comparisons |
@@ -57,7 +57,7 @@ Use a new output directory for every rerun. Captured workflow JSON contains port
 
 ## What the results establish
 
-The case study checks eight selected loop examples, not all KNIME workflows or ease of use. The planning experiment compares two searches on one workflow family with a fixed cost model. It does not measure execution of the returned plans. The execution experiment uses materialized edges and one concurrent region. Explicit body copies were faster in all six recorded settings; the loop representation stays at five logical operators as the iteration count grows. These results do not establish a universal runtime advantage for loops.
+The case study checks ten selected loop examples, not all KNIME workflows or ease of use. The planning experiment compares two searches on one workflow family with a fixed cost model. It does not measure execution of the returned plans. The execution experiment uses materialized edges and one concurrent region. Explicit body copies were faster in all six recorded settings; the loop representation stays at five logical operators as the iteration count grows. These results do not establish a universal runtime advantage for loops.
 
 No benchmark numbers are illustrative or simulated. The saved measurements are from the runs identified in the provenance files; running the verification commands does not collect new performance measurements.
 

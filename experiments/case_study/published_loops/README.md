@@ -19,4 +19,4 @@ python analyze.py plans_json.tar.gz replay
 python -m unittest -v
 ```
 
-The two generated files should match the committed CSV and JSON. These observations describe the archived graphs. Whole-workflow output comparisons use the nine runnable examples separately.
+The two generated files should match the committed CSV and JSON. These observations describe the archived graphs. Whole-workflow output comparisons use ten runnable examples separately. The tenth uses the same recursive boundary pair as the ninth, leaving the coverage of 487 structures unchanged.

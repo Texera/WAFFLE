@@ -1,0 +1,14 @@
+{
+  "runs": [
+    {
+      "case": "hierarchy",
+      "strategy": "recursive",
+      "workflow": "hierarchy-waffle.json",
+      "fields": [
+        "payload"
+      ],
+      "pair": 0,
+      "warmup": false
+    }
+  ]
+}

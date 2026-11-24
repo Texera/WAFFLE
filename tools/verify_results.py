@@ -38,6 +38,9 @@ def main():
         recursive = json.loads(run(case / 'recursive/verify.py'))
         assert [recursive[k]['rows'] for k in ('sum', 'fib')] == [10, 30]
         print('Published recursive workflow: four systems matched all 40 rows')
+        hierarchy = json.loads(run(case / 'hierarchy/verify.py'))
+        assert hierarchy == dict(rows=11, rounds=2, frontier=[5, 6, 0], relation=[8, 11, 11])
+        print('Published hierarchy: four systems matched both feedback tables and all 11 sorted rows')
         print(run(ROOT / 'experiments/generated_loops/verify.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify_binding.py').strip())
