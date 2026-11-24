@@ -12,7 +12,7 @@ Both variants execute through Texera's compiler, coordinator and Python workers.
 - One warm-up pair and five measured pairs per setting, alternating strategy order. One shared JVM, fresh Python workers, no cache flush or CPU isolation.
 - JaCoCo-instrumented Amber JVM classes from the existing sbt test configuration. Probe overhead is included and has not been separately quantified.
 - Every output checked against an independent scikit-learn calculation, with absolute/relative tolerance 1e-9. analyze.py requires successful execution, all 72 ordered records and matching input hashes.
-- Figures show medians and min/max over five measurements, not confidence intervals.
+- The figure shows all five measured runs per strategy and setting, with a short horizontal mark at the median. The summary also records the minimum and maximum.
 
 The recorded machine used Windows 11 Pro, AMD Ryzen 9 9950X (16 cores), 192 GiB RAM, JBR 17.0.14 and Python 3.12. Python package versions are pinned in the root requirements.txt. Explicit copies were faster in all six settings. This experiment does not isolate control-message overhead or establish a general speed advantage for loops.
 

@@ -34,28 +34,49 @@ def analyze(root,out):
     (out/'summary.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(result,indent=2));return result
 
-def plot(summary,output):
+def plot(summary, measurements, output):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
-    plt.rcParams.update({'font.size':8,'pdf.fonttype':42,'ps.fonttype':42})
-    sizes=sorted({r['points'] for r in summary['summary']})
-    fig,axes=plt.subplots(1,len(sizes),figsize=(3.35,1.85),sharey=True,squeeze=False)
-    for ax,n in zip(axes[0],sizes):
-        for strategy,style,marker in [('loop','-','o'),('copies','--','s')]:
-            vals=sorted([r for r in summary['summary'] if r['points']==n and r['strategy']==strategy],key=lambda r:r['iterations'])
-            med=[r['median_s'] for r in vals]
-            ax.errorbar([r['iterations'] for r in vals],med,
-                        yerr=[[r['median_s']-r['min_s'] for r in vals],[r['max_s']-r['median_s'] for r in vals]],
-                        color='black',linestyle=style,marker=marker,markersize=3,linewidth=1,capsize=2,
-                        markerfacecolor='black' if strategy=='loop' else 'white',label='Loop' if strategy=='loop' else 'Explicit copies')
-        ax.set_title(f'{n:,} points',fontsize=8);ax.set_xticks([1,4,8]);ax.set_xlabel('Number of K values');ax.grid(axis='y',alpha=.2)
-    axes[0,0].set_ylim(0,max(r['max_s'] for r in summary['summary'])*1.1)
-    axes[0,0].set_ylabel('Workflow time (s)')
-    handles,labels=axes[0,0].get_legend_handles_labels();fig.legend(handles,labels,loc='upper center',bbox_to_anchor=(.54,1.04),ncol=2,frameon=False,fontsize=7)
-    fig.tight_layout(rect=(0,0,1,.9),pad=.4,w_pad=.5);fig.savefig(output,bbox_inches='tight');plt.close(fig)
+    from matplotlib.lines import Line2D
+
+    with measurements.open(encoding='utf-8') as source:
+        runs = [r for r in csv.DictReader(source) if r['warmup'] == 'False']
+    assert len(runs) == summary['measured_runs']
+    sizes = sorted({r['points'] for r in summary['summary']})
+    strategies = [('loop', -0.16, 'o', 'black', 'Loop'),
+                  ('copies', 0.16, 's', 'white', 'Explicit copies')]
+    plt.rcParams.update({'font.size': 8, 'pdf.fonttype': 42})
+    fig, axes = plt.subplots(1, len(sizes), figsize=(3.4, 1.95), sharey=True, squeeze=False)
+    for ax, size in zip(axes[0], sizes):
+        settings = sorted({r['iterations'] for r in summary['summary'] if r['points'] == size})
+        for x, k_count in enumerate(settings):
+            for strategy, offset, marker, face, _ in strategies:
+                group = sorted((r for r in runs if r['case'] == f'n{size}-i{k_count}'
+                                and r['strategy'] == strategy), key=lambda r: int(r['pair']))
+                times = [int(r['execution_ns']) / 1e9 for r in group]
+                center = x + offset
+                for index, seconds in enumerate(times):
+                    pos = center + 0.046 * (index - (len(group) - 1) / 2)
+                    ax.plot(pos, seconds, marker, ms=2.7, mfc=face, mec='black', mew=0.55)
+                ax.hlines(statistics.median(times), center - 0.125, center + 0.125,
+                          color='black', linewidth=0.8)
+        ax.set(xlim=(-0.5, len(settings) - 0.5), xticks=range(len(settings)),
+               xticklabels=settings, xlabel='Number of K values')
+        ax.set_title(f'{size:,} points', fontsize=8)
+        ax.grid(axis='y', alpha=0.2)
+    axes[0, 0].set_ylim(0, max(r['max_s'] for r in summary['summary']) * 1.08)
+    axes[0, 0].set_ylabel('Workflow time (s)')
+    handles = [Line2D([], [], linestyle='none', marker=m, markersize=3.5,
+                      markeredgecolor='black', markerfacecolor=f, label=label)
+               for _, _, m, f, label in strategies]
+    fig.legend(handles=handles, loc='upper center', ncol=2, frameon=False, fontsize=7)
+    fig.tight_layout(rect=(0, 0, 1, 0.87), pad=0.45, w_pad=0.6)
+    fig.savefig(output, bbox_inches='tight', metadata={'CreationDate': None})
+    plt.close(fig)
+
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('package',type=Path);p.add_argument('output',type=Path);p.add_argument('--plot',type=Path)
     a=p.parse_args();result=analyze(a.package,a.output)
-    if a.plot:plot(result,a.plot)
+    if a.plot:plot(result,a.output/'measurements.csv',a.plot)

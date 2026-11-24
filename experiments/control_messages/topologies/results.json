@@ -1,0 +1,28 @@
+{
+  "archive": "https://raw.githubusercontent.com/Texera/Chowder/e054e86a6a239b15783b8884e675a5f43a36f38d/experiments/workflows/6k_set/plans_json.tar.gz",
+  "sha256": "d8fd2f7cc1b95647326eed1bfdb4493c49b58f896bd43f997928ad476e6f402a",
+  "counts": {
+    "json_files": 6191,
+    "cyclic": 0,
+    "invalid": 0,
+    "reconvergent_merges": 10158
+  },
+  "by_size": {
+    "0-10": {
+      "workflows": 3124,
+      "with_reconvergence": 866
+    },
+    "11-20": {
+      "workflows": 1621,
+      "with_reconvergence": 1030
+    },
+    "21-50": {
+      "workflows": 1032,
+      "with_reconvergence": 830
+    },
+    "51+": {
+      "workflows": 414,
+      "with_reconvergence": 389
+    }
+  }
+}
