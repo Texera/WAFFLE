@@ -2,7 +2,7 @@
 
 Eight consecutive official KNIME loop examples, numbered 09–16, were selected before translation. `sources.json` records URLs, authors, versions and archive hashes. No original `.knwf` archive is redistributed here. The official collection is https://hub.knime.com/knime/spaces/Examples/latest/06_Control_Structures/04_Loops/ .
 
-The [published-plan analysis](published_loops/README.md) compares boundary types and path structure in all 798 eligible distinct archived plans with the original eight examples and a [ninth published recursive workflow](recursive/README.md). A [tenth workflow](hierarchy/README.md) exercises changing table sizes with the same recursive boundaries.
+The [published-plan analysis](published_loops/README.md) examines 1,119 distinct archived plans and compares boundary types and path structure in the 798 single-pair plans with the original eight examples and a [ninth published recursive workflow](recursive/README.md). A [tenth workflow](hierarchy/README.md) exercises changing table sizes with the same recursive boundaries.
 
 This is a bounded correctness study of these examples, not a random sample of workflows, a full-system equivalence test or a usability study. Long counts and intervals are reduced to five iterations in both systems. Case12 uses the first five of the original 38 loop-table rows. Every adjustment is recorded by `prepare_knime.py`. Cases09 and11 retain their original iteration settings and datasets (four chunks and thirteen groups). The computations inside each iteration are retained.
 

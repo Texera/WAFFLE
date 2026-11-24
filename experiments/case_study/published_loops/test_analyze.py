@@ -35,7 +35,15 @@ class SourcePlans(unittest.TestCase):
         g = graph(["Group Loop Start", "Loop End", "Other"], [(0, 2)])
         self.assertEqual(analyze(g), ("no connected pair", None))
         g = graph(["Group Loop Start", "Loop End", "Loop End"], [(0, 1), (1, 2)])
-        self.assertEqual(analyze(g), ("multiple named boundaries", None))
+        status, (fingerprint, starts, ends, reachable) = analyze(g)
+        self.assertEqual((status, starts, ends, reachable), ("multiple named boundaries", 1, 2, 2))
+        # Two disjoint loops allow two start-to-end paths, not four.
+        separate = graph(["Loop Start", "Loop End"] * 2, [(0, 1), (2, 3)])
+        self.assertEqual(analyze(separate)[1][1:], (2, 2, 2))
+        # In series the first start can also reach the second end.
+        separate["links"].extend(graph(["x"] * 4, [(1, 2)])["links"])
+        self.assertEqual(analyze(separate)[1][1:], (2, 2, 3))
+        self.assertNotEqual(analyze(separate)[1][0], fingerprint)
 
     def test_bypass_outside_region(self):
         g = graph(["Input", "Loop Start", "Loop End", "Sink"], [(0, 1), (1, 2), (2, 3), (0, 3)])

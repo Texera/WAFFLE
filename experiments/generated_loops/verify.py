@@ -1,5 +1,6 @@
 """Recheck the compact operator and coordinator evidence using only stdlib."""
 import argparse
+import csv
 from collections import Counter
 from functools import cache
 import json
@@ -83,6 +84,28 @@ def verify_operators(record):
     return hashes
 
 
+def verify_sensitivity():
+    stopping = {i: arms for i, (family, _, arms) in enumerate(cases()) if family == "stopping"}
+    fractions = ("1/3", "1/2", "2/3")
+    seen = set()
+    with (HERE / "stopping_sensitivity.csv").open(newline="") as stream:
+        for record in csv.DictReader(stream):
+            i, fixture, fraction = int(record["graph"]), record["input"], record["fraction"]
+            key = (i, fixture, fraction)
+            require(i in stopping and fixture in FIXTURES and fraction in fractions and key not in seen,
+                    f"unexpected or repeated threshold observation {key}")
+            seen.add(key)
+            policy = fractions.index(fraction)
+            arms, values = stopping[i], FIXTURES[fixture]
+            visits = expected("stopping", policy, arms, values)
+            score = visits[-1][1]
+            count = len(values) * 2 ** len(arms)
+            observed = tuple(int(record[k]) for k in ("visits", "rows_meeting", "rows_total", "threshold_met"))
+            require(observed == (len(visits), score, count, int(6 * score >= (policy + 2) * count)),
+                    f"threshold result {key}")
+    require(len(seen) == len(stopping) * len(FIXTURES) * len(fractions), "missing threshold observations")
+
+
 def check_native(record, hashes):
     require(record["strict_compilations"] == len(hashes) and
             record["compiled_graph_hash_list_sha256"] == digest(hashes), "compiled graph coverage")
@@ -119,6 +142,7 @@ def main():
     parser.add_argument("--write", type=Path, help="new compact native result file")
     args = parser.parse_args()
     hashes = verify_operators(json.loads((HERE / "operators.json").read_text()))
+    verify_sensitivity()
     if args.capture:
         record = collect(args.capture, hashes)
         if args.write:

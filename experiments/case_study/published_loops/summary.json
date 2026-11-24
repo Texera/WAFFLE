@@ -5,6 +5,8 @@
     "no connected pair": 5032,
     "one connected pair": 832
   },
+  "distinct_connected_plans": 1119,
+  "distinct_multi_boundary": 321,
   "distinct_pairs": 39,
   "eligible_signatures": 798,
   "matching_reference_pair": 487,

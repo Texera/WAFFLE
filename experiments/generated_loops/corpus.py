@@ -18,7 +18,11 @@ def cases():
     shallow = chain.from_iterable(product(ARMS, repeat=depth) for depth in (1, 2, 3))
     # Keep the established four-stage IDs while enumerating the entire grammar.
     deep = sorted(product(ARMS, repeat=4), key=digest)
-    for index, arms in enumerate(chain(shallow, deep)):
+    # Append the new shapes so existing graph IDs, families and policies stay fixed.
+    extra_pair = (2, 3)
+    extended = (shape for depth in (1, 2, 3, 4)
+                for shape in product((*ARMS, extra_pair), repeat=depth) if extra_pair in shape)
+    for index, arms in enumerate(chain(shallow, deep, extended)):
         yield FAMILIES[index % 3], (index // 3) % 3, arms
 
 

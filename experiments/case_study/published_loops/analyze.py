@@ -1,4 +1,4 @@
-"""Census of named loop boundaries in all distinct eligible published plans."""
+"""Classify distinct published plans with a reachable labeled start and end."""
 import argparse
 import csv
 import hashlib
@@ -44,8 +44,6 @@ def analyze(plan):
             reached.update(v for v, _ in outputs[n])
     if not reached & ends:
         return "no connected pair", None
-    if len(starts) != 1 or len(ends) != 1:
-        return "multiple named boundaries", None
     # A label-preserving graph isomorphism must preserve each vertex's ancestor
     # and descendant signatures. Distinct fingerprints certify distinct labeled
     # structures; no claim about equivalence is needed for matching digests.
@@ -58,6 +56,13 @@ def analyze(plan):
     upstream = signatures(order, inputs)
     downstream = signatures(reversed(order), outputs)
     fingerprint = digest(sorted((upstream[n], downstream[n]) for n in names))
+    if len(starts) != 1 or len(ends) != 1:
+        sources = {node: {node} if node in starts else set() for node in names}
+        for node in order:
+            for child, _ in outputs[node]:
+                sources[child].update(sources[node])
+        paths = sum(len(sources[end]) for end in ends)
+        return "multiple named boundaries", (fingerprint, len(starts), len(ends), paths)
     start, = starts
     end, = ends
     # Intersect forward and backward reachability to isolate vertices on
@@ -81,6 +86,7 @@ def sample(archive):
         raise ValueError("Unexpected 6K-Set archive")
     archive.seek(0)
     groups = defaultdict(list)
+    multiple = defaultdict(list)
     census = Counter()
     with tarfile.open(fileobj=archive) as tar:
         for member in tar:
@@ -91,7 +97,8 @@ def sample(archive):
             census[status] += 1
             if record:
                 fingerprint, *details = record
-                groups[fingerprint].append((digest(member.name), *details))
+                group = multiple if status == "multiple named boundaries" else groups
+                group[fingerprint].append((digest(member.name), *details))
     originals = json.loads((HERE / "reference_pairs.json").read_text())
     pairs = {(label(x["start"]), label(x["end"])) for x in originals}
     rows = []
@@ -99,7 +106,15 @@ def sample(archive):
         archive_path_hash, start, end, side_in, side_out, hidden = min(groups[fingerprint])
         rows.append((fingerprint, archive_path_hash, start, end, int((start, end) in pairs), side_in, side_out, int(hidden)))
     pair_counts = Counter((r[2], r[3]) for r in rows)
-    return rows, dict(archive_members=sum(census.values()), classifications=dict(census),
+    if groups.keys() & multiple.keys():
+        raise ValueError("A single-pair and a multi-boundary plan share a fingerprint")
+    multi_rows = []
+    for signature, members in sorted(multiple.items()):
+        if len({member[1:] for member in members}) != 1:
+            raise ValueError("Conflicting boundary counts for the same fingerprint")
+        multi_rows.append((signature, *min(members)))
+    return rows, multi_rows, dict(distinct_connected_plans=len(rows) + len(multi_rows),
+                      distinct_multi_boundary=len(multi_rows), archive_members=sum(census.values()), classifications=dict(census),
                       eligible_signatures=len(groups), plans=len(rows), distinct_pairs=len(pair_counts),
                       matching_reference_pair=sum(r[4] for r in rows),
                       path_regions_without_side_links=sum(r[5] == 0 and r[6] == 0 for r in rows),
@@ -113,13 +128,17 @@ def main():
     p.add_argument("output", type=Path)
     args = p.parse_args()
     with args.archive.open("rb") as stream:
-        rows, summary = sample(stream)
+        rows, multi_rows, summary = sample(stream)
     args.output.mkdir(parents=True, exist_ok=True)
     with (args.output / "plans.csv").open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f, lineterminator="\n")
         writer.writerow(("fingerprint", "archive_member_hash", "start", "end", "reference_pair",
                          "incoming_side_links", "outgoing_side_links", "boundary_source_omitted"))
         writer.writerows(rows)
+    with (args.output / "multiple.csv").open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f, lineterminator="\n")
+        writer.writerow(("fingerprint", "archive_member_hash", "named_starts", "named_ends", "reachable_start_end_pairs"))
+        writer.writerows(multi_rows)
     (args.output / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
