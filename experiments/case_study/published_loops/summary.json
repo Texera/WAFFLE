@@ -1,16 +1,16 @@
 {
   "archive_members": 6191,
   "classifications": {
-    "multiple named boundaries": 327,
-    "no connected pair": 5032,
-    "one connected pair": 832
+    "multiple named boundaries": 490,
+    "no connected pair": 4865,
+    "one connected pair": 836
   },
-  "distinct_connected_plans": 1119,
-  "distinct_multi_boundary": 321,
-  "distinct_pairs": 39,
-  "eligible_signatures": 798,
-  "matching_reference_pair": 487,
-  "missing_boundary_source": 798,
+  "distinct_connected_plans": 1198,
+  "distinct_multi_boundary": 397,
+  "distinct_pairs": 41,
+  "eligible_signatures": 801,
+  "matching_reference_pair": 484,
+  "missing_boundary_source": 801,
   "pairs": [
     {
       "end": "boosting learner loop end",
@@ -54,7 +54,7 @@
     },
     {
       "end": "loop end",
-      "plans": 49,
+      "plans": 48,
       "start": "counting loop start"
     },
     {
@@ -74,7 +74,7 @@
     },
     {
       "end": "feature selection loop end",
-      "plans": 14,
+      "plans": 12,
       "start": "feature selection loop start 1 1"
     },
     {
@@ -84,7 +84,7 @@
     },
     {
       "end": "loop end",
-      "plans": 100,
+      "plans": 98,
       "start": "group loop start"
     },
     {
@@ -129,7 +129,7 @@
     },
     {
       "end": "parameter optimization loop end",
-      "plans": 57,
+      "plans": 34,
       "start": "parameter optimization loop start"
     },
     {
@@ -206,8 +206,18 @@
       "end": "loop end",
       "plans": 2,
       "start": "window loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 10,
+      "start": "x partitioner"
+    },
+    {
+      "end": "x aggregator",
+      "plans": 21,
+      "start": "x partitioner"
     }
   ],
-  "path_regions_without_side_links": 453,
-  "plans": 798
+  "path_regions_without_side_links": 468,
+  "plans": 801
 }

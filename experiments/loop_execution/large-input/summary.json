@@ -1,0 +1,29 @@
+{
+  "raw_sha256": "a3f20eaa6fed19d648663fb109faca510472acfbd046152918045aa1493a901a",
+  "completed_runs": 12,
+  "measured_runs": 10,
+  "all_outputs_match": true,
+  "timing": "native coordinator and workers through result retrieval; compilation excluded",
+  "summary": [
+    {
+      "case": "n20000-i1",
+      "points": 20000,
+      "iterations": 1,
+      "strategy": "loop",
+      "runs": 5,
+      "median_s": 50.0877333,
+      "min_s": 45.7033745,
+      "max_s": 53.5010227
+    },
+    {
+      "case": "n20000-i1",
+      "points": 20000,
+      "iterations": 1,
+      "strategy": "copies",
+      "runs": 5,
+      "median_s": 26.1412371,
+      "min_s": 24.7686054,
+      "max_s": 28.6584338
+    }
+  ]
+}

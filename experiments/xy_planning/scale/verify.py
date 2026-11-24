@@ -289,6 +289,10 @@ if __name__ == "__main__":
         print(
             "Verified 252 repeated filter plans, the original capped trials and the longer X trials."
         )
+    if not args.write and not args.write_intermediate:
+        long_filters = verify(HERE / "long-filters", [(4, 12), (4, 16)])
+        assert long_filters == json.loads((HERE / "long-filters.json").read_text())
+        print("Verified 84 measured filter plans at 132 and 164 operators.")
     for row in data:
         print(
             row["case"],

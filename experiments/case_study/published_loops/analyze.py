@@ -25,8 +25,8 @@ def analyze(plan):
     names = {op["operatorID"]: label(op.get("customDisplayName", "")) for op in plan["operators"]}
     if len(names) != len(plan["operators"]):
         raise ValueError("Duplicate operator identifier")
-    starts = {n for n, name in names.items() if re.search(r"\bloop start\b", name)}
-    ends = {n for n, name in names.items() if re.search(r"\bloop end\b", name)}
+    starts = {n for n, name in names.items() if name == "x partitioner" or re.search(r"\bloop start\b", name)}
+    ends = {n for n, name in names.items() if name == "x aggregator" or re.search(r"\bloop end\b", name)}
     if not starts or not ends:
         return "no connected pair", None
     inputs = {n: [] for n in names}

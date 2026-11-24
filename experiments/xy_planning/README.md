@@ -1,6 +1,6 @@
 # Global (X) versus modular (Y) planning
 
-Sections 7.5 and 7.6 now include two 100-operator workflows. The [scale experiment](scale/README.md) records the added graph layouts, direct X/Y measurements, time limit and independent cost checks. The original six-workflow experiment is documented below.
+Sections 7.5 and 7.6 vary branching up to 100 physical operators and lengthen filter chains up to 164 operators. The [scale experiment](scale/README.md) records the added graph layouts, direct X/Y measurements, time limit and independent cost checks. The original six-workflow experiment is documented below.
 
 Six compiled native workflows contain aggregation/join groups inside and before one loop. Group counts are 1/1, 2/2, 3/3, 4/4, 1/4 and 4/1, giving 12, 20, 28, 36, 24 and 24 physical operators. The compiler supplies actual blocking ports; the research adapter adds the two loop-boundary cuts.
 

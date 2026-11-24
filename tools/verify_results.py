@@ -45,10 +45,21 @@ def main():
         print(run(ROOT / 'experiments/control_messages/verify.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify_binding.py').strip())
         execution = ROOT / 'experiments/loop_execution'
+        size_file = temp / 'size.csv'
+        run(execution / 'size_sweep.py', size_file)
+        assert size_file.read_bytes() == (execution / 'size_sweep.csv').read_bytes()
+        print('Workflow construction: verified both graphs at 1,028 candidate counts.')
         run(execution / 'analyze.py', execution / 'results', temp / 'execution')
         assert read(temp / 'execution/summary.json') == read(execution / 'results/summary.json')
         assert (temp / 'execution/measurements.csv').read_bytes() == (execution / 'results/measurements.csv').read_bytes()
         print('Execution: all 72 runs verified; 60 measurements reproduce the summary')
+        supplement = execution / 'large-input'
+        run(execution / 'analyze.py', supplement, temp / 'large-input')
+        extra = read(temp / 'large-input/summary.json')
+        assert extra == read(supplement / 'summary.json')
+        assert (extra['completed_runs'], extra['measured_runs']) == (12, 10)
+        assert (temp / 'large-input/measurements.csv').read_bytes() == (supplement / 'measurements.csv').read_bytes()
+        print('Execution supplement: 12 runs at 20,000 inputs, including 10 measured.')
         planning = ROOT / 'experiments/xy_planning'
         shutil.copytree(planning / 'raw', temp / 'planning')
         output = run(planning / 'runner/analyze-compiled.py', temp / 'planning')

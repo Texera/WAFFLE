@@ -34,7 +34,7 @@ def analyze(root,out):
     (out/'summary.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(result,indent=2));return result
 
-def plot(summary, measurements, output):
+def plot(summary, measurements, output, additional=None):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -43,11 +43,21 @@ def plot(summary, measurements, output):
     with measurements.open(encoding='utf-8') as source:
         runs = [r for r in csv.DictReader(source) if r['warmup'] == 'False']
     assert len(runs) == summary['measured_runs']
+    if additional is not None:
+        extra = json.loads((additional / 'summary.json').read_text())
+        with (additional / 'measurements.csv').open() as source:
+            extra_runs = [r for r in csv.DictReader(source) if r['warmup'] == 'False']
+        assert len(extra_runs) == extra['measured_runs']
+        assert not {r['case'] for r in runs} & {r['case'] for r in extra_runs}
+        runs.extend(extra_runs)
+        summary = dict(summary, summary=summary['summary'] + extra['summary'])
     sizes = sorted({r['points'] for r in summary['summary']})
     strategies = [('loop', -0.16, 'o', 'black', 'Loop'),
                   ('copies', 0.16, 's', 'white', 'Explicit copies')]
     plt.rcParams.update({'font.size': 8, 'pdf.fonttype': 42})
-    fig, axes = plt.subplots(1, len(sizes), figsize=(3.4, 1.95), sharey=True, squeeze=False)
+    widths = [len({r['iterations'] for r in summary['summary'] if r['points'] == n}) + 0.5 for n in sizes]
+    fig, axes = plt.subplots(1, len(sizes), figsize=(3.4, 1.95), sharey=True, squeeze=False,
+                             gridspec_kw={'width_ratios': widths})
     for ax, size in zip(axes[0], sizes):
         settings = sorted({r['iterations'] for r in summary['summary'] if r['points'] == size})
         for x, k_count in enumerate(settings):
@@ -62,7 +72,7 @@ def plot(summary, measurements, output):
                 ax.hlines(statistics.median(times), center - 0.125, center + 0.125,
                           color='black', linewidth=0.8)
         ax.set(xlim=(-0.5, len(settings) - 0.5), xticks=range(len(settings)),
-               xticklabels=settings, xlabel='Number of K values')
+               xticklabels=settings)
         ax.set_title(f'{size:,} points', fontsize=8)
         ax.grid(axis='y', alpha=0.2)
     axes[0, 0].set_ylim(0, max(r['max_s'] for r in summary['summary']) * 1.08)
@@ -71,12 +81,14 @@ def plot(summary, measurements, output):
                       markeredgecolor='black', markerfacecolor=f, label=label)
                for _, _, m, f, label in strategies]
     fig.legend(handles=handles, loc='upper center', ncol=2, frameon=False, fontsize=7)
-    fig.tight_layout(rect=(0, 0, 1, 0.87), pad=0.45, w_pad=0.6)
+    fig.text(0.56, 0.015, 'Number of K values', ha='center')
+    fig.tight_layout(rect=(0, 0.075, 1, 0.87), pad=0.45, w_pad=0.6)
     fig.savefig(output, bbox_inches='tight', metadata={'CreationDate': None})
     plt.close(fig)
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('package',type=Path);p.add_argument('output',type=Path);p.add_argument('--plot',type=Path)
+    p.add_argument('--additional-summary',type=Path,help='Directory containing the verified supplemental summary and measurements')
     a=p.parse_args();result=analyze(a.package,a.output)
-    if a.plot:plot(result,a.output/'measurements.csv',a.plot)
+    if a.plot:plot(result,a.output/'measurements.csv',a.plot,a.additional_summary)

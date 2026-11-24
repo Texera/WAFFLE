@@ -4,7 +4,7 @@ import csv
 from pathlib import Path
 import sys
 
-ARRIVAL_WIDTHS = (1, 2, 4, 8, 16, 32, 64, 128)
+ARRIVAL_WIDTHS = (1, 2, 4, 8, 16, 32, 64, 128, 256, 512)
 
 
 def run(repo, output):

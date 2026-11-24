@@ -22,7 +22,12 @@ def cases():
     extra_pair = (2, 3)
     extended = (shape for depth in (1, 2, 3, 4)
                 for shape in product((*ARMS, extra_pair), repeat=depth) if extra_pair in shape)
-    for index, arms in enumerate(chain(shallow, deep, extended)):
+    # Retain prior graph IDs and add all shapes with at least one four-hop arm.
+    long_pairs = ((0, 4), (1, 4), (2, 4))
+    longer = (shape for depth in (1, 2, 3, 4)
+              for shape in product((*ARMS, extra_pair, *long_pairs), repeat=depth)
+              if any(pair in long_pairs for pair in shape))
+    for index, arms in enumerate(chain(shallow, deep, extended, longer)):
         yield FAMILIES[index % 3], (index // 3) % 3, arms
 
 

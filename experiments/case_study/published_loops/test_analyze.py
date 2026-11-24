@@ -45,6 +45,13 @@ class SourcePlans(unittest.TestCase):
         self.assertEqual(analyze(separate)[1][1:], (2, 2, 3))
         self.assertNotEqual(analyze(separate)[1][0], fingerprint)
 
+    def test_cross_validation_boundaries(self):
+        g = graph(["X_Partitioner", "Predictor", "X_Aggregator"], [(0, 1), (1, 2)])
+        self.assertEqual(analyze(g)[0], "one connected pair")
+        self.assertEqual(analyze(graph(["X_Partitioner", "X_Aggregator"], []))[1], None)
+        ordinary = graph(["X_Partitioner", "Column Aggregator"], [(0, 1)])
+        self.assertEqual(analyze(ordinary)[1], None)
+
     def test_bypass_outside_region(self):
         g = graph(["Input", "Loop Start", "Loop End", "Sink"], [(0, 1), (1, 2), (2, 3), (0, 3)])
         self.assertEqual(analyze(g)[1][3:5], (0, 0))

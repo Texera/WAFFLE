@@ -10,7 +10,7 @@ from corpus import cases, digest, FIXTURES, graph
 from oracle import expected, topology
 
 HERE = Path(__file__).resolve().parent
-SENTINELS = (0, 1, 2, 59, 399)
+SENTINELS = (0, 1, 2, 59, 399, 4680, 4681, 4682)
 
 
 def require(condition, message):

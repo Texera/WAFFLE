@@ -16,6 +16,10 @@ Both variants execute through Texera's compiler, coordinator and Python workers.
 
 The recorded machine used Windows 11 Pro, AMD Ryzen 9 9950X (16 cores), 192 GiB RAM, JBR 17.0.14 and Python 3.12. Python package versions are pinned in the root requirements.txt. Explicit copies were faster in all six settings. This experiment does not isolate control-message overhead or establish a general speed advantage for loops.
 
+A supplemental native run held the candidate count at one and raised the input from 2,000 to 20,000 rows. The twelve runs used one fresh JVM, one warm-up pair and five measured pairs. The median was 50.1 seconds for the loop and 26.1 seconds for explicit copies. The [captured evidence](large-input/) includes the native timings and outputs, fixture, and workflow files with portable input paths. To reproduce it, generate a new package with the additional arguments --counts 20000 --iterations 1 --pairs 5, then run the same native runner and analyzer. To plot both batches, pass --additional-summary experiments/loop_execution/large-input to the plotting command.
+
+The separate [workflow-size sweep](size_sweep.csv) constructs both representations at every candidate count from 1 through 1,024 and at 2,048, 4,096, 8,192 and 16,384. It checks every operator and link. At 16,384 candidates the explicit graph contains 16,386 operators and 32,768 links. The loop contains five operators and four links. These are construction measurements.
+
 ## Reproduce
 
 Run commands from the repository root. First prepare work/runtime with tools/prepare_engine.py, build it using its own README, and configure its storage services and Python operator environment. Install the root requirements into that Python environment. Set JAVA_HOME to JDK 17. The helpers accept explicit paths and do not alter tracked engine source.

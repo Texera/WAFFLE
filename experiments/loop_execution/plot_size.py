@@ -1,45 +1,40 @@
-"""Count graph operators and data links directly from the saved engine workflows."""
-import json
+"""Plot selected measured workflow sizes from the validated construction sweep."""
+import csv
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 
+HERE = Path(__file__).resolve().parent
+
 
 @plt.rc_context({"font.family": "DejaVu Serif", "font.size": 8, "pdf.fonttype": 42})
 def workflow_size():
-    folder = Path(__file__).resolve().parent / "results"
-    counts = {}
-    settings = (1, 4, 8)
-    for values in settings:
-        for method in ("loop", "copies"):
-            totals = set()
-            for tuples in (200, 2000):
-                workflow = json.loads((folder / f"n{tuples}-i{values}-{method}.json").read_text())
-                totals.add((len(workflow["operators"]), len(workflow["links"])))
-            if len(totals) != 1:
-                raise ValueError("Workflow size unexpectedly depends on input cardinality")
-            counts[values, method] = totals.pop()
-
-    fig, axes = plt.subplots(1, 2, figsize=(3.35, 1.82), sharey=True)
-    fig.subplots_adjust(left=0.17, right=0.98, bottom=0.22, top=0.69, wspace=0.30)
-    for measure, (ax, title) in enumerate(zip(axes, ("Operators", "Data links"))):
-        for method, label, color, offset in (("loop", "Loop", "#1761a0", -0.17),
-                                            ("copies", "Explicit copies", "#b34e00", 0.17)):
-            bars = ax.barh([i + offset for i in range(3)],
-                           [counts[v, method][measure] for v in settings],
-                           height=0.29, color=color, label=label)
-            ax.bar_label(bars, padding=2, fontsize=7)
-        ax.set_title(title, fontsize=8, pad=2)
-        ax.set_xlim(0, 20)
-        ax.set_xticks((0, 8, 16))
-        ax.set_yticks(range(3), settings)
-        ax.spines[["top", "right", "left"]].set_visible(False)
+    settings = (1, 8, 64, 1024, 16384)
+    with (HERE / "size_sweep.csv").open(newline="") as stream:
+        counts = {(int(r["candidates"]), r["workflow"]): r for r in csv.DictReader(stream)}
+    fig, axes = plt.subplots(1, 2, figsize=(3.35, 1.85), sharey=True)
+    fig.subplots_adjust(left=0.21, right=0.98, bottom=0.21, top=0.73, wspace=0.22)
+    for ax, key, title in zip(axes, ("operators", "links"), ("Operators", "Data links")):
+        for i, k in enumerate(settings):
+            values = [int(counts[k, method][key]) for method in ("loop", "copies")]
+            ax.plot(values, [i, i], color="#bbb", linewidth=0.8, zorder=1)
+        for method, label, marker, color in (("loop", "Loop", "o", "#1761a0"),
+                                               ("copies", "Explicit copies", "s", "#aa4800")):
+            ax.scatter([int(counts[k, method][key]) for k in settings], range(len(settings)),
+                       s=13, color=color, marker=marker, label=label, zorder=2)
+        ax.set_xscale("log")
+        ax.set(xlim=(1.4, 60000), xticks=[2, 100, 10000], xticklabels=["2", "100", "10,000"],
+               yticks=range(len(settings)), yticklabels=[f"{k:,}" for k in settings])
+        ax.minorticks_off()
+        ax.set_title(title, fontsize=8, pad=3)
+        ax.spines[["top", "right"]].set_visible(False)
         ax.tick_params(length=2, labelsize=7)
     axes[0].invert_yaxis()
-    axes[0].set_ylabel("Values of K", fontsize=8)
+    axes[0].set_ylabel("Values of K")
     fig.legend(*axes[0].get_legend_handles_labels(), loc="upper center", ncol=2,
-               frameon=False, fontsize=7.5, handlelength=1.2, columnspacing=1.6)
-    fig.savefig(Path(__file__).resolve().parents[2] / "figures" / "loop-workflow-size.pdf", metadata={"CreationDate": None, "ModDate": None})
+               frameon=False, fontsize=7.5, handlelength=0.9)
+    fig.savefig(HERE.parents[1] / "figures" / "loop-workflow-size.pdf",
+                metadata={"CreationDate": None, "ModDate": None})
     plt.close(fig)
 
 

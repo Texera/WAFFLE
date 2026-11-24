@@ -1,6 +1,6 @@
 {
-  "strict_compilations": 4680,
-  "compiled_graph_hash_list_sha256": "54dfc412a8354dd2afe1288bb6b3136ac37b254b772e7e01c9892acd209f147d",
+  "strict_compilations": 16104,
+  "compiled_graph_hash_list_sha256": "087af89a29c82e1d0ce7f05a28e3fb6ac1dec3f6293f58eb3a1d231a10cfda76",
   "coordinator": [
     {
       "index": 0,
@@ -97,6 +97,60 @@
         [
           2,
           56880
+        ]
+      ]
+    },
+    {
+      "index": 4680,
+      "graph_sha256": "0036e01fa8a78db907285ed33bf1e62f817a9245ff153d16a9c0c9e67fc70e62",
+      "rows": [
+        [
+          -2,
+          94
+        ],
+        [
+          -1,
+          98
+        ],
+        [
+          0,
+          104
+        ],
+        [
+          1,
+          112
+        ],
+        [
+          2,
+          124
+        ]
+      ]
+    },
+    {
+      "index": 4681,
+      "graph_sha256": "b367c57280e22a44d8944ff59cb27da14b2817c7b96fb6f3539f0c522a631712",
+      "rows": [
+        [
+          0,
+          12
+        ]
+      ]
+    },
+    {
+      "index": 4682,
+      "graph_sha256": "b4b965dcae2fb1e6a344412ab475b9a21a44d24339ef630ed89747527bd74f24",
+      "rows": [
+        [
+          0,
+          -23
+        ],
+        [
+          1,
+          -18
+        ],
+        [
+          2,
+          37
         ]
       ]
     }

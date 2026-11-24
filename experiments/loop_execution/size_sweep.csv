@@ -2047,3 +2047,11 @@ candidates,workflow,operators,links
 1023,copies,1025,2046
 1024,loop,5,4
 1024,copies,1026,2048
+2048,loop,5,4
+2048,copies,2050,4096
+4096,loop,5,4
+4096,copies,4098,8192
+8192,loop,5,4
+8192,copies,8194,16384
+16384,loop,5,4
+16384,copies,16386,32768

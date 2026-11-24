@@ -1,0 +1,10 @@
+{
+  "revision": "a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6",
+  "source_tree": "7cb877ac9ebdc8d829ba59b1fb1e20a870e4a344",
+  "tracked_worktree_diff": "",
+  "original_graph_sha256": {
+    "n20000-i1-copies.json": "6af3dea2ed84fd9728b3a99fc1cbc04014cc35240788b6033a01558c4dd799f8",
+    "n20000-i1-loop.json": "cdfa8b61e7b397372273867ff42e7c8a8d0b05fa558e74ce73181e308b75dca5"
+  },
+  "portable_graphs": "Input paths in the published graphs use a portable run directory. The captured graph hashes precede this path substitution. Timings, rows and input CSV are the native-run bytes."
+}

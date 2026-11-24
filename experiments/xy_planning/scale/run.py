@@ -51,6 +51,7 @@ def main():
     series.add_argument(
         "--dense", action="store_true", help="Run the separately capped 12/12 graph"
     )
+    series.add_argument("--long-filters", action="store_true", help="Test chains of 12 and 16 filters per group")
     args = parser.parse_args()
     if args.operators is not None and args.extend_x is None:
         parser.error("--operators requires --extend-x")
@@ -191,6 +192,8 @@ def main():
         )
         if args.filter_gaps:
             command += " filter-gaps"
+        elif args.long_filters:
+            command += " long-filters"
         with (folder / "run.log").open("w", encoding="utf-8") as log:
             subprocess.run(
                 [*sbt, setting, command],

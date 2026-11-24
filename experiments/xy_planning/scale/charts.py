@@ -62,11 +62,11 @@ def draw_search_states(balanced, unequal, filters, trials, output):
                     color=color, linestyle="--", marker="|", markersize=5, linewidth=1, label=f"{method}, add filters")
         ax.legend(loc="lower center", bbox_to_anchor=(0.51, 1.01), ncol=2, frameon=False,
                   handlelength=1.6, columnspacing=1.4, fontsize=7.1)
-        ax.set(xlim=(8, 104), ylim=(2.7, 520000), xlabel="Physical operators", ylabel="Visited states")
+        ax.set(xlim=(8, max(row["operators"] for row in filters) + 4), ylim=(2.7, 520000), xlabel="Physical operators", ylabel="Visited states")
         ax.set_yscale("log", base=2)
         ticks = [4, 32, 256, 2048, 16384, 262144]
         ax.set_yticks(ticks, [f"{n:,}" for n in ticks])
-        ax.set_xticks([12, 24, 36, 52, 68, 84, 100])
+        ax.set_xticks([12, 36, 68, 100, 132, 164])
         ax.tick_params(labelsize=6.7, pad=2, length=2.5)
         ax.grid(axis="y", linewidth=0.5, color="#ddd")
         ax.set_axisbelow(True)
@@ -79,6 +79,7 @@ def draw(metric, output):
     baseline = json.loads((HERE.parent / "summary.json").read_text())
     extended = json.loads((HERE / "summary.json").read_text())
     intermediate = json.loads((HERE / "intermediate.json").read_text())
+    long_filters = json.loads((HERE / "long-filters.json").read_text())
     trials = intermediate["branch"]
     balanced = [r for r in baseline if r["inside"] == r["outside"]]
     balanced += [r for r in extended if r["filters_per_group"] == 0 and r["inside"] > 4]
@@ -87,7 +88,7 @@ def draw(metric, output):
     filters = sorted(
         (
             r
-            for r in extended + intermediate["filter"]
+            for r in extended + intermediate["filter"] + long_filters
             if r["inside"] == r["outside"] == 4
         ),
         key=lambda r: r["operators"],
@@ -160,7 +161,8 @@ def draw(metric, output):
             ax.tick_params(labelsize=6.6, length=2.4, pad=2)
             ax.spines[["right", "top"]].set_visible(False)
         branch_ax.set_xticks([12, 36, 60, 76, 100])
-        filter_ax.set_xticks([36, 52, 68, 84, 100])
+        filter_ax.set_xlim(29, max(row["operators"] for row in filters) + 8)
+        filter_ax.set_xticks([36, 68, 100, 132, 164])
         # Reserve space above the highest observed time or timeout arrow.
         highest_ms = max(
             r[m]["total_ms"]

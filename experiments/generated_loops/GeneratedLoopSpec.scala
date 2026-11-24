@@ -54,8 +54,8 @@ class GeneratedLoopSpec extends TestKit(ActorSystem("GeneratedLoopSpec", AmberRu
 
   "WAFFLE strict compiler" should "build a physical workflow for each generated graph" in {
     val first = sys.env.get("WAFFLE_FIRST_GRAPH").fold(0)(_.toInt)
-    val end = sys.env.get("WAFFLE_END_GRAPH").fold(4680)(_.toInt)
-    require(0 <= first && first < end && end <= 4680)
+    val end = sys.env.get("WAFFLE_END_GRAPH").fold(16104)(_.toInt)
+    require(0 <= first && first < end && end <= 16104)
     (first until end).foreach { i =>
       val (_, _, sha) = compileGraph(i, base + i)
       record("compiled.jsonl", Map("index" -> i, "graph_sha256" -> sha))
@@ -64,9 +64,9 @@ class GeneratedLoopSpec extends TestKit(ActorSystem("GeneratedLoopSpec", AmberRu
 
   // First of each family, plus a depth-three aggregation with two nonempty
   // transform arms at its final union, and the first four-stage graph.
-  for (i <- List(0, 1, 2, 59, 399)) {
+  for (i <- List(0, 1, 2, 59, 399, 4680, 4681, 4682)) {
     "WAFFLE coordinator" should s"execute sentinel $i and read its materialized sink" in {
-      val id = base + 4680 + i
+      val id = base + 16104 + i
       setUpWorkflowExecutionData(id)
       try {
         val (workflow, sink, sha) = compileGraph(i, id)
