@@ -1,0 +1,74 @@
+{
+  "knime": {
+    "archive_size_mismatches": 0,
+    "cursor_pages": 159,
+    "distinct_loop_projections": 5925,
+    "map_fetch_failures": 0,
+    "records": 54955,
+    "repeated_catalog_ids": 0,
+    "status": {
+      "no-native-boundary-pair": 45810,
+      "read": 9145
+    },
+    "verified_loop_records": 8987
+  },
+  "n8n": {
+    "distinct_loop_projections": 2831,
+    "distinct_search_ids": 14319,
+    "records": 14330,
+    "search_api_reported_total": 14385,
+    "sitemap_ids": 14330,
+    "status": {
+      "graph": 12919,
+      "paid": 1364,
+      "partial-graph": 45,
+      "unreadable-ValueError": 2
+    },
+    "verified_loop_records": 2949
+  },
+  "n8n-community": {
+    "distinct_loop_projections": 263,
+    "loop_projections_also_in_directory": 239,
+    "records": 2057,
+    "repository_revision": "54688735f7043504a561565f2c2df3e8a9e835cc",
+    "status": {
+      "graph": 2036,
+      "partial-graph": 11,
+      "unreadable-KeyError": 10
+    },
+    "verified_loop_records": 310
+  },
+  "n8n-community-latest": {
+    "distinct_loop_projections": 0,
+    "loop_projections_also_in_directory": 0,
+    "records": 2061,
+    "repository_revision": "94007c1445d9258a7da116646b79473e7c7c3282",
+    "status": {
+      "graph": 698,
+      "partial-graph": 1363
+    },
+    "verified_loop_records": 0
+  },
+  "rapidminer_github": {
+    "distinct_loop_projections": 771,
+    "external_locations": 3987,
+    "indexed_locations": 3998,
+    "loop_projections_also_in_vendor": 39,
+    "own_artifact_locations_excluded": 11,
+    "records": 3188,
+    "status": {
+      "invalid-xml": 6,
+      "read": 3181,
+      "unrecognized-process": 1
+    },
+    "verified_loop_records": 990
+  },
+  "rapidminer_vendor": {
+    "distinct_loop_projections": 95,
+    "records": 605,
+    "status": {
+      "read": 605
+    },
+    "verified_loop_records": 102
+  }
+}
