@@ -54,3 +54,16 @@ python verify.py --capture "$PACKAGE"
 The recorded runs took place on November 23, 2026 (Pacific), using Windows 11, JBR 17.0.14, Python 3.12.10, pandas 2.2.3, and PyArrow 21.0.0. The first JVM compiled all graphs and executed IDs 0–2. A second JVM executed ID 59. One intervening sbt launch encountered a startup lock before engine execution. Both measurement JVMs exited successfully. The native adapter uses the existing Amber integration-test harness and reads the PostgreSQL-backed Iceberg results after completion.
 
 Fresh packages contain the expanded workflows, compiler records and engine log. Published digests use SHA-256 over canonical UTF-8 JSON with sorted keys and compact separators. The committed evidence comprises the [operator counts and trace digest](operators.json) and [native compilation digest and sink rows](native.json).
+
+### Matched stopping-threshold comparison
+
+The sensitivity sweep holds the 133 stopping graphs fixed. Each graph runs on the low, mixed and high inputs at fractions of one third, one half and two thirds. This gives 1,197 operator runs and 3,258 checked visits. One run per graph/input pair repeats the policy in the original sweep. Each recorded row gives the visits, the number of qualifying rows, the total row count and whether the target was met. Reaching the target on the sixth visit counts as success.
+
+From the artifact root, use the prepared runtime with generated Python protobuf modules and the Python dependencies used by the original operator driver.
+
+```sh
+python experiments/generated_loops/stopping_sensitivity.py . "$RUNTIME" sensitivity.csv
+python experiments/generated_loops/plot.py
+```
+
+The plotting command reads the [recorded measurements](stopping_sensitivity.csv). The two panels distinguish targets met on the first visit from targets met at any visit.

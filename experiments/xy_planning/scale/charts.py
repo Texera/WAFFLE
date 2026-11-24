@@ -42,6 +42,39 @@ def plot_runs(ax, rows, method, metric, color, marker, size, line):
     return handle
 
 
+def draw_search_states(balanced, unequal, filters, trials, output):
+    """Overlay both graph changes so the fixed-branch state counts are visible."""
+    with plt.rc_context({"font.family": "DejaVu Serif", "font.size": 7.5, "pdf.fonttype": 42}):
+        fig, ax = plt.subplots(figsize=(3.35, 2.09))
+        fig.subplots_adjust(left=0.21, right=0.98, bottom=0.22, top=0.77)
+        for method, _, color, marker, size in METHODS:
+            trend = plot_runs(ax, balanced, method, "search_states", color, marker, size, "-")
+            trend.set_label(f"{method}, add branches")
+            plot_runs(ax, unequal, method, "search_states", color, "x", 4, "none")
+            counts = [row["operators"] for row in trials]
+            values = [row[method].get("search_states", float("nan")) for row in trials]
+            last = balanced[-1]
+            ax.plot([last["operators"], *counts], [last[method]["search_states"], *values],
+                    color=color, linestyle=":", linewidth=1)
+            ax.plot(counts, values, color=color, marker=marker, markersize=size,
+                    markerfacecolor="white", linestyle="none")
+            ax.plot([row["operators"] for row in filters], [row[method]["search_states"] for row in filters],
+                    color=color, linestyle="--", marker="|", markersize=5, linewidth=1, label=f"{method}, add filters")
+        ax.legend(loc="lower center", bbox_to_anchor=(0.51, 1.01), ncol=2, frameon=False,
+                  handlelength=1.6, columnspacing=1.4, fontsize=7.1)
+        ax.set(xlim=(8, 104), ylim=(2.7, 520000), xlabel="Physical operators", ylabel="Visited states")
+        ax.set_yscale("log", base=2)
+        ticks = [4, 32, 256, 2048, 16384, 262144]
+        ax.set_yticks(ticks, [f"{n:,}" for n in ticks])
+        ax.set_xticks([12, 24, 36, 52, 68, 84, 100])
+        ax.tick_params(labelsize=6.7, pad=2, length=2.5)
+        ax.grid(axis="y", linewidth=0.5, color="#ddd")
+        ax.set_axisbelow(True)
+        ax.spines[["top", "right"]].set_visible(False)
+        fig.savefig(output, metadata={"CreationDate": None, "ModDate": None})
+        plt.close(fig)
+
+
 def draw(metric, output):
     baseline = json.loads((HERE.parent / "summary.json").read_text())
     extended = json.loads((HERE / "summary.json").read_text())
@@ -59,7 +92,11 @@ def draw(metric, output):
         ),
         key=lambda r: r["operators"],
     )
-    timing = metric == "pooled_median_ms"
+    if metric == "search_states":
+        draw_search_states(balanced, unequal, filters, trials, output)
+        return
+    if metric != "pooled_median_ms":
+        raise ValueError(f"Unknown metric: {metric}")
     with plt.rc_context(
         {"font.family": "DejaVu Serif", "font.size": 7.5, "pdf.fonttype": 42}
     ):
@@ -77,7 +114,7 @@ def draw(metric, output):
             plot_runs(filter_ax, filters, method, metric, color, marker, size, "-")
             # The final repeated point anchors the dotted series. A timeout breaks the line.
             last = balanced[-1]
-            trial_metric = "total_ms" if timing else "search_states"
+            trial_metric = "total_ms"
             sizes = [r["operators"] for r in trials]
             values = [r[method].get(trial_metric, float("nan")) for r in trials]
             branch_ax.plot(
@@ -97,23 +134,22 @@ def draw(metric, output):
                 markerfacecolor="white",
                 markersize=size,
             )
-            if timing:
-                for trial in trials:
-                    outcome = trial[method]
-                    if outcome["status"] != "timeout":
-                        continue
-                    x = trial["operators"]
-                    limit_ms = 1000 * outcome["limit_s"]
-                    branch_ax.plot(x, limit_ms, marker="_", markersize=4, color=color)
-                    branch_ax.annotate(
-                        "",
-                        xy=(x, limit_ms),
-                        xytext=(0, 7),
-                        textcoords="offset points",
-                        arrowprops=dict(
-                            arrowstyle="<-", color=color, lw=0.8, shrinkA=0, shrinkB=0
-                        ),
-                    )
+            for trial in trials:
+                outcome = trial[method]
+                if outcome["status"] != "timeout":
+                    continue
+                x = trial["operators"]
+                limit_ms = 1000 * outcome["limit_s"]
+                branch_ax.plot(x, limit_ms, marker="_", markersize=4, color=color)
+                branch_ax.annotate(
+                    "",
+                    xy=(x, limit_ms),
+                    xytext=(0, 7),
+                    textcoords="offset points",
+                    arrowprops=dict(
+                        arrowstyle="<-", color=color, lw=0.8, shrinkA=0, shrinkB=0
+                    ),
+                )
         for ax, title in ((branch_ax, "Add branch groups"), (filter_ax, "Add filters")):
             ax.set_title(title, fontsize=7.6, pad=4)
             ax.set_xlim(7, 108)
@@ -125,31 +161,18 @@ def draw(metric, output):
             ax.spines[["right", "top"]].set_visible(False)
         branch_ax.set_xticks([12, 36, 60, 76, 100])
         filter_ax.set_xticks([36, 52, 68, 84, 100])
-        if timing:
-            # Reserve space above the highest observed time or timeout arrow.
-            highest_ms = max(
-                r[m]["total_ms"]
-                if r[m]["status"] == "completed"
-                else 1000 * r[m]["limit_s"]
-                for r in trials
-                for m, *_ in METHODS
-            )
-            branch_ax.set_ylim(1.7, highest_ms * 6)
-            ticks = [10**i for i in range(1, 9) if 10**i <= highest_ms * 2]
-            branch_ax.set_yticks(ticks, [f"{ms / 1000:g}" for ms in ticks])
-            branch_ax.set_ylabel("Planning time (s, log scale)")
-        else:
-            highest = max(
-                row[method].get("search_states", 0)
-                for row in trials
-                for method, *_ in METHODS
-            )
-            branch_ax.set_ylim(2.8, max(1024, highest) * 1.65)
-            ticks = [n for n in (4, 32, 256, 2048, 16384) if n <= max(1024, highest)]
-            if highest >= 4 * ticks[-1]:
-                ticks.append(highest)
-            branch_ax.set_yticks(ticks, [f"{n:,}" for n in ticks])
-            branch_ax.set_ylabel("Visited states (log scale)")
+        # Reserve space above the highest observed time or timeout arrow.
+        highest_ms = max(
+            r[m]["total_ms"]
+            if r[m]["status"] == "completed"
+            else 1000 * r[m]["limit_s"]
+            for r in trials
+            for m, *_ in METHODS
+        )
+        branch_ax.set_ylim(1.7, highest_ms * 6)
+        ticks = [10**i for i in range(1, 9) if 10**i <= highest_ms * 2]
+        branch_ax.set_yticks(ticks, [f"{ms / 1000:g}" for ms in ticks])
+        branch_ax.set_ylabel("Planning time (s, log scale)")
         fig.legend(
             handles,
             [f"{name} ({label})" for name, label, *_ in METHODS],

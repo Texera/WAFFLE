@@ -1,32 +1,45 @@
-"""Plot the checked arrival orders from the Section 5 experiment."""
+"""Show how message identity changes which deliveries invoke the merge callback."""
 import argparse
+import csv
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from verify import check, RESULTS, WIDTHS
+from verify import check, RESULTS
 
 
 def plot(results, output):
-    counts = check(results)
-    fig, ax = plt.subplots(figsize=(3.30, 1.70))
-    fig.subplots_adjust(left=0.18, right=0.97, top=0.94, bottom=0.28)
-    for mode, label, color, style, marker in (
-        ("publication", "One ID per message", "#186386", "-", "o"),
-        ("per_copy", "One ID per copy", "#843b24", "--", "s"),
-    ):
-        ax.plot(WIDTHS, [counts[mode][w] for w in WIDTHS], label=label,
-                color=color, linestyle=style, marker=marker, markersize=4.5,
-                markerfacecolor="none" if mode == "per_copy" else color)
-    ax.set(xlabel="Branches", ylabel="Orders keeping K = 3", xticks=WIDTHS,
-           yticks=[0, 2, 4, 6, 8], ylim=(-0.15, 8.6))
-    ax.tick_params(labelsize=8)
-    ax.yaxis.label.set_fontsize(8)
-    ax.grid(axis="y", alpha=0.2)
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.legend(loc="upper left", frameon=False, fontsize=7, handlelength=2)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output, metadata={"CreationDate": None, "ModDate": None})
-    plt.close(fig)
+    check(results)
+    with (results / "arrival_orders.csv").open(newline="") as stream:
+        example = {r["identity"]: r for r in csv.DictReader(stream)
+                   if (r["branches"], r["copies_before_update"]) == ("4", "2")}
+    delivered = example["publication"]["delivered_K"].split()
+    with plt.rc_context({"font.family": "DejaVu Serif", "font.size": 8, "pdf.fonttype": 42}):
+        fig, ax = plt.subplots(figsize=(3.35, 1.50))
+        fig.subplots_adjust(left=0.32, right=0.98, top=0.79, bottom=0.24)
+        for y, mode in enumerate(("delivered", "publication", "per_copy")):
+            shown = []
+            ax.hlines(y, 0, len(delivered) - 1, color="#aaa", lw=0.7)
+            for i, k in enumerate(delivered):
+                if mode == "publication" and k in shown:
+                    ax.plot(i, y, marker="x", color="#555", ms=5)
+                    continue
+                shown.append(k)
+                ax.plot(i, y, marker="o" if k == "2" else "s", ms=12,
+                        color="#175e82" if k == "2" else "#903e19")
+                ax.text(i, y, k, ha="center", va="center", color="white", fontsize=7)
+            if mode != "delivered" and shown != example[mode]["callback_K"].split():
+                raise ValueError("Callback trace differs from the recorded run")
+        ax.set(xlim=(-0.45, 4.45), ylim=(2.50, -0.55))
+        ax.set_yticks([0, 1, 2], ["Delivered K", "Shared ID", "ID per copy"])
+        ax.set_xticks(range(5), range(1, 6))
+        ax.xaxis.tick_top()
+        ax.xaxis.set_label_position("top")
+        ax.set_xlabel("Delivery order", labelpad=2)
+        ax.tick_params(length=0, pad=2, labelsize=7.5)
+        ax.spines[:].set_visible(False)
+        fig.text(0.63, 0.10, "×  callback suppressed", ha="center", fontsize=7.5)
+        fig.savefig(output, metadata={"CreationDate": None, "ModDate": None})
+        plt.close(fig)
 
 
 if __name__ == "__main__":
