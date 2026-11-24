@@ -1,0 +1,134 @@
+{
+  "id": "recursive07sum",
+  "name": "Recursive loop - sum",
+  "active": false,
+  "nodes": [
+    {
+      "id": "Start",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "Input",
+      "name": "Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return [{x:0, y:0, collected:[], i:0}];"
+      }
+    },
+    {
+      "id": "Body",
+      "name": "Body",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        120
+      ],
+      "parameters": {
+        "jsCode": "const {x,y,collected,i} = $input.first().json;\nconst [a,b] = [x+1, y+x+1];\nreturn [{x:a,y:b,i:i+1,collected:collected.concat({x:a,y:b})}];"
+      }
+    },
+    {
+      "id": "Continue",
+      "name": "Continue",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        120
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.i }}",
+              "operation": "smaller",
+              "value2": 10
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "Result",
+      "name": "Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        -100
+      ],
+      "parameters": {
+        "jsCode": "return $input.first().json.collected;"
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input": {
+      "main": [
+        [
+          {
+            "node": "Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Body": {
+      "main": [
+        [
+          {
+            "node": "Continue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue": {
+      "main": [
+        [
+          {
+            "node": "Body",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

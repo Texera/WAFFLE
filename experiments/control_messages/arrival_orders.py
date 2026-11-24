@@ -4,7 +4,7 @@ import csv
 from pathlib import Path
 import sys
 
-from prepare import WIDTHS
+ARRIVAL_WIDTHS = (1, 2, 4, 8, 16, 32, 64, 128)
 
 
 def run(repo, output):
@@ -35,7 +35,7 @@ def run(repo, output):
             writer = csv.writer(stream)
             writer.writerow(["branches", "copies_before_update", "identity", "delivered_K",
                              "callback_K", "callbacks", "final_K"])
-            for width in WIDTHS:
+            for width in ARRIVAL_WIDTHS:
                 for before in range(1, width + 1):
                     for identity in ("publication", "per_copy"):
                         receiver = Receiver()

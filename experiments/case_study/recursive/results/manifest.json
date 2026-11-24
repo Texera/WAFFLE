@@ -1,0 +1,26 @@
+{
+  "runs": [
+    {
+      "case": "sum",
+      "strategy": "recursive",
+      "workflow": "sum-waffle.json",
+      "fields": [
+        "x",
+        "y"
+      ],
+      "pair": 0,
+      "warmup": false
+    },
+    {
+      "case": "fib",
+      "strategy": "recursive",
+      "workflow": "fib-waffle.json",
+      "fields": [
+        "x",
+        "y"
+      ],
+      "pair": 0,
+      "warmup": false
+    }
+  ]
+}

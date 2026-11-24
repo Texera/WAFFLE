@@ -4,6 +4,8 @@ import csv
 import json
 from pathlib import Path
 
+from arrival_orders import ARRIVAL_WIDTHS
+
 WIDTHS = (1, 2, 4, 8)
 RESULTS = Path(__file__).with_name("results")
 
@@ -24,9 +26,9 @@ def check(results):
     with (results / "arrival_orders.csv").open(newline="") as stream:
         rows = list(csv.DictReader(stream))
     modes = ("publication", "per_copy")
-    expected_orders = {(w, pos, mode) for w in WIDTHS for pos in range(1, w + 1) for mode in modes}
+    expected_orders = {(w, pos, mode) for w in ARRIVAL_WIDTHS for pos in range(1, w + 1) for mode in modes}
     observed = set()
-    successes = {mode: {w: 0 for w in WIDTHS} for mode in modes}
+    successes = {mode: {w: 0 for w in ARRIVAL_WIDTHS} for mode in modes}
     for row in rows:
         width, before = int(row["branches"]), int(row["copies_before_update"])
         mode = row["identity"]
@@ -51,6 +53,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("results", nargs="?", default=RESULTS, type=Path)
     counts = check(parser.parse_args().results)
-    print("8 workflow outputs verified. Orders retaining K=3 out of 15:")
+    print(f"8 workflow outputs verified. Orders retaining K=3 out of {sum(ARRIVAL_WIDTHS)}:")
     for mode, widths in counts.items():
         print(f"{mode}: {sum(widths.values())} ({widths})")

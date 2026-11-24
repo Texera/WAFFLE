@@ -5,9 +5,10 @@
     "no connected pair": 5032,
     "one connected pair": 832
   },
+  "distinct_pairs": 39,
   "eligible_signatures": 798,
-  "matching_reference_pair": 267,
-  "missing_boundary_source": 500,
+  "matching_reference_pair": 487,
+  "missing_boundary_source": 798,
   "pairs": [
     {
       "end": "boosting learner loop end",
@@ -16,12 +17,12 @@
     },
     {
       "end": "loop end",
-      "plans": 56,
+      "plans": 92,
       "start": "chunk loop start"
     },
     {
       "end": "loop end column append",
-      "plans": 2,
+      "plans": 6,
       "start": "chunk loop start"
     },
     {
@@ -31,17 +32,17 @@
     },
     {
       "end": "variable loop end",
-      "plans": 8,
+      "plans": 11,
       "start": "chunk loop start"
     },
     {
       "end": "loop end",
-      "plans": 9,
+      "plans": 18,
       "start": "column list loop start"
     },
     {
       "end": "loop end column append",
-      "plans": 24,
+      "plans": 42,
       "start": "column list loop start"
     },
     {
@@ -51,57 +52,57 @@
     },
     {
       "end": "loop end",
-      "plans": 27,
+      "plans": 49,
       "start": "counting loop start"
     },
     {
       "end": "loop end column append",
-      "plans": 4,
+      "plans": 6,
       "start": "counting loop start"
     },
     {
       "end": "variable loop end",
-      "plans": 7,
+      "plans": 9,
       "start": "counting loop start"
     },
     {
       "end": "feature selection loop end",
-      "plans": 1,
+      "plans": 2,
       "start": "feature selection loop start"
     },
     {
       "end": "feature selection loop end",
-      "plans": 12,
+      "plans": 14,
       "start": "feature selection loop start 1 1"
     },
     {
       "end": "variable condition loop end",
-      "plans": 6,
+      "plans": 13,
       "start": "generic loop start"
     },
     {
       "end": "loop end",
-      "plans": 71,
+      "plans": 100,
       "start": "group loop start"
     },
     {
       "end": "loop end 2 ports",
-      "plans": 1,
+      "plans": 2,
       "start": "group loop start"
     },
     {
       "end": "loop end column append",
-      "plans": 7,
+      "plans": 9,
       "start": "group loop start"
     },
     {
       "end": "loop end deprecated",
-      "plans": 1,
+      "plans": 2,
       "start": "group loop start"
     },
     {
       "end": "variable loop end",
-      "plans": 32,
+      "plans": 47,
       "start": "group loop start"
     },
     {
@@ -117,27 +118,37 @@
     {
       "end": "loop end",
       "plans": 2,
+      "start": "interval loop start"
+    },
+    {
+      "end": "loop end",
+      "plans": 2,
       "start": "parameter optimization loop start"
     },
     {
       "end": "parameter optimization loop end",
-      "plans": 28,
+      "plans": 57,
       "start": "parameter optimization loop start"
     },
     {
       "end": "parameter optimization loop end",
-      "plans": 1,
+      "plans": 3,
       "start": "parameter optimization loop start table"
     },
     {
       "end": "recursive loop end",
-      "plans": 39,
+      "plans": 64,
       "start": "recursive loop start"
     },
     {
       "end": "recursive loop end 2 ports",
-      "plans": 8,
+      "plans": 9,
       "start": "recursive loop start 2 ports"
+    },
+    {
+      "end": "loop end",
+      "plans": 1,
+      "start": "row iterator loop start"
     },
     {
       "end": "shapley values loop end",
@@ -146,27 +157,32 @@
     },
     {
       "end": "loop end",
-      "plans": 96,
+      "plans": 152,
       "start": "table row to variable loop start"
     },
     {
       "end": "loop end 2 ports",
-      "plans": 2,
+      "plans": 3,
       "start": "table row to variable loop start"
     },
     {
       "end": "loop end column append",
-      "plans": 13,
+      "plans": 16,
+      "start": "table row to variable loop start"
+    },
+    {
+      "end": "variable condition loop end",
+      "plans": 1,
       "start": "table row to variable loop start"
     },
     {
       "end": "variable loop end",
-      "plans": 30,
+      "plans": 51,
       "start": "table row to variable loop start"
     },
     {
       "end": "loop end",
-      "plans": 1,
+      "plans": 2,
       "start": "table row to variable loop start deprecated"
     },
     {
@@ -186,11 +202,10 @@
     },
     {
       "end": "loop end",
-      "plans": 1,
+      "plans": 2,
       "start": "window loop start"
     }
   ],
-  "path_regions_without_side_links": 297,
-  "sample": 500,
-  "sampled_pairs": 36
+  "path_regions_without_side_links": 453,
+  "plans": 798
 }

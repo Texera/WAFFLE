@@ -1,4 +1,4 @@
-"""Census of named loop boundaries and a reproducible sample of distinct published plans."""
+"""Census of named loop boundaries in all distinct eligible published plans."""
 import argparse
 import csv
 import hashlib
@@ -95,14 +95,12 @@ def sample(archive):
     originals = json.loads((HERE / "reference_pairs.json").read_text())
     pairs = {(label(x["start"]), label(x["end"])) for x in originals}
     rows = []
-    for fingerprint in sorted(groups)[:500]:
+    for fingerprint in sorted(groups):
         archive_path_hash, start, end, side_in, side_out, hidden = min(groups[fingerprint])
         rows.append((fingerprint, archive_path_hash, start, end, int((start, end) in pairs), side_in, side_out, int(hidden)))
-    if len(rows) != 500:
-        raise ValueError("Fewer than 500 distinct eligible structures")
     pair_counts = Counter((r[2], r[3]) for r in rows)
     return rows, dict(archive_members=sum(census.values()), classifications=dict(census),
-                      eligible_signatures=len(groups), sample=len(rows), sampled_pairs=len(pair_counts),
+                      eligible_signatures=len(groups), plans=len(rows), distinct_pairs=len(pair_counts),
                       matching_reference_pair=sum(r[4] for r in rows),
                       path_regions_without_side_links=sum(r[5] == 0 and r[6] == 0 for r in rows),
                       missing_boundary_source=sum(r[7] for r in rows),
@@ -117,7 +115,7 @@ def main():
     with args.archive.open("rb") as stream:
         rows, summary = sample(stream)
     args.output.mkdir(parents=True, exist_ok=True)
-    with (args.output / "sample.csv").open("w", newline="", encoding="utf-8") as f:
+    with (args.output / "plans.csv").open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f, lineterminator="\n")
         writer.writerow(("fingerprint", "archive_member_hash", "start", "end", "reference_pair",
                          "incoming_side_links", "outgoing_side_links", "boundary_source_omitted"))

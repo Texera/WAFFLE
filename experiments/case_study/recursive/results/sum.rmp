@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<process version="10.1.000">
+  <operator class="process" compatibility="10.1.000" name="Process" activated="true" expanded="true" x="0" y="0">
+    <process>
+      <operator class="execute_script" compatibility="10.1.000" name="Seed" activated="true" expanded="true" x="45" y="35">
+        <parameter key="script" value="&#10;import com.rapidminer.example.table.AttributeFactory&#10;import com.rapidminer.example.table.DoubleArrayDataRow&#10;import com.rapidminer.example.table.MemoryExampleTable&#10;import com.rapidminer.tools.Ontology&#10;import groovy.json.JsonOutput&#10;import groovy.json.JsonSlurper&#10;def table(rows) {&#10;    def col = AttributeFactory.createAttribute(&quot;payload&quot;, Ontology.STRING)&#10;    def t = new MemoryExampleTable([col])&#10;    for (row in rows) {&#10;        double value = col.mapping.mapString(JsonOutput.toJson(row))&#10;        t.addDataRow(new DoubleArrayDataRow([value] as double[]))&#10;    }&#10;    return t.createExampleSet()&#10;}&#10;def unpack(set) {&#10;    def col = set.attributes.get(&quot;payload&quot;)&#10;    return set.collect { new JsonSlurper().parseText(it.getValueAsString(col)) }&#10;}&#10;def h = operator.process.macroHandler&#10;h.addMacro('currentX','0')&#10;h.addMacro('currentY','0')&#10;return table([[x:0,y:0]])" />
+        <parameter key="standard_imports" value="false" />
+      </operator>
+      <operator class="loop" compatibility="10.1.000" name="Repeat" activated="true" expanded="true" x="245" y="35">
+        <parameter key="iterations" value="10" />
+        <parameter key="enable_parallel_execution" value="false" />
+        <process>
+          <operator class="execute_script" compatibility="10.1.000" name="Body" activated="true" expanded="true" x="180" y="60">
+            <parameter key="script" value="&#10;import com.rapidminer.example.table.AttributeFactory&#10;import com.rapidminer.example.table.DoubleArrayDataRow&#10;import com.rapidminer.example.table.MemoryExampleTable&#10;import com.rapidminer.tools.Ontology&#10;import groovy.json.JsonOutput&#10;import groovy.json.JsonSlurper&#10;def table(rows) {&#10;    def col = AttributeFactory.createAttribute(&quot;payload&quot;, Ontology.STRING)&#10;    def t = new MemoryExampleTable([col])&#10;    for (row in rows) {&#10;        double value = col.mapping.mapString(JsonOutput.toJson(row))&#10;        t.addDataRow(new DoubleArrayDataRow([value] as double[]))&#10;    }&#10;    return t.createExampleSet()&#10;}&#10;def unpack(set) {&#10;    def col = set.attributes.get(&quot;payload&quot;)&#10;    return set.collect { new JsonSlurper().parseText(it.getValueAsString(col)) }&#10;}&#10;def h = operator.process.macroHandler&#10;int x = h.getMacro('currentX').toInteger()&#10;int y = h.getMacro('currentY').toInteger()&#10;def (a,b) = [x+1,y+x+1]&#10;h.addMacro('currentX',a.toString())&#10;h.addMacro('currentY',b.toString())&#10;return table([[x:a,y:b]])" />
+            <parameter key="standard_imports" value="false" />
+          </operator>
+          <connect from_port="input 1" to_port="input 1" to_op="Body" />
+          <connect from_port="output 1" to_port="output 1" from_op="Body" />
+        </process>
+      </operator>
+      <operator class="execute_script" compatibility="10.1.000" name="Collect" activated="true" expanded="true" x="445" y="35">
+        <parameter key="script" value="&#10;import com.rapidminer.example.table.AttributeFactory&#10;import com.rapidminer.example.table.DoubleArrayDataRow&#10;import com.rapidminer.example.table.MemoryExampleTable&#10;import com.rapidminer.tools.Ontology&#10;import groovy.json.JsonOutput&#10;import groovy.json.JsonSlurper&#10;def table(rows) {&#10;    def col = AttributeFactory.createAttribute(&quot;payload&quot;, Ontology.STRING)&#10;    def t = new MemoryExampleTable([col])&#10;    for (row in rows) {&#10;        double value = col.mapping.mapString(JsonOutput.toJson(row))&#10;        t.addDataRow(new DoubleArrayDataRow([value] as double[]))&#10;    }&#10;    return t.createExampleSet()&#10;}&#10;def unpack(set) {&#10;    def col = set.attributes.get(&quot;payload&quot;)&#10;    return set.collect { new JsonSlurper().parseText(it.getValueAsString(col)) }&#10;}&#10;return table(input[0].getObjects().collectMany { unpack(it) })" />
+        <parameter key="standard_imports" value="false" />
+      </operator>
+      <connect from_port="output 1" to_port="input 1" from_op="Seed" to_op="Repeat" />
+      <connect from_port="output 1" to_port="input 1" from_op="Repeat" to_op="Collect" />
+      <connect from_port="output 1" to_port="result 1" from_op="Collect" />
+    </process>
+  </operator>
+</process>

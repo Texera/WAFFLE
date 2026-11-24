@@ -35,6 +35,9 @@ def main():
         assert sum(r['rows'] for r in summary['cases']) == 241
         assert summary == read(case / 'results/comparison.json')
         print('Case study: 8/8 matches; 241 output rows verified')
+        recursive = json.loads(run(case / 'recursive/verify.py'))
+        assert [recursive[k]['rows'] for k in ('sum', 'fib')] == [10, 30]
+        print('Published recursive workflow: four systems matched all 40 rows')
         print(run(ROOT / 'experiments/generated_loops/verify.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify_binding.py').strip())

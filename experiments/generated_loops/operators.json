@@ -3,7 +3,7 @@
     "1": 7,
     "2": 49,
     "3": 343,
-    "4": 1601
+    "4": 2401
   },
   "edges_range": [
     7,
@@ -11,79 +11,79 @@
   ],
   "families": {
     "aggregation": {
-      "distinct_three_fixture_output_profiles": 640,
-      "graphs": 666,
+      "distinct_three_fixture_output_profiles": 892,
+      "graphs": 933,
       "iterations_per_run": {
-        "3": 1998
+        "3": 2799
       },
       "operations": {
-        "feature_row_calls": 506226,
-        "reducer_input_rows": 199836,
-        "union_invocations": 22599
+        "feature_row_calls": 738045,
+        "reducer_input_rows": 289548,
+        "union_invocations": 32211
       },
       "outcomes": {},
       "policy_graphs": {
-        "0": 222,
-        "1": 222,
-        "2": 222
+        "0": 311,
+        "1": 311,
+        "2": 311
       },
-      "runs": 1998,
-      "visits": 5994
+      "runs": 2799,
+      "visits": 8397
     },
     "search": {
-      "distinct_three_fixture_output_profiles": 667,
-      "graphs": 667,
+      "distinct_three_fixture_output_profiles": 934,
+      "graphs": 934,
       "iterations_per_run": {
-        "5": 2001
+        "5": 2802
       },
       "operations": {
-        "feature_row_calls": 2511390,
-        "reducer_input_rows": 1000230,
-        "union_invocations": 37695
+        "feature_row_calls": 3671325,
+        "reducer_input_rows": 1448790,
+        "union_invocations": 53715
       },
       "outcomes": {},
       "policy_graphs": {
-        "0": 223,
-        "1": 222,
-        "2": 222
+        "0": 312,
+        "1": 311,
+        "2": 311
       },
-      "runs": 2001,
-      "visits": 10005
+      "runs": 2802,
+      "visits": 14010
     },
     "stopping": {
-      "distinct_three_fixture_output_profiles": 610,
-      "graphs": 667,
+      "distinct_three_fixture_output_profiles": 855,
+      "graphs": 933,
       "iterations_per_run": {
-        "1": 1306,
-        "2": 11,
-        "3": 6,
-        "4": 7,
-        "5": 5,
-        "6": 666
+        "1": 1830,
+        "2": 14,
+        "3": 12,
+        "4": 11,
+        "5": 7,
+        "6": 925
       },
       "operations": {
-        "feature_row_calls": 1239885,
-        "reducer_input_rows": 493116,
-        "union_invocations": 20313
+        "feature_row_calls": 1789014,
+        "reducer_input_rows": 711612,
+        "union_invocations": 28825
       },
       "outcomes": {
-        "cap_without_quorum": 654,
-        "quorum": 1347
+        "cap_without_quorum": 910,
+        "quorum": 1889
       },
       "policy_graphs": {
-        "0": 223,
-        "1": 222,
-        "2": 222
+        "0": 311,
+        "1": 311,
+        "2": 311
       },
-      "runs": 2001,
-      "visits": 5395
+      "runs": 2799,
+      "visits": 7523
     }
   },
-  "graph_hash_list_sha256": "92262df689a5b152e1153d1ca3d511803b33e505a4378cad40a38126bf889611",
-  "graphs": 2000,
+  "graph_hash_list_sha256": "6cd15811a8824cf6ac786bb0bb4a5c58624b5a379018ad43460aba3298af0b4f",
+  "graphs": 2800,
   "nodes_range": [
     7,
     25
   ],
-  "ordered_trace_sha256": "18b8d563b8880b3018ad572eafc5152b5c09f1591e18524a52b609d2fa5fc5f6"
+  "ordered_trace_sha256": "8f31e848efee6edbc4e97ae54d781a9f9da5a3699db73ff141eb4852735a0069"
 }

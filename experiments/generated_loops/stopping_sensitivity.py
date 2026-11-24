@@ -30,7 +30,7 @@ def measure(artifact, runtime, output):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("artifact", type=Path, help="WAFFLE artifact checkout containing the 2,000-graph generator")
+    parser.add_argument("artifact", type=Path, help="WAFFLE artifact checkout containing the complete four-stage generator")
     parser.add_argument("runtime", type=Path, help="runtime prepared from implementation.lock.json")
     parser.add_argument("output", type=Path)
     args = parser.parse_args()

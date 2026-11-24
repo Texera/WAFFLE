@@ -16,7 +16,7 @@ def draw(source, output):
     graphs = {row["graph"] for row in rows}
     keys = {(row["graph"], row["input"], row["fraction"]) for row in rows}
     expected = {(graph, fixture, fraction) for graph in graphs for fixture in INPUTS for fraction in FRACTIONS}
-    if len(graphs) != 667 or len(rows) != len(keys) or keys != expected:
+    if len(graphs) != 933 or len(rows) != len(keys) or keys != expected:
         raise ValueError("Incomplete or duplicate graph/input/fraction observations")
     cmap = LinearSegmentedColormap.from_list("count", ("#f1f4f6", "#195779"))
     with plt.rc_context({"font.family": "DejaVu Serif", "font.size": 8, "pdf.fonttype": 42}):
