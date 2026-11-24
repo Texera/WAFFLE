@@ -1,0 +1,86 @@
+{
+  "depth_histogram": {
+    "1": 7,
+    "2": 49,
+    "3": 343
+  },
+  "edges_range": [
+    7,
+    22
+  ],
+  "families": {
+    "aggregation": {
+      "distinct_three_fixture_output_profiles": 127,
+      "graphs": 133,
+      "iterations_per_run": {
+        "3": 399
+      },
+      "operations": {
+        "feature_row_calls": 48573,
+        "reducer_input_rows": 20748,
+        "union_invocations": 3411
+      },
+      "outcomes": {},
+      "policy_graphs": {
+        "0": 45,
+        "1": 44,
+        "2": 44
+      },
+      "runs": 399,
+      "visits": 1197
+    },
+    "search": {
+      "distinct_three_fixture_output_profiles": 133,
+      "graphs": 133,
+      "iterations_per_run": {
+        "5": 399
+      },
+      "operations": {
+        "feature_row_calls": 242025,
+        "reducer_input_rows": 103110,
+        "union_invocations": 5655
+      },
+      "outcomes": {},
+      "policy_graphs": {
+        "0": 45,
+        "1": 44,
+        "2": 44
+      },
+      "runs": 399,
+      "visits": 1995
+    },
+    "stopping": {
+      "distinct_three_fixture_output_profiles": 100,
+      "graphs": 133,
+      "iterations_per_run": {
+        "1": 256,
+        "2": 5,
+        "4": 3,
+        "6": 135
+      },
+      "operations": {
+        "feature_row_calls": 121722,
+        "reducer_input_rows": 51516,
+        "union_invocations": 3085
+      },
+      "outcomes": {
+        "cap_without_quorum": 134,
+        "quorum": 265
+      },
+      "policy_graphs": {
+        "0": 45,
+        "1": 44,
+        "2": 44
+      },
+      "runs": 399,
+      "visits": 1088
+    }
+  },
+  "graph_hash_list_sha256": "9a9c934a02fc3c19232a8379700443a9a53368736b874a5f904a83fc0bf6d9b7",
+  "graphs": 399,
+  "nodes_range": [
+    7,
+    20
+  ],
+  "ordered_trace_sha256": "538ce7b831ce09df85fd5074837af2eca84ada1dcf6e82bd3e94dd853962097a"
+}

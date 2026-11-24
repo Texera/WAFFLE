@@ -1,0 +1,78 @@
+{
+  "strict_compilations": 399,
+  "compiled_graph_hash_list_sha256": "9a9c934a02fc3c19232a8379700443a9a53368736b874a5f904a83fc0bf6d9b7",
+  "coordinator": [
+    {
+      "index": 0,
+      "graph_sha256": "66fdd630e7641656b67396769ca336405146cd88368a86c5e0fb82fcc309cbb5",
+      "rows": [
+        [
+          -2,
+          59
+        ],
+        [
+          -1,
+          51
+        ],
+        [
+          0,
+          47
+        ],
+        [
+          1,
+          49
+        ],
+        [
+          2,
+          55
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "graph_sha256": "34afd03f8bbdb7284c588dd76ba5d0bc3c48fc05ecd6b0b15ac579a9441d7878",
+      "rows": [
+        [
+          0,
+          11
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "graph_sha256": "83ef8284969bbb90851e1bb682cf4a18b53483058d8032cb78b4bab41f8b7b8c",
+      "rows": [
+        [
+          0,
+          -20
+        ],
+        [
+          1,
+          -18
+        ],
+        [
+          2,
+          4
+        ]
+      ]
+    },
+    {
+      "index": 59,
+      "graph_sha256": "175818e424c6198b151e921d64d005980b815f008979b8ec31103a6ed492f4f1",
+      "rows": [
+        [
+          0,
+          152
+        ],
+        [
+          1,
+          82
+        ],
+        [
+          2,
+          120
+        ]
+      ]
+    }
+  ]
+}
