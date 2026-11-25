@@ -1,6 +1,8 @@
 # User study: configuring and adapting workflow loops
 
-**Status: 35-minute connected-loop revision, November 15, 2026. No participant results.** Both platforms pass 12 native checks each on the two-task protocol. Workflow A also passes GUI import, initial run, sweep edit/run, adaptation edit/run and separate exports in both tools. Six relocated KNIME archives pass native checks. See the [rehearsal record](results/2026-11-15-35min/README.md). Texera uses native CSV File Scan and Sort with prepared clustering. The historical [36-run record](results/2026-11-15-native-operators/README.md) covers the older three-task design. A teammate timing pilot remains necessary. This is the facilitator's protocol; give participants only their starter, neutral task cards and platform field guide.
+The [Section 7.3 group results](results/group-results.csv) summarize ten included responses. Each row gives a statistic, its unit and its denominator. Timing comparisons use the responses reporting independent completion of the same task in both tools.
+
+**Author rehearsal, November 15, 2026.** Both platforms pass 12 native checks each on the two-task protocol. Workflow A also passes GUI import, initial run, sweep edit/run, adaptation edit/run and separate exports in both tools. Six relocated KNIME archives pass native checks. See the [rehearsal record](results/2026-11-15-35min/README.md). Texera uses native CSV File Scan and Sort with prepared clustering. The historical [36-run record](results/2026-11-15-native-operators/README.md) covers the older three-task design. A teammate timing pilot remains necessary. This is the facilitator's protocol; give participants only their starter, neutral task cards and platform field guide.
 
 ## Question and hypothesis
 

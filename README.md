@@ -9,13 +9,13 @@ Experimental scripts, data, recorded results, and figure generation for the WAFF
 | §7.2: public catalogs | [public_catalogs](experiments/case_study/public_catalogs) | Source inventories and verified structural loop evidence from three comparison systems |
 | §7.2: generated loop computations | [generated_loops](experiments/generated_loops) | 16,104 graphs on three inputs each, with every visited score and output row checked |
 | Supplemental K-means loop rules | [loop_policies](experiments/loop_policies) | Four control rules on four inputs across four engines, with fixed-range and score-threshold comparisons |
-| §7.3: create and adapt loops | [user_study](experiments/user_study) | Protocol, starters, fallbacks and author dry runs. Participant responses are held separately. |
+| §7.3: create and adapt loops | [user_study](experiments/user_study) | [Group results from ten included responses](experiments/user_study/results/group-results.csv), protocol, starters, fallbacks and author dry runs. |
 | §7.4: control-variable delivery and binding | [control_messages](experiments/control_messages) | Eight merge workflows, 1,023 arrival orders under two policies, and 378 first-tuple bindings in 18 native runs with up to 32 workers |
 | §§7.5–7.6: global (X) versus modular (Y) planning | [xy_planning](experiments/xy_planning) | 3,600 measured plans on the original six workflows, extended tests up to 100 operators with increased branching and 164 with longer filter chains; all completed pairs attain the same verified minimum |
 | §§7.7–7.8: loop versus explicit body copies | [loop_execution](experiments/loop_execution) | 84 native executions, including 14 warm-ups; seven settings up to 20,000 tuples; separate graph-construction checks through 131,072 candidates; all outputs checked |
 | Scheduling supplement | [scheduling_oracle](experiments/scheduling_oracle) | Independent scheduling model |
 
-The [Section 7 data index](SECTION7-DATA.md) maps each subsection, figure and table to the files used for it. The archive contains the automated experiment data. The user-study directory contains study materials and author dry runs.
+The [Section 7 data index](SECTION7-DATA.md) maps each subsection, figure and table to the files used for it.
 
 ## Check the saved results
 
@@ -64,4 +64,4 @@ No benchmark numbers are illustrative or simulated. The saved measurements are f
 
 ## Sources and license
 
-The code is distributed under [Apache License 2.0](LICENSE), with upstream notices in [NOTICE](NOTICE). See [THIRD_PARTY.md](THIRD_PARTY.md) for Texera and KNIME attribution and the provenance of example data. This repository contains no paper manuscript, private review comments, or participant data.
+The code is distributed under [Apache License 2.0](LICENSE), with upstream notices in [NOTICE](NOTICE). See [THIRD_PARTY.md](THIRD_PARTY.md) for Texera and KNIME attribution and the provenance of example data. The paper manuscript, private review comments and individual study records are held separately.

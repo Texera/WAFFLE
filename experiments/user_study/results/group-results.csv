@@ -1,0 +1,180 @@
+measure,task_or_step,workflow,tool_or_comparison,statistic,value,unit,denominator,population,percent_of_denominator
+Cohort,,,Both tools,Included responses,10,count,10,included responses,100
+Tool order,,,System A,Used first,7,count,10,included responses,70
+Assigned sequence,,A,System A,First workflow and tool,3,count,10,included responses,30
+Assigned sequence,,B,System A,First workflow and tool,4,count,10,included responses,40
+Tool order,,,WAFFLE,Used first,3,count,10,included responses,30
+Assigned sequence,,A,WAFFLE,First workflow and tool,2,count,10,included responses,20
+Assigned sequence,,B,WAFFLE,First workflow and tool,1,count,10,included responses,10
+Independent completion,Both tasks,,Across tools,Both tools,2,count,10,included responses,20
+Independent completion,Both tasks,,Across tools,System A only,0,count,10,included responses,0
+Independent completion,Both tasks,,Across tools,WAFFLE only,5,count,10,included responses,50
+Independent completion,Both tasks,,Across tools,Neither tool,3,count,10,included responses,30
+Independent completion,Configure the loop,,Across tools,Both tools,6,count,10,included responses,60
+Independent completion,Configure the loop,,Across tools,System A only,0,count,10,included responses,0
+Independent completion,Configure the loop,,Across tools,WAFFLE only,2,count,10,included responses,20
+Independent completion,Configure the loop,,Across tools,Neither tool,2,count,10,included responses,20
+Independent completion,Change the stopping rule,,Across tools,Both tools,2,count,10,included responses,20
+Independent completion,Change the stopping rule,,Across tools,System A only,0,count,10,included responses,0
+Independent completion,Change the stopping rule,,Across tools,WAFFLE only,6,count,10,included responses,60
+Independent completion,Change the stopping rule,,Across tools,Neither tool,2,count,10,included responses,20
+All attempts,Both tasks,,System A,Time limit,5,count,20,task attempts on this tool,25
+All attempts,Both tasks,,System A,Supplied fallback,3,count,20,task attempts on this tool,15
+All attempts,Both tasks,,System A,Technical block,0,count,20,task attempts on this tool,0
+Reported outcome,Configure the loop,,System A,Completed,7,count,10,attempts at this task on this tool,70
+Reported outcome,Configure the loop,,System A,Time limit,3,count,10,attempts at this task on this tool,30
+Reported outcome,Configure the loop,,System A,Technical block,0,count,10,attempts at this task on this tool,0
+Reported help,Configure the loop,,System A,No extra help,8,count,10,attempts at this task on this tool,80
+Reported help,Configure the loop,,System A,Extra help,2,count,10,attempts at this task on this tool,20
+Reported help,Configure the loop,,System A,Supplied fallback,0,count,10,attempts at this task on this tool,0
+Independent completion,Configure the loop,,System A,Completed with no extra help,6,count,10,attempts at this task on this tool,60
+Elapsed time,Configure the loop,,System A,Median across all attempts (includes time limits),135.5,seconds,10,attempts at this task on this tool,
+Reported outcome,Change the stopping rule,,System A,Completed,8,count,10,attempts at this task on this tool,80
+Reported outcome,Change the stopping rule,,System A,Time limit,2,count,10,attempts at this task on this tool,20
+Reported outcome,Change the stopping rule,,System A,Technical block,0,count,10,attempts at this task on this tool,0
+Reported help,Change the stopping rule,,System A,No extra help,2,count,10,attempts at this task on this tool,20
+Reported help,Change the stopping rule,,System A,Extra help,5,count,10,attempts at this task on this tool,50
+Reported help,Change the stopping rule,,System A,Supplied fallback,3,count,10,attempts at this task on this tool,30
+Independent completion,Change the stopping rule,,System A,Completed with no extra help,2,count,10,attempts at this task on this tool,20
+Elapsed time,Change the stopping rule,,System A,Median across all attempts (includes time limits),221.5,seconds,10,attempts at this task on this tool,
+All attempts,Both tasks,,WAFFLE,Time limit,1,count,20,task attempts on this tool,5
+All attempts,Both tasks,,WAFFLE,Supplied fallback,0,count,20,task attempts on this tool,0
+All attempts,Both tasks,,WAFFLE,Technical block,0,count,20,task attempts on this tool,0
+Reported outcome,Configure the loop,,WAFFLE,Completed,9,count,10,attempts at this task on this tool,90
+Reported outcome,Configure the loop,,WAFFLE,Time limit,1,count,10,attempts at this task on this tool,10
+Reported outcome,Configure the loop,,WAFFLE,Technical block,0,count,10,attempts at this task on this tool,0
+Reported help,Configure the loop,,WAFFLE,No extra help,9,count,10,attempts at this task on this tool,90
+Reported help,Configure the loop,,WAFFLE,Extra help,1,count,10,attempts at this task on this tool,10
+Reported help,Configure the loop,,WAFFLE,Supplied fallback,0,count,10,attempts at this task on this tool,0
+Independent completion,Configure the loop,,WAFFLE,Completed with no extra help,8,count,10,attempts at this task on this tool,80
+Elapsed time,Configure the loop,,WAFFLE,Median across all attempts (includes time limits),118.5,seconds,10,attempts at this task on this tool,
+Reported outcome,Change the stopping rule,,WAFFLE,Completed,10,count,10,attempts at this task on this tool,100
+Reported outcome,Change the stopping rule,,WAFFLE,Time limit,0,count,10,attempts at this task on this tool,0
+Reported outcome,Change the stopping rule,,WAFFLE,Technical block,0,count,10,attempts at this task on this tool,0
+Reported help,Change the stopping rule,,WAFFLE,No extra help,8,count,10,attempts at this task on this tool,80
+Reported help,Change the stopping rule,,WAFFLE,Extra help,2,count,10,attempts at this task on this tool,20
+Reported help,Change the stopping rule,,WAFFLE,Supplied fallback,0,count,10,attempts at this task on this tool,0
+Independent completion,Change the stopping rule,,WAFFLE,Completed with no extra help,8,count,10,attempts at this task on this tool,80
+Elapsed time,Change the stopping rule,,WAFFLE,Median across all attempts (includes time limits),109,seconds,10,attempts at this task on this tool,
+Paired time,Configure the loop,,Both tools,Independently completed in both tools,6,count,10,included responses,60
+Paired time,Configure the loop,,System A,Median for eligible pairs,108,seconds,6,independent pairs for this task,
+Paired time,Configure the loop,,WAFFLE,Median for eligible pairs,118.5,seconds,6,independent pairs for this task,
+Paired time,Configure the loop,,WAFFLE minus System A,Median within-person difference,10.5,seconds,6,independent pairs for this task,
+Paired time,Configure the loop,,Across tools,System A faster,3,count,6,independent pairs for this task,50
+Paired time,Configure the loop,,Across tools,WAFFLE faster,3,count,6,independent pairs for this task,50
+Paired time,Configure the loop,,Across tools,Equal time,0,count,6,independent pairs for this task,0
+Paired time,Change the stopping rule,,Both tools,Independently completed in both tools,2,count,10,included responses,20
+Paired time,Change the stopping rule,,System A,Median for eligible pairs,159.5,seconds,2,independent pairs for this task,
+Paired time,Change the stopping rule,,WAFFLE,Median for eligible pairs,188,seconds,2,independent pairs for this task,
+Paired time,Change the stopping rule,,WAFFLE minus System A,Median within-person difference,28.5,seconds,2,independent pairs for this task,
+Paired time,Change the stopping rule,,Across tools,System A faster,1,count,2,independent pairs for this task,50
+Paired time,Change the stopping rule,,Across tools,WAFFLE faster,1,count,2,independent pairs for this task,50
+Paired time,Change the stopping rule,,Across tools,Equal time,0,count,2,independent pairs for this task,0
+Fallback sensitivity,Change the stopping rule,,Both tools,Pairs retained after excluding fallback-labeled workflow,1,count,2,independent stopping-rule pairs before artifact check,50
+Ease rating,Set the loop's K range,,System A,Median,4.5,1 to 7 (higher is easier),10,paired ratings for this step,
+Ease distribution,Set the loop's K range,,System A,Rating 1,0,count,10,paired ratings for this step,0
+Ease distribution,Set the loop's K range,,System A,Rating 2,3,count,10,paired ratings for this step,30
+Ease distribution,Set the loop's K range,,System A,Rating 3,1,count,10,paired ratings for this step,10
+Ease distribution,Set the loop's K range,,System A,Rating 4,1,count,10,paired ratings for this step,10
+Ease distribution,Set the loop's K range,,System A,Rating 5,1,count,10,paired ratings for this step,10
+Ease distribution,Set the loop's K range,,System A,Rating 6,1,count,10,paired ratings for this step,10
+Ease distribution,Set the loop's K range,,System A,Rating 7,3,count,10,paired ratings for this step,30
+Ease rating,Set the loop's K range,,WAFFLE,Median,6,1 to 7 (higher is easier),10,paired ratings for this step,
+Ease distribution,Set the loop's K range,,WAFFLE,Rating 1,1,count,10,paired ratings for this step,10
+Ease distribution,Set the loop's K range,,WAFFLE,Rating 2,0,count,10,paired ratings for this step,0
+Ease distribution,Set the loop's K range,,WAFFLE,Rating 3,1,count,10,paired ratings for this step,10
+Ease distribution,Set the loop's K range,,WAFFLE,Rating 4,0,count,10,paired ratings for this step,0
+Ease distribution,Set the loop's K range,,WAFFLE,Rating 5,0,count,10,paired ratings for this step,0
+Ease distribution,Set the loop's K range,,WAFFLE,Rating 6,5,count,10,paired ratings for this step,50
+Ease distribution,Set the loop's K range,,WAFFLE,Rating 7,3,count,10,paired ratings for this step,30
+Paired ease comparison,Set the loop's K range,,Across tools,WAFFLE easier,5,count,10,paired ratings for this step,50
+Paired ease comparison,Set the loop's K range,,Across tools,Equally easy,2,count,10,paired ratings for this step,20
+Paired ease comparison,Set the loop's K range,,Across tools,System A easier,3,count,10,paired ratings for this step,30
+Ease rating,Change the stopping rule,,System A,Median,3,1 to 7 (higher is easier),10,paired ratings for this step,
+Ease distribution,Change the stopping rule,,System A,Rating 1,2,count,10,paired ratings for this step,20
+Ease distribution,Change the stopping rule,,System A,Rating 2,1,count,10,paired ratings for this step,10
+Ease distribution,Change the stopping rule,,System A,Rating 3,4,count,10,paired ratings for this step,40
+Ease distribution,Change the stopping rule,,System A,Rating 4,1,count,10,paired ratings for this step,10
+Ease distribution,Change the stopping rule,,System A,Rating 5,1,count,10,paired ratings for this step,10
+Ease distribution,Change the stopping rule,,System A,Rating 6,0,count,10,paired ratings for this step,0
+Ease distribution,Change the stopping rule,,System A,Rating 7,1,count,10,paired ratings for this step,10
+Ease rating,Change the stopping rule,,WAFFLE,Median,5.5,1 to 7 (higher is easier),10,paired ratings for this step,
+Ease distribution,Change the stopping rule,,WAFFLE,Rating 1,1,count,10,paired ratings for this step,10
+Ease distribution,Change the stopping rule,,WAFFLE,Rating 2,1,count,10,paired ratings for this step,10
+Ease distribution,Change the stopping rule,,WAFFLE,Rating 3,1,count,10,paired ratings for this step,10
+Ease distribution,Change the stopping rule,,WAFFLE,Rating 4,0,count,10,paired ratings for this step,0
+Ease distribution,Change the stopping rule,,WAFFLE,Rating 5,2,count,10,paired ratings for this step,20
+Ease distribution,Change the stopping rule,,WAFFLE,Rating 6,3,count,10,paired ratings for this step,30
+Ease distribution,Change the stopping rule,,WAFFLE,Rating 7,2,count,10,paired ratings for this step,20
+Paired ease comparison,Change the stopping rule,,Across tools,WAFFLE easier,7,count,10,paired ratings for this step,70
+Paired ease comparison,Change the stopping rule,,Across tools,Equally easy,2,count,10,paired ratings for this step,20
+Paired ease comparison,Change the stopping rule,,Across tools,System A easier,1,count,10,paired ratings for this step,10
+Ease rating,See which K values ran,,System A,Median,3,1 to 7 (higher is easier),10,paired ratings for this step,
+Ease distribution,See which K values ran,,System A,Rating 1,2,count,10,paired ratings for this step,20
+Ease distribution,See which K values ran,,System A,Rating 2,2,count,10,paired ratings for this step,20
+Ease distribution,See which K values ran,,System A,Rating 3,2,count,10,paired ratings for this step,20
+Ease distribution,See which K values ran,,System A,Rating 4,1,count,10,paired ratings for this step,10
+Ease distribution,See which K values ran,,System A,Rating 5,1,count,10,paired ratings for this step,10
+Ease distribution,See which K values ran,,System A,Rating 6,1,count,10,paired ratings for this step,10
+Ease distribution,See which K values ran,,System A,Rating 7,1,count,10,paired ratings for this step,10
+Ease rating,See which K values ran,,WAFFLE,Median,6.5,1 to 7 (higher is easier),10,paired ratings for this step,
+Ease distribution,See which K values ran,,WAFFLE,Rating 1,1,count,10,paired ratings for this step,10
+Ease distribution,See which K values ran,,WAFFLE,Rating 2,0,count,10,paired ratings for this step,0
+Ease distribution,See which K values ran,,WAFFLE,Rating 3,0,count,10,paired ratings for this step,0
+Ease distribution,See which K values ran,,WAFFLE,Rating 4,0,count,10,paired ratings for this step,0
+Ease distribution,See which K values ran,,WAFFLE,Rating 5,0,count,10,paired ratings for this step,0
+Ease distribution,See which K values ran,,WAFFLE,Rating 6,4,count,10,paired ratings for this step,40
+Ease distribution,See which K values ran,,WAFFLE,Rating 7,5,count,10,paired ratings for this step,50
+Paired ease comparison,See which K values ran,,Across tools,WAFFLE easier,7,count,10,paired ratings for this step,70
+Paired ease comparison,See which K values ran,,Across tools,Equally easy,3,count,10,paired ratings for this step,30
+Paired ease comparison,See which K values ran,,Across tools,System A easier,0,count,10,paired ratings for this step,0
+Ease rating,Check the scores,,System A,Median,5,1 to 7 (higher is easier),10,paired ratings for this step,
+Ease distribution,Check the scores,,System A,Rating 1,0,count,10,paired ratings for this step,0
+Ease distribution,Check the scores,,System A,Rating 2,0,count,10,paired ratings for this step,0
+Ease distribution,Check the scores,,System A,Rating 3,4,count,10,paired ratings for this step,40
+Ease distribution,Check the scores,,System A,Rating 4,1,count,10,paired ratings for this step,10
+Ease distribution,Check the scores,,System A,Rating 5,0,count,10,paired ratings for this step,0
+Ease distribution,Check the scores,,System A,Rating 6,2,count,10,paired ratings for this step,20
+Ease distribution,Check the scores,,System A,Rating 7,3,count,10,paired ratings for this step,30
+Ease rating,Check the scores,,WAFFLE,Median,6,1 to 7 (higher is easier),10,paired ratings for this step,
+Ease distribution,Check the scores,,WAFFLE,Rating 1,1,count,10,paired ratings for this step,10
+Ease distribution,Check the scores,,WAFFLE,Rating 2,0,count,10,paired ratings for this step,0
+Ease distribution,Check the scores,,WAFFLE,Rating 3,0,count,10,paired ratings for this step,0
+Ease distribution,Check the scores,,WAFFLE,Rating 4,0,count,10,paired ratings for this step,0
+Ease distribution,Check the scores,,WAFFLE,Rating 5,0,count,10,paired ratings for this step,0
+Ease distribution,Check the scores,,WAFFLE,Rating 6,5,count,10,paired ratings for this step,50
+Ease distribution,Check the scores,,WAFFLE,Rating 7,4,count,10,paired ratings for this step,40
+Paired ease comparison,Check the scores,,Across tools,WAFFLE easier,5,count,10,paired ratings for this step,50
+Paired ease comparison,Check the scores,,Across tools,Equally easy,4,count,10,paired ratings for this step,40
+Paired ease comparison,Check the scores,,Across tools,System A easier,1,count,10,paired ratings for this step,10
+Overall preference,Similar loop task,,Across tools,System A,2,count,10,included responses,20
+Overall preference,Similar loop task,,Across tools,WAFFLE,7,count,10,included responses,70
+Overall preference,Similar loop task,,Across tools,No preference,1,count,10,included responses,10
+Reported best K and score,Configure the loop,A,System A,Parseable K and score,3,count,4,attempts with this workflow on this tool,75
+Reported best K and score,Configure the loop,A,System A,Reported not obtained,1,count,4,attempts with this workflow on this tool,25
+Reported best K and score,Configure the loop,A,System A,Incomplete or ambiguous K/score,0,count,4,attempts with this workflow on this tool,0
+Reported best K,Configure the loop,A,System A,K=2,0,count,3,parseable K/score reports for this workflow and tool,0
+Reported best K,Configure the loop,A,System A,K=3,1,count,3,parseable K/score reports for this workflow and tool,33.33
+Reported best K,Configure the loop,A,System A,K=4,2,count,3,parseable K/score reports for this workflow and tool,66.67
+Reported best score,Configure the loop,A,System A,Median of reported scores (unvalidated),-2.23,reported score,3,parseable K/score reports for this workflow and tool,
+Reported best K and score,Configure the loop,B,System A,Parseable K and score,3,count,6,attempts with this workflow on this tool,50
+Reported best K and score,Configure the loop,B,System A,Reported not obtained,2,count,6,attempts with this workflow on this tool,33.33
+Reported best K and score,Configure the loop,B,System A,Incomplete or ambiguous K/score,1,count,6,attempts with this workflow on this tool,16.67
+Reported best K,Configure the loop,B,System A,K=2,0,count,3,parseable K/score reports for this workflow and tool,0
+Reported best K,Configure the loop,B,System A,K=3,1,count,3,parseable K/score reports for this workflow and tool,33.33
+Reported best K,Configure the loop,B,System A,K=4,2,count,3,parseable K/score reports for this workflow and tool,66.67
+Reported best score,Configure the loop,B,System A,Median of reported scores (unvalidated),-2.23,reported score,3,parseable K/score reports for this workflow and tool,
+Reported best K and score,Configure the loop,A,WAFFLE,Parseable K and score,5,count,6,attempts with this workflow on this tool,83.33
+Reported best K and score,Configure the loop,A,WAFFLE,Reported not obtained,0,count,6,attempts with this workflow on this tool,0
+Reported best K and score,Configure the loop,A,WAFFLE,Incomplete or ambiguous K/score,1,count,6,attempts with this workflow on this tool,16.67
+Reported best K,Configure the loop,A,WAFFLE,K=2,1,count,5,parseable K/score reports for this workflow and tool,20
+Reported best K,Configure the loop,A,WAFFLE,K=3,1,count,5,parseable K/score reports for this workflow and tool,20
+Reported best K,Configure the loop,A,WAFFLE,K=4,3,count,5,parseable K/score reports for this workflow and tool,60
+Reported best score,Configure the loop,A,WAFFLE,Median of reported scores (unvalidated),-2.23,reported score,5,parseable K/score reports for this workflow and tool,
+Reported best K and score,Configure the loop,B,WAFFLE,Parseable K and score,4,count,4,attempts with this workflow on this tool,100
+Reported best K and score,Configure the loop,B,WAFFLE,Reported not obtained,0,count,4,attempts with this workflow on this tool,0
+Reported best K and score,Configure the loop,B,WAFFLE,Incomplete or ambiguous K/score,0,count,4,attempts with this workflow on this tool,0
+Reported best K,Configure the loop,B,WAFFLE,K=2,0,count,4,parseable K/score reports for this workflow and tool,0
+Reported best K,Configure the loop,B,WAFFLE,K=3,1,count,4,parseable K/score reports for this workflow and tool,25
+Reported best K,Configure the loop,B,WAFFLE,K=4,3,count,4,parseable K/score reports for this workflow and tool,75
+Reported best score,Configure the loop,B,WAFFLE,Median of reported scores (unvalidated),-2.23,reported score,4,parseable K/score reports for this workflow and tool,
