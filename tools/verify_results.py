@@ -56,6 +56,7 @@ def main():
         print('Published hierarchy: four systems matched both feedback tables and all 11 sorted rows')
         print(run(ROOT / 'experiments/generated_loops/verify.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify.py').strip())
+        print(run(ROOT / 'experiments/control_messages/verify_scoped.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify_binding.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify_binding.py',
                   ROOT / 'experiments/control_messages/binding_wide_results', '--wide').strip())

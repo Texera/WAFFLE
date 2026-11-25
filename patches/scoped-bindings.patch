@@ -1,0 +1,426 @@
+diff --git a/amber/src/main/python/core/architecture/managers/state_processing_manager.py b/amber/src/main/python/core/architecture/managers/state_processing_manager.py
+index 442b6e03564c3ab4ed78ad1eae92358abf7392ca..9f93604d9b186b457d7a2ef15bee59223c03682b 100644
+--- a/amber/src/main/python/core/architecture/managers/state_processing_manager.py
++++ b/amber/src/main/python/core/architecture/managers/state_processing_manager.py
+@@ -23,6 +23,7 @@ from core.models.state import State
+ class StateProcessingManager:
+     def __init__(self):
+         self.current_input_state: Optional[State] = None
++        self.visible_input_state: Optional[State] = None
+         self.current_output_state: Optional[State] = None
+ 
+     def get_input_state(self) -> Optional[State]:
+diff --git a/amber/src/main/python/core/models/operator.py b/amber/src/main/python/core/models/operator.py
+index 6a72745142aca21218c4f412479c744e37b965a3..b3d1b17891bf4e38b62e77940973e20182477e19 100644
+--- a/amber/src/main/python/core/models/operator.py
++++ b/amber/src/main/python/core/models/operator.py
+@@ -455,6 +455,11 @@ class _LoopNamespace(dict):
+     def __init__(self, local, enclosing):
+         super().__init__(local)
+         self.enclosing = enclosing
++        self.assigned = set()
++
++    def __setitem__(self, name, value):
++        self.assigned.add(name)
++        super().__setitem__(name, value)
+ 
+     def __missing__(self, name):
+         return self.enclosing[name]
+@@ -525,6 +530,7 @@ class LoopStartOperator(_LoopOperator):
+         # init() reads the input data D, which has not arrived when open() runs, so it is
+         # kept and run once D is complete (see _initialize).
+         self._initialization_code = initialization_code
++        self.checkpoint_candidates = {}
+         self._initialized = False
+         self.variables = State()
+ 
+@@ -557,6 +563,10 @@ class LoopStartOperator(_LoopOperator):
+         exec(self._initialization_code, namespace)
+         _check_reserved_kept(namespace, table)
+         variables = _user_variables(namespace)
++        # Only an init() name may inherit an unassigned checkpoint candidate.
++        # A body-only name such as score must be produced afresh.
++        for name in variables.keys() & self.checkpoint_candidates.keys():
++            variables[name] = self.checkpoint_candidates[name]
+         # A value that arrived before, on the back edge, replaces the one init() set.
+         variables.update(self.variables)
+         self.variables = State(variables)
+@@ -648,6 +658,7 @@ class LoopEndOperator(_LoopOperator):
+         # AttributeError; a None _loop_table means "nothing consumed yet" and
+         # condition() short-circuits to False (see eval_condition).
+         self.variables: State = State()
++        self.assigned_names: set[str] = set()
+         # Set by the runtime (attach_loop_table) right before the matching
+         # consume and taken (cleared) by run_update. The clear is defensive
+         # rather than load-bearing today -- a worker instance handles a single
+@@ -704,6 +715,7 @@ class LoopEndOperator(_LoopOperator):
+                 raise _reserved_name_error(key)
+         self._loop_table = input_table
+         self.variables = _user_variables(namespace)
++        self.assigned_names = namespace.assigned & self.variables.keys()
+ 
+     @overrides.final
+     def eval_condition(self, condition_expr: str) -> bool:
+diff --git a/amber/src/main/python/core/models/state.py b/amber/src/main/python/core/models/state.py
+index eced672ecd21597413bbd10a3b96501a84bccb11..18a805ef26bf958838e50da89a4d8eb3af7ba471 100644
+--- a/amber/src/main/python/core/models/state.py
++++ b/amber/src/main/python/core/models/state.py
+@@ -26,6 +26,22 @@ from .tuple import Tuple
+ 
+ 
+ class State(dict):
++    CHECKPOINT_V1 = "waffle-loop-checkpoint-v1"
++
++    def checkpoint(self, assigned_names):
++        # This record is private to the loop back edge. User keys in either
++        # map are unrestricted. Older checkpoints contained just the values.
++        assigned = {k: v for k, v in self.items() if k in assigned_names}
++        candidates = {k: v for k, v in self.items() if k not in assigned_names}
++        return State(assigned=assigned, candidates=candidates).to_tuple(message_id=self.CHECKPOINT_V1)
++
++    @classmethod
++    def read_checkpoint(cls, row):
++        values = cls.from_tuple(row)
++        if row[cls.MESSAGE_ID] == cls.CHECKPOINT_V1:
++            return values["assigned"], values["candidates"]
++        return values, {}
++
+     CONTENT = "content"
+     # Loop-control bookkeeping owned by the worker runtime, NOT user state -- it
+     # never appears in the content JSON. In memory it rides on the StateFrame
+@@ -47,6 +63,13 @@ class State(dict):
+     def to_json(self) -> str:
+         return json.dumps(_to_json_value(self), separators=(",", ":"))
+ 
++    @staticmethod
++    def equal_value(left: Any, right: Any) -> bool:
++        # Compare typed wire values, independent of dictionary insertion order.
++        return json.dumps(_to_json_value(left), sort_keys=True) == json.dumps(
++            _to_json_value(right), sort_keys=True
++        )
++
+     @staticmethod
+     def to_columns(
+         content_json: str,
+diff --git a/amber/src/main/python/core/runnables/data_processor.py b/amber/src/main/python/core/runnables/data_processor.py
+index 973ae3e5fb98e5b035ac7a9a26cf628aa56b2568..923750e4c04322517a4449fa07a9305967fbf10a 100644
+--- a/amber/src/main/python/core/runnables/data_processor.py
++++ b/amber/src/main/python/core/runnables/data_processor.py
+@@ -115,7 +115,9 @@ class DataProcessor(Runnable, Stoppable):
+         with self._executor_session() as (executor, port_id):
+             # Register the state message before the callback runs, so
+             # process_state (and every call after it) can consult self.state.
+-            executor.state = state
++            manager = self._context.state_processing_manager
++            visible, manager.visible_input_state = manager.visible_input_state, None
++            executor.state = state if visible is None else visible
+             self._set_output_state(executor.process_state(state, port_id))
+ 
+     def process_tuple(self) -> None:
+diff --git a/amber/src/main/python/core/runnables/main_loop.py b/amber/src/main/python/core/runnables/main_loop.py
+index 020249afcc1fb362cfa172b9a8aec314b13e381d..a04e019f8a85b75ea519e42e148b640e1e9fdc89 100644
+--- a/amber/src/main/python/core/runnables/main_loop.py
++++ b/amber/src/main/python/core/runnables/main_loop.py
+@@ -94,6 +94,10 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         self._loop_start_id: str = ""
+         # Registration, callbacks and forwarding share one duplicate gate.
+         self._seen_state_messages: set[str] = set()
++        # A new worker is constructed on each iteration. Depth determines
++        # visibility; the originating block determines binding identity.
++        self._block_bindings: dict[str, State] = {}
++        self._block_depths: dict[str, int] = {}
+         self._publication_envelope = (0, "")
+         self._loop_state_consumed: bool = False
+         # Unstamped legacy body publications may precede the loop's own frame.
+@@ -208,7 +212,8 @@ class MainLoop(StoppableQueueBlockingRunnable):
+             # Only a committed checkpoint is visible; an empty table can
+             # remain if the first write failed before its Iceberg commit.
+             for row in doc.get():
+-                executor.variables.update(State.from_tuple(row))
++                assigned, executor.checkpoint_candidates = State.read_checkpoint(row)
++                executor.variables.update(assigned)
+ 
+     def _clear_loop_checkpoint(self) -> None:
+         if self._loop_start_id:
+@@ -241,11 +246,15 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         # The materialized input belongs to the producer. Leave its original
+         # rows and message IDs available to every fresh inner worker.
+         uri = self._checkpoint_uri(self._loop_start_id)
++        assigned = set(executor.assigned_names)
+         if DocumentFactory.document_exists(uri):
+             doc, _ = DocumentFactory.open_document(uri)
++            for row in doc.get():
++                earlier, _ = State.read_checkpoint(row)
++                assigned.update(earlier)
+         else:
+             doc = DocumentFactory.create_document(uri, State.SCHEMA)
+-        doc.replace_one(executor.variables.to_tuple(0))
++        doc.replace_one(executor.variables.checkpoint(assigned))
+         coordinator_interface.jump_to_operator_region(
+             JumpToOperatorRegionRequest(OperatorIdentity(self._loop_start_id))
+         )
+@@ -403,9 +412,36 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         input_snapshot: Optional[State] = None,
+     ) -> None:
+         self._switch_context()
++        if self.context.exception_manager.has_exception():
++            return
+         output_state = self.context.state_processing_manager.get_output_state()
++        executor = self.context.executor_manager.executor
++        if input_snapshot is not None and output_loop_start_id and not isinstance(
++            executor, (LoopStartOperator, LoopEndOperator)
++        ):
++            # A handler can introduce names. The runtime forwards accepted input
++            # bindings once even when the handler returns no state of its own.
++            self._emit_and_save_state(
++                input_snapshot, output_loop_counter, output_loop_start_id, input_message_id
++            )
++            if self.context.exception_manager.has_exception():
++                return
++            if output_state is not None:
++                try:
++                    output_state = State({
++                        name: value for name, value in output_state.items()
++                        if name not in input_snapshot or not State.equal_value(value, input_snapshot[name])
++                    })
++                except (TypeError, ValueError) as err:
++                    self.context.report_exception(err)
++                    self._check_exception()
++                    return
++                if not output_state:
++                    return
++            input_snapshot = None
++            output_loop_counter, output_loop_start_id = self._publication_envelope
++            input_message_id = None
+         if output_state is not None:
+-            executor = self.context.executor_manager.executor
+             message_id = input_message_id
+             if isinstance(executor, LoopStartOperator):
+                 output_loop_start_id = get_logical_op_id(self.context.worker_id)
+@@ -425,6 +461,12 @@ class MainLoop(StoppableQueueBlockingRunnable):
+                     self.context.report_exception(err)
+                     self._check_exception()
+                     return
++            if output_loop_start_id and not isinstance(executor, (LoopStartOperator, LoopEndOperator)):
++                fresh = self._accept_bindings(output_state, output_loop_start_id, output_loop_counter)
++                if fresh is None or (output_state and not fresh):
++                    return
++                output_state = fresh
++                executor.state = self._visible_bindings()
+             self._emit_and_save_state(
+                 output_state, output_loop_counter, output_loop_start_id, message_id
+             )
+@@ -513,10 +555,36 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         self.process_input_tuple()
+         self._check_and_process_control()
+ 
++    def _accept_bindings(self, incoming: State, block: str, depth: int) -> Optional[State]:
++        bindings = self._block_bindings.setdefault(block, State())
++        self._block_depths[block] = depth
++        fresh = State()
++        try:
++            for name, value in incoming.items():
++                if name not in bindings:
++                    fresh[name] = value
++                elif not State.equal_value(bindings[name], value):
++                    raise ValueError(
++                        f"Binding conflict for {name} in {block}: "
++                        f"{bindings[name]!r} versus {value!r}"
++                    )
++        except (TypeError, ValueError) as err:
++            self.context.report_exception(err)
++            self._check_exception()
++            return None
++        bindings.update(deepcopy(fresh))
++        return fresh
++
++    def _visible_bindings(self) -> State:
++        visible = State()
++        for block in sorted(self._block_depths, key=self._block_depths.get, reverse=True):
++            visible.update(self._block_bindings[block])
++        return deepcopy(visible)
++
+     def _process_state_frame(self, frame: StateFrame) -> None:
+         # Empty identifiers are legacy/unissued frames. New publications always
+         # receive an identifier before either network or storage fan-out.
+-        if frame.message_id:
++        if frame.message_id and (not frame.loop_start_id or not frame.frame):
+             if frame.message_id in self._seen_state_messages:
+                 self._check_and_process_control()
+                 return
+@@ -525,6 +593,20 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         in_counter = frame.loop_counter
+         executor = self.context.executor_manager.executor
+ 
++        if frame.loop_start_id and state:
++            fresh = self._accept_bindings(state, frame.loop_start_id, in_counter)
++            if fresh is None:
++                return
++            if not fresh:
++                self._check_and_process_control()
++                return
++            # Two workers may accept different subsets of one publication.
++            # A narrowed frame must not reuse the full publication's ID.
++            message_id = frame.message_id if len(fresh) == len(state) else str(uuid4())
++            state = fresh
++            frame = StateFrame(state, loop_counter=in_counter, loop_start_id=frame.loop_start_id,
++                               message_id=message_id)
++
+         if isinstance(executor, LoopEndOperator) and in_counter > 0:
+             executor.inherit_state(state, in_counter)
+             self._enclosing_frames.append(frame)
+@@ -559,6 +641,8 @@ class MainLoop(StoppableQueueBlockingRunnable):
+         ):
+             self._publication_envelope = (in_counter, frame.loop_start_id)
+         self.context.state_processing_manager.current_input_state = state
++        if frame.loop_start_id:
++            self.context.state_processing_manager.visible_input_state = self._visible_bindings()
+         self.process_input_state(
+             output_loop_counter=in_counter,
+             output_loop_start_id=frame.loop_start_id,
+diff --git a/amber/src/test/python/core/architecture/packaging/test_state_materialization_e2e.py b/amber/src/test/python/core/architecture/packaging/test_state_materialization_e2e.py
+index 2a8106a1b9f424a2c78608f732c66ee3ae8574f8..89369dffe794cbe31d22500403e7851b60e8919a 100644
+--- a/amber/src/test/python/core/architecture/packaging/test_state_materialization_e2e.py
++++ b/amber/src/test/python/core/architecture/packaging/test_state_materialization_e2e.py
+@@ -286,7 +286,7 @@ def test_state_table_persists_across_writer_close():
+     assert rows[0][State.LOOP_START_ID] == "inner-loop"
+ 
+ 
+-@pytest.mark.parametrize("updates", [(2, 3), (3, 2)])
++@pytest.mark.parametrize("updates", [(2, 2), (3, 3)])
+ def test_inner_iteration_replays_enclosing_updates_in_input_order(updates, monkeypatch):
+     base = _fresh_base_uri()
+     DocumentFactory.create_document(VFSURIFactory.result_uri(base), State.SCHEMA)
+@@ -343,7 +343,7 @@ def test_inner_iteration_replays_enclosing_updates_in_input_order(updates, monke
+         worker._loop_start_id = "inner"
+         worker.context.loop_start_port_uris = {"inner": base}
+         monkeypatch.setattr(worker._async_rpc_client, "coordinator_stub", Mock())
+-        end = Mock(variables=State({"i": i}))
++        end = Mock(variables=State({"i": i}), assigned_names={"i"})
+         end.condition.return_value = again
+         try:
+             worker._finish_loop_iteration(end)
+diff --git a/amber/src/test/python/core/runnables/test_main_loop.py b/amber/src/test/python/core/runnables/test_main_loop.py
+index 09e4ed2a18abfaf0470e2865c295c2fc1fd7f3c0..cd26c2c1e080678cb2696f88c13da4949b13ad6d 100644
+--- a/amber/src/test/python/core/runnables/test_main_loop.py
++++ b/amber/src/test/python/core/runnables/test_main_loop.py
+@@ -172,10 +172,13 @@ class TestMainLoop:
+ 
+         monkeypatch.setattr(main_loop, "_switch_context", callback)
+         main_loop._process_state_frame(StateFrame(State({"K": 2}), 0, "loop", "A"))
+-        assert bool(sent[0].message_id)
+-        assert (sent[0].message_id != "A") is (change_value is not None)
++        assert sent[0].message_id == "A"
+         assert sent[0].loop_start_id == "loop"
+         assert saved == [sent[0].message_id]
++        if change_value is not None:
++            assert "Binding conflict for K" in str(main_loop.context.exception_manager.exc_info[1])
++            assert sent[0].frame == {"K": 2}
++            return
+ 
+         monkeypatch.setattr(main_loop, "_switch_context", lambda: None)
+         manager.current_output_state = State({"score": 0.4})
+@@ -221,15 +224,16 @@ class TestMainLoop:
+         original.message_id = "A"
+         changed = StateFrame(State({"K": 3}), loop_start_id="loop")
+         changed.message_id = "B"
+-        equal_but_distinct = StateFrame(State({"K": 3}), loop_start_id="loop")
++        equal_but_distinct = StateFrame(State({"K": 2}), loop_start_id="loop")
+         equal_but_distinct.message_id = "C"
+ 
+-        for frame in (original, changed, original, equal_but_distinct):
++        for frame in (original, original, equal_but_distinct, changed):
+             main_loop._process_state_frame(frame)
+ 
+-        assert len(processed) == 3
++        assert len(processed) == 1
++        assert "Binding conflict for K" in str(main_loop.context.exception_manager.exc_info[1])
+         assert main_loop.context.state_processing_manager.current_input_state == {
+-            "K": 3
++            "K": 2
+         }
+ 
+     def test_stopping_example_accumulates_late_score_for_two_iterations(
+@@ -270,7 +274,11 @@ class TestMainLoop:
+                 assert executor.variables["K"] == iteration + 3
+                 assert executor.condition() is (iteration == 0)
+                 assert emitted == []  # own-block variables stop at LoopEnd
+-                variables = State(executor.variables)
++                row = executor.variables.checkpoint(executor.assigned_names)
++                assigned, candidates = State.read_checkpoint(row)
++                variables = State({k: v for k, v in candidates.items() if k in ("K", "prev")})
++                variables.update(assigned)
++                assert "score" not in variables
+             finally:
+                 runtime.stop()
+ 
+@@ -2838,9 +2846,9 @@ class TestMainLoop:
+             "core.runnables.main_loop.DocumentFactory.document_exists",
+             lambda _: continuing,
+         )
+-        for k in (2, 3):
++        for name, k in (("K", 2), ("ratio", 3)):
+             main_loop._process_state_frame(
+-                StateFrame(State({"K": k}), 2, "outer-loop", str(k))
++                StateFrame(State({name: k}), 2, "outer-loop", str(k))
+             )
+         main_loop._process_state_frame(
+             StateFrame(State({"i": 1}), 0, "inner", "inner-iteration")
+@@ -2850,12 +2858,12 @@ class TestMainLoop:
+         assert reset_calls == ([] if continuing else [True])
+         assert emitted == [
+             (State({"K": 2}), 1, "outer-loop"),
+-            (State({"K": 3}), 1, "outer-loop"),
++            (State({"ratio": 3}), 1, "outer-loop"),
+         ]
+         executor.attach_loop_table(Table([Tuple({"v": 1})]))
+         executor.run_update("seen = K", State({"i": 1}))
+-        assert executor.eval_condition("seen == K == 3")
+-        assert executor.variables == {"i": 1, "seen": 3}
++        assert executor.eval_condition("seen == K == 2 and ratio == 3")
++        assert executor.variables == {"i": 1, "seen": 2}
+ 
+     def test_loopend_consume_defers_operator_to_end_channel(
+         self, main_loop, monkeypatch
+@@ -2994,7 +3002,7 @@ class TestMainLoop:
+         main_loop._jump_to_loop_start(executor, self._stub_coordinator([]))
+ 
+         writes = [event for event in events if event[0] == "replace_one"]
+-        assert writes == [("replace_one", State({"i": 8}).to_tuple(0))]
++        assert writes == [("replace_one", State({"i": 8}).checkpoint({"i"}))]
+ 
+     def test_loopend_accumulates_unstamped_publication_without_changing_jump_target(
+         self, main_loop, monkeypatch
+@@ -3091,6 +3099,7 @@ class TestMainLoop:
+         # state is forwarded AND the loop's own stamped state is consumed. The
+         # completion guard must stay silent, in either arrival order.
+         for body_state_first in (True, False):
++            main_loop._block_bindings.clear()
+             executor = _FalseLoopEnd()
+             main_loop.context.executor_manager.executor = executor
+             main_loop._forwarded_unstamped_state = False
+@@ -3456,6 +3465,7 @@ class TestMainLoop:
+ 
+         class _Executor:
+             variables = State({"i": 7})
++            assigned_names = {"i"}
+ 
+         main_loop._jump_to_loop_start(_Executor(), _Coordinator())
+ 
+@@ -3465,7 +3475,7 @@ class TestMainLoop:
+             VFSURIFactory.loop_checkpoint_uri("vfs:///wf/port/outer", "outer-loop"),
+             State.SCHEMA,
+         )
+-        assert write == ("replace_one", State({"i": 7}).to_tuple(0))
++        assert write == ("replace_one", State({"i": 7}).checkpoint({"i"}))
+         assert jump[0] == "jump"
+         assert jump[1].target_operator_id.id == "outer-loop"
+ 
+@@ -3684,6 +3694,7 @@ class TestMainLoop:
+         assert not isinstance(
+             main_loop.context.executor_manager.executor, LoopStartOperator
+         ), "a body operator is not a LoopStart, so no id stamping happens here"
++        main_loop.context.executor_manager.executor = EmptyOnFinishOperator()
+         emitted, _, _ = self._capture_state_emit(main_loop, monkeypatch)
+         monkeypatch.setattr(
+             main_loop.context.state_processing_manager,

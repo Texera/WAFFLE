@@ -10,5 +10,10 @@
   "planning": {
     "revision": "ddc04792511838d06f982ced01641e7d06ce6524",
     "tree": "a97fec19c596eef1f1a87d4412ba95245f17732d"
+  },
+  "runtime-scoped": {
+    "tree": "99f59a7ef5f610547fec8b679bee5173b8a14cea",
+    "patch": "patches/scoped-bindings.patch",
+    "patch_sha256": "9f7ca3b4d59cad26d80fefba4f7ded75e45859daf0277e31e4220834c11fc163"
   }
 }

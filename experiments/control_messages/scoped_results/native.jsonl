@@ -1,0 +1,7 @@
+{"execution_id":367581528,"outcome":"completed","rows":[{"calls":1,"ratio":0.0,"first":1,"rows_seen":2,"K":2}],"layout":"LR","case":"equal"}
+{"execution_id":367581529,"outcome":"completed","rows":[{"calls":1,"ratio":0.0,"first":1,"rows_seen":2,"K":2}],"layout":"RL","case":"equal"}
+{"execution_id":367581530,"outcome":"completed","rows":[{"calls":2,"ratio":0.8,"first":1,"rows_seen":2,"K":2}],"layout":"LR","case":"independent"}
+{"execution_id":367581531,"outcome":"completed","rows":[{"calls":2,"ratio":0.8,"first":0,"rows_seen":2,"K":2}],"layout":"RL","case":"independent"}
+{"execution_id":367581532,"outcome":"conflict","error":"Binding conflict for K in LoopStart-operator-4e307707-f16f-5c50-b839-9c940e33dd69: 2 versus 3","worker":"Worker:WF367581532-merge-main-0","layout":"LR","case":"conflict"}
+{"execution_id":367581533,"outcome":"conflict","error":"Binding conflict for K in LoopStart-operator-4e307707-f16f-5c50-b839-9c940e33dd69: 3 versus 2","worker":"Worker:WF367581533-merge-main-0","layout":"RL","case":"conflict"}
+{"execution_id":367581534,"outcome":"completed","rows":[{"calls":1,"ratio":0.0,"first":1,"rows_seen":2,"K":2},{"calls":1,"ratio":0.0,"first":1,"rows_seen":2,"K":3}],"layout":"LR","case":"new-iteration"}

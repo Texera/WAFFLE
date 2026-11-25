@@ -1,0 +1,26 @@
+{
+  "original_tree": "7cb877ac9ebdc8d829ba59b1fb1e20a870e4a344",
+  "scoped_tree": "99f59a7ef5f610547fec8b679bee5173b8a14cea",
+  "patch_sha256": "9f7ca3b4d59cad26d80fefba4f7ded75e45859daf0277e31e4220834c11fc163",
+  "workflow_suite": "ScopedMergeSpec",
+  "execution_mode": "MATERIALIZED",
+  "host_count": 1,
+  "workers_per_operator": 1,
+  "concurrent_regions": 1,
+  "python": "3.12.10",
+  "java": "17.0.14",
+  "execution": "ScalaTest with the compiled JVM classes of the original tree. JVM sources are identical in the two trees. Python workers launched from the scoped tree.",
+  "results_sha256": {
+    "conflict-LR.json": "c869f0481099ae55702d4b1ac6233eb89509732edf442ede25f8b1def714597a",
+    "conflict-RL.json": "fd92964e0d176058829248996a65c6a3afc7f0be9db769bd077d44534c8f924d",
+    "equal-LR.json": "6d5f455bf50e6f074da87f0accd43ec76f633f7af89c4da2bd21eef54a6aca23",
+    "equal-RL.json": "6d5f455bf50e6f074da87f0accd43ec76f633f7af89c4da2bd21eef54a6aca23",
+    "independent-LR.json": "d250d619412d797c4dd10395a5c07a597f2c3bcd282fa25a42ec05877a6dc27e",
+    "independent-RL.json": "c03e92738f168096b34ee3acadd59a1f777509476abcbaa57ea95ac517189636",
+    "manifest.json": "105122ec955490f0394e3fb22640ccb66fe032c36fac941b077789b6216ca7e8",
+    "native.jsonl": "3b9757e76c93c2bcb1b348855f9f2871de2c6c514f8a521e3770d946c0324af7",
+    "new-iteration.json": "fe4e1bc5ed6842205ffaa48555f9d4d6c8bef7ec81b13c315e47e12d5c9caea3",
+    "receiver-original.json": "ea7828a86f9d38c2f395e8463829adb9cd6fe087da5bf5aff2225907379a502c",
+    "receiver.json": "7b0de37f08e90f8b6fd3c01a36d24441564da87e360566179ceae098f02e0bc3"
+  }
+}

@@ -1,0 +1,769 @@
+[
+  {
+    "case": "equal",
+    "events": [
+      {
+        "id": "left",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "right",
+        "path": "right",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      }
+    ]
+  },
+  {
+    "case": "equal",
+    "events": [
+      {
+        "id": "right",
+        "path": "right",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "left",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      }
+    ]
+  },
+  {
+    "case": "independent",
+    "events": [
+      {
+        "id": "left",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "right",
+        "path": "right",
+        "incoming": {
+          "ratio": 0.8
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "visible": {
+          "K": 2,
+          "ratio": 0.8
+        },
+        "error": null
+      }
+    ]
+  },
+  {
+    "case": "independent",
+    "events": [
+      {
+        "id": "right",
+        "path": "right",
+        "incoming": {
+          "ratio": 0.8
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "ratio": 0.8
+          }
+        ],
+        "forwarded": [
+          {
+            "ratio": 0.8
+          }
+        ],
+        "visible": {
+          "ratio": 0.8
+        },
+        "error": null
+      },
+      {
+        "id": "left",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "ratio": 0.8
+          },
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "ratio": 0.8
+          },
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "ratio": 0.8,
+          "K": 2
+        },
+        "error": null
+      }
+    ]
+  },
+  {
+    "case": "conflict",
+    "events": [
+      {
+        "id": "left",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "right",
+        "path": "right",
+        "incoming": {
+          "K": 3
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": "Binding conflict for K in loop: 2 versus 3"
+      }
+    ]
+  },
+  {
+    "case": "conflict",
+    "events": [
+      {
+        "id": "right",
+        "path": "right",
+        "incoming": {
+          "K": 3
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 3
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 3
+          }
+        ],
+        "visible": {
+          "K": 3
+        },
+        "error": null
+      },
+      {
+        "id": "left",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 3
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 3
+          }
+        ],
+        "visible": {
+          "K": 3
+        },
+        "error": "Binding conflict for K in loop: 3 versus 2"
+      }
+    ]
+  },
+  {
+    "case": "figure13",
+    "events": [
+      {
+        "id": "start",
+        "path": "right",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "start",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "filter",
+        "path": "left",
+        "incoming": {
+          "ratio": 0.8
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "visible": {
+          "K": 2,
+          "ratio": 0.8
+        },
+        "error": null
+      }
+    ]
+  },
+  {
+    "case": "figure13",
+    "events": [
+      {
+        "id": "start",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "start",
+        "path": "right",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "filter",
+        "path": "left",
+        "incoming": {
+          "ratio": 0.8
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "visible": {
+          "K": 2,
+          "ratio": 0.8
+        },
+        "error": null
+      }
+    ]
+  },
+  {
+    "case": "figure13",
+    "events": [
+      {
+        "id": "start",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "filter",
+        "path": "left",
+        "incoming": {
+          "ratio": 0.8
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "visible": {
+          "K": 2,
+          "ratio": 0.8
+        },
+        "error": null
+      },
+      {
+        "id": "start",
+        "path": "right",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "visible": {
+          "K": 2,
+          "ratio": 0.8
+        },
+        "error": null
+      }
+    ]
+  },
+  {
+    "case": "nested",
+    "events": [
+      {
+        "id": "outer1",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "outer",
+        "depth": 1,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "inner",
+        "path": "right",
+        "incoming": {
+          "K": 3
+        },
+        "block": "inner",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          },
+          {
+            "K": 3
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          },
+          {
+            "K": 3
+          }
+        ],
+        "visible": {
+          "K": 3
+        },
+        "error": null
+      },
+      {
+        "id": "outer2",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "outer",
+        "depth": 1,
+        "callbacks": [
+          {
+            "K": 2
+          },
+          {
+            "K": 3
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          },
+          {
+            "K": 3
+          }
+        ],
+        "visible": {
+          "K": 3
+        },
+        "error": null
+      }
+    ]
+  },
+  {
+    "case": "partial",
+    "events": [
+      {
+        "id": "a",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "b",
+        "path": "right",
+        "incoming": {
+          "K": 2,
+          "ratio": 0.8
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          },
+          {
+            "ratio": 0.8
+          }
+        ],
+        "visible": {
+          "K": 2,
+          "ratio": 0.8
+        },
+        "error": null
+      }
+    ]
+  },
+  {
+    "case": "atomic",
+    "events": [
+      {
+        "id": "a",
+        "path": "left",
+        "incoming": {
+          "K": 2
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": null
+      },
+      {
+        "id": "b",
+        "path": "right",
+        "incoming": {
+          "ratio": 0.8,
+          "K": 3
+        },
+        "block": "loop",
+        "depth": 0,
+        "callbacks": [
+          {
+            "K": 2
+          }
+        ],
+        "forwarded": [
+          {
+            "K": 2
+          }
+        ],
+        "visible": {
+          "K": 2
+        },
+        "error": "Binding conflict for K in loop: 2 versus 3"
+      }
+    ]
+  }
+]

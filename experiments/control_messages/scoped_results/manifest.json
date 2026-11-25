@@ -1,0 +1,88 @@
+{
+  "runs": [
+    {
+      "case": "equal",
+      "layout": "LR",
+      "workflow": "equal-LR.json",
+      "fields": [
+        "K",
+        "ratio",
+        "calls",
+        "first",
+        "rows_seen"
+      ]
+    },
+    {
+      "case": "equal",
+      "layout": "RL",
+      "workflow": "equal-RL.json",
+      "fields": [
+        "K",
+        "ratio",
+        "calls",
+        "first",
+        "rows_seen"
+      ]
+    },
+    {
+      "case": "independent",
+      "layout": "LR",
+      "workflow": "independent-LR.json",
+      "fields": [
+        "K",
+        "ratio",
+        "calls",
+        "first",
+        "rows_seen"
+      ]
+    },
+    {
+      "case": "independent",
+      "layout": "RL",
+      "workflow": "independent-RL.json",
+      "fields": [
+        "K",
+        "ratio",
+        "calls",
+        "first",
+        "rows_seen"
+      ]
+    },
+    {
+      "case": "conflict",
+      "layout": "LR",
+      "workflow": "conflict-LR.json",
+      "fields": [
+        "K",
+        "ratio",
+        "calls",
+        "first",
+        "rows_seen"
+      ]
+    },
+    {
+      "case": "conflict",
+      "layout": "RL",
+      "workflow": "conflict-RL.json",
+      "fields": [
+        "K",
+        "ratio",
+        "calls",
+        "first",
+        "rows_seen"
+      ]
+    },
+    {
+      "case": "new-iteration",
+      "layout": "LR",
+      "workflow": "new-iteration.json",
+      "fields": [
+        "K",
+        "ratio",
+        "calls",
+        "first",
+        "rows_seen"
+      ]
+    }
+  ]
+}

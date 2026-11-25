@@ -1,6 +1,27 @@
 # Control messages at a merge
 
-This experiment tests §5.2 on the runtime tree pinned in the public WAFFLE artifact (`a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6`, tree `7cb877ac9ebdc8d829ba59b1fb1e20a870e4a344`). The branch-count sweep follows the diamond workflow used by Ni and Li for [on-demand state retrieval](https://doi.org/10.1145/3736733.3736743). Here the outcome is the value retained at a merge.
+## Scoped bindings in Figure 23
+
+Two branches publish the same name and value, different names, or conflicting values. Each pair is tried in both branch layouts. The observer counts callbacks for the tested names and returns its visible bindings and data row count. The common `seed` travels before the branch publications and is excluded from the callback count. For a conflict, the harness records the merge worker's error from the coordinator and ends the run. A timeout, an error from another operator, or a completed conflicting workflow fails the check. A seventh workflow publishes equal K values on both branches for two iterations, changing K from 2 to 3 between iterations.
+
+The [full workflow files and results](scoped_results/) and [controlled receiver driver](scoped_orders.py) use the additional worker patch pinned as `runtime-scoped`. The driver sends frames to two registered input channels on fresh native workers. It records each callback, the state handed to the output manager, the visible map after each delivery, and any error. It covers the six paired orders, the three FIFO orders in the paper's branching example, nesting, a partial duplicate, and a conflict in a mixed frame. The Figure 23 baseline uses the original runtime. Its raw receiver observations are preserved alongside the scoped observations.
+
+Prepare a separate engine with `python tools/prepare_engine.py runtime-scoped work/scoped-runtime` from the repository root. Configure it as described in [loop execution](../loop_execution/README.md). From this experiment directory run:
+
+```sh
+python prepare_scoped.py RUN
+python ../loop_execution/run_native.py RUN --repo /path/to/scoped-runtime --scoped-merge
+python scoped_orders.py --repo /path/to/scoped-runtime RUN/receiver.json
+python scoped_orders.py --original --repo /path/to/original-runtime RUN/receiver-original.json
+python verify_scoped.py RUN
+python plot_scoped.py merge.pdf --results RUN
+```
+
+To check the archived results, run `python verify_scoped.py`. The earlier branch-width sweep below and the multiworker binding study use the original runtime pinned as `runtime`.
+
+## Earlier message-ID experiment
+
+This historical experiment measures duplicate message IDs on the original runtime (`a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6`, tree `7cb877ac9ebdc8d829ba59b1fb1e20a870e4a344`). The branch-count sweep follows the diamond workflow used by Ni and Li for [on-demand state retrieval](https://doi.org/10.1145/3736733.3736743).
 
 **Full workflows.** The native compiler and execution service run eight one-iteration workflows with one worker per operator and materialized edges. LoopStart sends one publication of K=2 and one data row along 1, 2, 4, or 8 paths to the same merge input port. At each width we run one workflow with only those copies and a second in which the first branch also publishes K=3 after its input ends. The merge counts calls to its control-message handler and returns its final K and input row count. All eight outputs are in `results/native.jsonl`. Each configuration was run once for correctness.
 
