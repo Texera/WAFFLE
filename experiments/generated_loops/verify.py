@@ -1,6 +1,7 @@
 """Recheck the compact operator and coordinator evidence using only stdlib."""
 import argparse
 import csv
+import gzip
 from collections import Counter
 from functools import cache
 import json
@@ -81,6 +82,13 @@ def verify_operators(record):
                            depth_histogram=Counter(map(len, shapes)), families=families,
                            graph_hash_list_sha256=digest(hashes), ordered_trace_sha256=digest(traces))
     require(json.loads(json.dumps(expected_record)) == record, "operator evidence differs from oracle")
+    with gzip.open(HERE / "ordered-traces.jsonl.gz", "rt", encoding="utf-8") as stream:
+        recorded = [json.loads(line) for line in stream]
+    require(digest(recorded) == record["ordered_trace_sha256"], "packaged graph/input traces")
+    with gzip.open(HERE / "compiled.jsonl.gz", "rt", encoding="utf-8") as stream:
+        compiled = [json.loads(line) for line in stream]
+    require(compiled == [{"index": i, "graph_sha256": h} for i, h in enumerate(hashes)],
+            "packaged native compilation records")
     return hashes
 
 

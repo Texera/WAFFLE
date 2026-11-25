@@ -53,7 +53,7 @@ python verify.py --capture "$PACKAGE"
 
 The recorded runs took place on November 23–24, 2026 (Pacific), using Windows 11, JBR 17.0.14, Python 3.12.10, pandas 2.2.3, and PyArrow 21.0.0. The first sbt invocation compiled IDs 0 through 1,999 and executed the five native cases. Three subsequent runs compiled IDs 2,000–2,799, 2,800–4,679 and 4,680–16,103. The verifier checks for missing or overlapping compilations and compares all graph hashes. The native adapter uses the existing Amber integration-test harness and reads the PostgreSQL-backed Iceberg results after completion.
 
-Fresh packages contain the expanded workflows, compiler records and engine log. Published digests use SHA-256 over canonical UTF-8 JSON with sorted keys and compact separators. The committed evidence comprises the [operator counts and trace digest](operators.json) and [native compilation digest and sink rows](native.json).
+Fresh packages contain the expanded workflows, compiler records and engine log. Published digests use SHA-256 over canonical UTF-8 JSON with sorted keys and compact separators. The [native compilation records](compiled.jsonl.gz) contain the index and graph SHA-256 from each of the four successful batches. Their ordered graph hashes reproduce the digest in [native.json](native.json), which also holds the coordinator sink rows. The [ordered operator traces](ordered-traces.jsonl.gz) expand the digest recorded in [operators.json](operators.json). Each line is a JSON array containing the graph index, fixture name and ordered `(K, score)` rows. We reconstructed these deterministic rows with the independent oracle and verified the full sequence against the original operator run’s digest.
 
 ### Matched stopping-threshold comparison
 
@@ -66,4 +66,4 @@ python experiments/generated_loops/stopping_sensitivity.py . "$RUNTIME" sensitiv
 python experiments/generated_loops/plot.py
 ```
 
-The plotting command reads the [recorded measurements](stopping_sensitivity.csv). The two panels distinguish targets met on the first visit from targets met at any visit.
+The plotting command reads the [recorded measurements](stopping_sensitivity.csv). Each input panel shows how many graphs met the target on the first visit and how many reached it by the last visit.

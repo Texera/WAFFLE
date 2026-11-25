@@ -10,6 +10,7 @@ from graphlib import TopologicalSorter
 from pathlib import Path
 
 ARCHIVE_SHA = "d8fd2f7cc1b95647326eed1bfdb4493c49b58f896bd43f997928ad476e6f402a"
+PROJECTED_SHA = "6450d44dd226f2e98734b276efd90f48c44ff29d293b72483816204ce42d09a5"
 HERE = Path(__file__).resolve().parent
 
 
@@ -82,7 +83,8 @@ def analyze(plan):
 
 
 def sample(archive):
-    if hashlib.file_digest(archive, "sha256").hexdigest() != ARCHIVE_SHA:
+    checksum = hashlib.file_digest(archive, "sha256").hexdigest()
+    if checksum not in (ARCHIVE_SHA, PROJECTED_SHA):
         raise ValueError("Unexpected 6K-Set archive")
     archive.seek(0)
     groups = defaultdict(list)
@@ -98,7 +100,8 @@ def sample(archive):
             if record:
                 fingerprint, *details = record
                 group = multiple if status == "multiple named boundaries" else groups
-                group[fingerprint].append((digest(member.name), *details))
+                member_hash = Path(member.name).stem if checksum == PROJECTED_SHA else digest(member.name)
+                group[fingerprint].append((member_hash, *details))
     originals = json.loads((HERE / "reference_pairs.json").read_text())
     pairs = {(label(x["start"]), label(x["end"])) for x in originals}
     rows = []

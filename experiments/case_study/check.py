@@ -65,5 +65,28 @@ def check(root):
     (root/'comparison.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
     print(json.dumps(result,indent=2));return int(result['matched']!=result['total'])
 
-if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('package',type=Path);a=p.parse_args();raise SystemExit(check(a.package))
+def check_translations(case_root):
+    reference = case_root / "results"
+    for folder, suffix in (("n8n_results", "-n8n.json"), ("rapidminer_results", ".rmp")):
+        directory = case_root / folder
+        comparison = json.loads((directory / "comparison.json").read_text(encoding="utf-8"))
+        assert [r["case"] for r in comparison] == list(range(9, 17))
+        for row in comparison:
+            n = row["case"]
+            result = json.loads((directory / f"{n:02}-run.json").read_text(encoding="utf-8"))
+            compare(expected_rows(reference, n), result["rows"])
+            assert row["status"] == "match" and row["rows"] == len(result["rows"])
+            assert result["iterations"] == row["iterations"] == {9: 4, 11: 13}.get(n, 5)
+            graph = directory / f"{n:02}{suffix}"
+            recorded_hash = result.get("workflow_sha256") or row["process_sha256"]
+            assert hashlib.sha256(graph.read_bytes()).hexdigest() == recorded_hash
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("package", type=Path)
+    parser.add_argument("--translations", type=Path, help="case-study directory with the two external translations")
+    args = parser.parse_args()
+    if args.translations:
+        check_translations(args.translations)
+    raise SystemExit(check(args.package))

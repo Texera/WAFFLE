@@ -12,7 +12,9 @@ The census found 41 distinct pairs of normalized boundary labels. The original e
 
 The [multi-boundary inventory](multiple.csv) supplies the other 397 fingerprints. The [boundary-count histogram](../../../figures/published-loop-boundaries.pdf) groups the 1,198 plans by their number of labeled starts plus ends. The [single-pair census](plans.csv) records fingerprints, boundary labels and side-link counts. Archive member names are represented by hashes. The old 500-structure sample is retained in [sample.csv](sample.csv) with its original eight-example coverage flag. The [reference pairs](reference_pairs.json) identify the [original eight](../sources.json) and the [targeted recursive example](../recursive/source.json). Label normalization retains port suffixes and deprecated labels and treats “TableRow” as “Table Row”.
 
-To reproduce from the [pinned archive](https://raw.githubusercontent.com/Texera/Chowder/e054e86a6a239b15783b8884e675a5f43a36f38d/experiments/workflows/6k_set/plans_json.tar.gz), run:
+The [bundled topology archive](topologies.tar.gz) retains all 6,191 graphs, including isolated operators and directed port connections. The projection replaces file names with their hashes and assigns integer IDs to operators within a plan. It keeps the operator labels and the flag for omitted source XML used by the census. To rebuild it from the upstream release, run `python project_archive.py plans_json.tar.gz topologies.tar.gz` with a new destination. The upstream release includes its [license](https://github.com/Texera/Chowder/blob/e054e86a6a239b15783b8884e675a5f43a36f38d/LICENSE) and [notice](https://github.com/Texera/Chowder/blob/e054e86a6a239b15783b8884e675a5f43a36f38d/NOTICE).
+
+Use `python analyze.py topologies.tar.gz replay` for the offline census. To reproduce from the [pinned archive](https://raw.githubusercontent.com/Texera/Chowder/e054e86a6a239b15783b8884e675a5f43a36f38d/experiments/workflows/6k_set/plans_json.tar.gz), run:
 
 ```sh
 python analyze.py plans_json.tar.gz replay

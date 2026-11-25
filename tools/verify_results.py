@@ -29,12 +29,25 @@ def main():
         temp = Path(folder)
         case = ROOT / 'experiments/case_study'
         shutil.copytree(case / 'results', temp / 'cases')
-        run(case / 'check.py', temp / 'cases')
+        run(case / 'check.py', temp / 'cases', '--translations', case)
         summary = read(temp / 'cases/comparison.json')
         assert summary['matched'] == summary['total'] == 8
         assert sum(r['rows'] for r in summary['cases']) == 241
         assert summary == read(case / 'results/comparison.json')
-        print('Case study: 8/8 matches; 241 output rows verified')
+        print('Case study: all three translations matched the reference in eight cases (241 rows)')
+        census = case / 'published_loops'
+        archive = census / 'topologies.tar.gz'
+        run(census / 'analyze.py', archive, temp / 'census')
+        for name in ('plans.csv', 'multiple.csv', 'summary.json'):
+            assert (temp / 'census' / name).read_text(encoding='utf-8') == (census / name).read_text(encoding='utf-8')
+        catalogs = case / 'public_catalogs'
+        print(run(catalogs / 'verify_snapshot.py', catalogs / 'plans', catalogs / 'snapshot').strip())
+        topologies = ROOT / 'experiments/control_messages/topologies'
+        assert json.loads(run(topologies / 'analyze.py', archive)) == read(topologies / 'results.json')
+        print('Archive census and reconvergence bins reproduced from all 6,191 bundled topologies.')
+        policies = ROOT / 'experiments/loop_policies'
+        for script in ('evidence.py', 'native_controls/verify.py', 'supplied_policies/check_policies.py'):
+            print(run(policies / script).strip())
         recursive = json.loads(run(case / 'recursive/verify.py'))
         assert [recursive[k]['rows'] for k in ('sum', 'fib')] == [10, 30]
         print('Published recursive workflow: four systems matched all 40 rows')

@@ -9,13 +9,13 @@ Experimental scripts, data, recorded results, and figure generation for the WAFF
 | §7.2: public catalogs | [public_catalogs](experiments/case_study/public_catalogs) | Source inventories and verified structural loop evidence from three comparison systems |
 | §7.2: generated loop computations | [generated_loops](experiments/generated_loops) | 16,104 graphs on three inputs each, with every visited score and output row checked |
 | Supplemental K-means loop rules | [loop_policies](experiments/loop_policies) | Four control rules on four inputs across four engines, with fixed-range and score-threshold comparisons |
-| §7.3: create and adapt loops | [user_study](experiments/user_study) | Proposed protocol only; no participant results |
+| §7.3: create and adapt loops | [user_study](experiments/user_study) | Protocol, starters, fallbacks and author dry runs. Participant responses are held separately. |
 | §7.4: control-variable delivery and binding | [control_messages](experiments/control_messages) | Eight merge workflows, 1,023 arrival orders under two policies, and 378 first-tuple bindings in 18 native runs with up to 32 workers |
 | §§7.5–7.6: global (X) versus modular (Y) planning | [xy_planning](experiments/xy_planning) | 3,600 measured plans on the original six workflows, extended tests up to 100 operators with increased branching and 164 with longer filter chains; all completed pairs attain the same verified minimum |
 | §§7.7–7.8: loop versus explicit body copies | [loop_execution](experiments/loop_execution) | 84 native executions, including 14 warm-ups; seven settings up to 20,000 tuples; separate graph-construction checks through 131,072 candidates; all outputs checked |
 | Scheduling supplement | [scheduling_oracle](experiments/scheduling_oracle) | Independent scheduling model |
 
-The user-study protocol is included, but no participant measurements have been collected here. Source data, workflow definitions, raw outputs, checks, and plotting code for the other experiments are included.
+The [Section 7 data index](SECTION7-DATA.md) maps each subsection, figure and table to the files used for it. The archive contains the automated experiment data. The user-study directory contains study materials and author dry runs.
 
 ## Check the saved results
 
@@ -32,7 +32,7 @@ python tools/verify_results.py
 python tools/make_figures.py
 ```
 
-The checker compares every case-study output, checks the merge-worker traces, validates all 72 loop-versus-copies records, and rechecks all 3,600 planning results with an independent oracle. It uses temporary directories so saved evidence is not overwritten. Generated figures are written to [figures/](figures/). Section 7 follows published chart types from the group: bars for counts and task comparisons and lines for scaling or ordered measurements ([Pasta, Figs. 16–17 and 20](https://doi.org/10.1145/3698832)). Execution times use box-and-whisker plots ([Amber, Figs. 10–11](https://www.vldb.org/pvldb/vol13/p740-kumar.pdf#page=10)). The WAFFLE boxes use quartiles and the full observed range of five runs.
+The checker rebuilds the published-plan counts, compares the four systems’ saved outputs and policy traces, checks generated graphs and worker observations, validates both execution-time batches, and rechecks planner results. It uses temporary directories so saved evidence is not overwritten. Generated figures are written to [figures/](figures/). Section 7 follows published chart types from the group: bars for counts and task comparisons and lines for scaling or ordered measurements ([Pasta, Figs. 16–17 and 20](https://doi.org/10.1145/3698832)). Execution times use box-and-whisker plots ([Amber, Figs. 10–11](https://www.vldb.org/pvldb/vol13/p740-kumar.pdf#page=10)). The WAFFLE boxes use quartiles and the full observed range of five runs.
 
 ## Run new measurements
 
