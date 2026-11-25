@@ -1,0 +1,42 @@
+{
+  "runtime": "runtime-scoped",
+  "scoped_tree": "99f59a7ef5f610547fec8b679bee5173b8a14cea",
+  "scoped_patch_sha256": "9f7ca3b4d59cad26d80fefba4f7ded75e45859daf0277e31e4220834c11fc163",
+  "jvm_source_tree": "7cb877ac9ebdc8d829ba59b1fb1e20a870e4a344",
+  "artifact_revision_before_run": "5df18b792ddadffb11bb49920cc1158c9e89c68b",
+  "suite": "MultiworkerBindingSpec",
+  "host_count": 1,
+  "execution_mode": "MATERIALIZED",
+  "concurrent_regions": 1,
+  "rows_per_iteration": 4096,
+  "K_by_iteration": [
+    2,
+    3
+  ],
+  "filter_worker_counts": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "repetitions_per_count": 3,
+  "java": "17.0.14",
+  "python": "3.12.10",
+  "launch": "ScalaTest with cached JVM classes from runtime (JVM sources identical) and Python workers launched from runtime-scoped. The native Filter probe reads its descriptor and received K on entry to its first tuple callback.",
+  "harness_sha256": {
+    "prepare_binding.py": "8e02aa95b376d357e1a7df935e1711277f943ee247211c0e3705d114c49ca055",
+    "MultiworkerBindingSpec.scala": "95fac9140051a5a9f7f6472234057b495427254de5f7170ea2d5a57086f9bf1a",
+    "verify_binding.py": "2fabf32302404395557fe6b36fde3b4d13181312cb3d45991580f87eb7626bf3"
+  },
+  "file_sha256": {
+    "standard/manifest.json": "081e9885b6f1e5c8ce76a46a4ef7394da8c49507fde6ee5c9a85f1ce508e548d",
+    "standard/native.jsonl": "1794a784aa24b599a518e657d15f1c71e89aee8d56da057db4b62168a59c61c3",
+    "standard/workflow.json": "079326bfb53cf941e64142c6bbc25b6d1ad87013bc11f061321bbb499c8549b7",
+    "summary.csv": "3551954e7981c42beacfdc4774911f07c3b4dcade242ca00a6bd3273ed77c3b3",
+    "wide/manifest.json": "01a2b4cb564cbdf2d2a34deb40152f3fbf75316cbe741ecf218ba0c246953fa5",
+    "wide/native.jsonl": "b4b4655965cc9dad933edbeef7e7053fd9b9d10ca741cedae3b361c07ff9ab72",
+    "wide/workflow.json": "079326bfb53cf941e64142c6bbc25b6d1ad87013bc11f061321bbb499c8549b7"
+  }
+}

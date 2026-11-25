@@ -1,0 +1,29 @@
+{
+  "rows": 4096,
+  "runs": [
+    {
+      "workers": 16,
+      "repeat": 0
+    },
+    {
+      "workers": 32,
+      "repeat": 0
+    },
+    {
+      "workers": 16,
+      "repeat": 1
+    },
+    {
+      "workers": 32,
+      "repeat": 1
+    },
+    {
+      "workers": 16,
+      "repeat": 2
+    },
+    {
+      "workers": 32,
+      "repeat": 2
+    }
+  ]
+}

@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 from verify_binding import RESULTS, check
 
 
-def observations():
-    check(RESULTS)
-    records = [json.loads(line) for line in (RESULTS / "native.jsonl").read_text().splitlines()]
+def observations(results=RESULTS):
+    check(results)
+    records = [json.loads(line) for line in (results / "native.jsonl").read_text().splitlines()]
     profiles = []
     for run in records:
         if run["workers"] != 8:
@@ -31,6 +31,9 @@ def observations():
 
 def draw(output):
     observations_by_worker = observations()
+    scoped_results = RESULTS.parent / "binding_scoped_results" / "standard"
+    if observations(scoped_results) != observations_by_worker:
+        raise ValueError("Figure 24 requires matching eight-worker profiles on both runtimes")
     workers = sorted(range(8), key=lambda w: observations_by_worker[w, 2][0])
     with plt.rc_context({"font.family": "DejaVu Serif", "font.size": 8, "pdf.fonttype": 42}):
         fig, ax = plt.subplots(figsize=(3.39, 1.52))

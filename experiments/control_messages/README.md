@@ -17,7 +17,7 @@ python verify_scoped.py RUN
 python plot_scoped.py merge.pdf --results RUN
 ```
 
-To check the archived results, run `python verify_scoped.py`. The earlier branch-width sweep below and the multiworker binding study use the original runtime pinned as `runtime`.
+To check the archived results, run `python verify_scoped.py`. The earlier branch-width sweep below uses the original runtime. The binding experiment at the end of this page compares the original and write-once runtimes.
 
 ## Earlier message-ID experiment
 
@@ -49,6 +49,8 @@ The harness compiles the ordinary Filter graph and verifies that its descriptor 
 
 The original [12 runs](binding_results/) contain 90 first-tuple observations. The [six additional runs](binding_wide_results/) contain 96 observations at 16 workers and 192 at 32 workers. All 378 bindings matched the expected K, and each run returned the expected 8,187 pairs of K and x. Both batches use the same workflow, native test harness, runtime tree, and inputs. The saved records include all first-tuple observations and all filtered output rows. The checker requires every worker index in both iterations and every expected output row, retaining duplicate counts. The number of machines and competing updates from multiple branches are separate experimental dimensions.
 
+We repeated the full sweep on the write-once runtime using the same workflow, manifests, Filter probe, and inputs. All 378 first-tuple bindings matched the iteration's expected K, including 192 at 32 workers. Each of the 18 runs produced the exact expected 8,187 output rows. Figure 24 shows the same eight-worker first inputs and outcomes on both runtimes. The [write-once records](binding_scoped_results/) include each worker's first tuple and every output row, a [summary by worker count](binding_scoped_results/summary.csv), and the [runtime trees and file hashes](binding_scoped_results/provenance.json).
+
 ```sh
 python prepare_binding.py BINDING_RUN
 python ../loop_execution/run_native.py BINDING_RUN --repo /path/to/runtime --binding
@@ -58,4 +60,4 @@ python ../loop_execution/run_native.py WIDE_RUN --repo /path/to/runtime --bindin
 python verify_binding.py WIDE_RUN --wide
 ```
 
-Use `python verify_binding.py` and `python test_verify_binding.py` to check the saved binding records and the checker's rejection of incomplete or incorrect evidence. The setup and native runner options above also apply.
+Use `python verify_binding.py` and `python test_verify_binding.py` to check the saved binding records and the checker's rejection of incomplete or incorrect evidence. To reproduce the write-once repeat, run the same commands with fresh run directories and pass the prepared `runtime-scoped` checkout to both native invocations. Run `python verify_scoped_binding.py` to check the archived repeat against the original protocol, and `python plot_first_tuples.py` to regenerate Figure 24 and check agreement across all six eight-worker runs.

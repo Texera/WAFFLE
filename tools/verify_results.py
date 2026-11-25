@@ -60,6 +60,7 @@ def main():
         print(run(ROOT / 'experiments/control_messages/verify_binding.py').strip())
         print(run(ROOT / 'experiments/control_messages/verify_binding.py',
                   ROOT / 'experiments/control_messages/binding_wide_results', '--wide').strip())
+        print(run(ROOT / 'experiments/control_messages/verify_scoped_binding.py').strip())
         run(ROOT / 'experiments/control_messages/topologies/loop_paths.py', '--check')
         execution = ROOT / 'experiments/loop_execution'
         size_file = temp / 'size.csv'
