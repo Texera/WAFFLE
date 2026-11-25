@@ -37,26 +37,27 @@ def traces():
 def draw(output):
     runs = traces()
     with plt.rc_context({"font.family": "DejaVu Serif", "font.size": 8, "pdf.fonttype": 42}):
-        fig, axes = plt.subplots(1, 4, sharey=True, figsize=(3.39, 1.52))
-        fig.subplots_adjust(left=0.215, right=0.99, bottom=0.27, top=0.70, wspace=0.15)
-        for ax, fixture, scale in zip(axes, FIXTURES, ("0.1×", "0.7×", "1×", "10×")):
-            for i, rule in enumerate(RULES):
-                visits = runs[rule, fixture]
-                for start, end in zip(visits, visits[1:]):
-                    curvature = 0.20 if end - start > 1 else 0
-                    ax.annotate("", xy=(end, i), xytext=(start, i),
-                                arrowprops={"arrowstyle": "-", "color": "#436579", "lw": 0.8,
-                                            "connectionstyle": f"arc3,rad={curvature}"})
-                ax.scatter(visits, [i] * len(visits), s=18, color="#185873", zorder=3)
-            ax.set(xlim=(1.65, 4.35), ylim=(3.43, -0.43), xticks=(2, 3, 4))
-            ax.set_yticks(range(4), ["Sweep", "Target", "Adaptive", "Gain"])
-            ax.set_title(scale, fontsize=8, pad=3)
-            ax.spines[:].set_visible(False)
-            ax.set_axisbelow(True)
-            ax.grid(axis="x", color="#d6dce0", linestyle=":", lw=0.5)
-            ax.tick_params(length=0, pad=2, labelsize=7.6)
-        fig.text(0.59, 0.95, "Input coordinate scale", ha="center", va="top", fontsize=8)
-        fig.text(0.59, 0.055, "Cluster count K", ha="center", fontsize=8)
+        fig, axes = plt.subplots(2, 2, figsize=(3.39, 2.27), sharex=True, sharey=True)
+        fig.subplots_adjust(left=0.14, right=0.98, bottom=0.16, top=0.78, hspace=0.46, wspace=0.14)
+        styles = (("#c1d9e2", ""), ("#397994", ""), ("white", "///"))
+        for ax, fixture, scale in zip(axes.flat, FIXTURES, ("0.1×", "0.7×", "1×", "10×")):
+            for visit, (color, hatch) in enumerate(styles):
+                positions, values = [], []
+                for i, rule in enumerate(RULES):
+                    sequence = runs[rule, fixture]
+                    if visit < len(sequence):
+                        positions.append(i + (visit - 1) * 0.24)
+                        values.append(sequence[visit])
+                ax.bar(positions, values, width=0.23, color=color, hatch=hatch,
+                       edgecolor="#284550", linewidth=0.5, label=f"Visit {visit + 1}")
+            ax.set(xlim=(-0.52, 3.52), ylim=(0, 4.35), yticks=(0, 2, 4))
+            ax.set_xticks(range(4), ["Sweep", "Target", "Adaptive", "Gain"], rotation=26, ha="right")
+            ax.set_title(f"Input scale {scale}", fontsize=7.4, pad=2)
+            ax.tick_params(length=2, pad=2, labelsize=6.8)
+            ax.spines[["right", "top"]].set_visible(False)
+        fig.supylabel("Cluster count K", x=0.01, fontsize=8)
+        fig.legend(*axes.flat[0].get_legend_handles_labels(), loc="upper center",
+                   frameon=False, ncol=3, fontsize=7.5, handlelength=1.1, columnspacing=1.2)
         fig.savefig(output, metadata={"CreationDate": None, "ModDate": None})
         plt.close(fig)
 

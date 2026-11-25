@@ -32,7 +32,7 @@ python tools/verify_results.py
 python tools/make_figures.py
 ```
 
-The checker compares every case-study output, checks the merge-worker traces, validates all 72 loop-versus-copies records, and rechecks all 3,600 planning results with an independent oracle. It uses temporary directories so saved evidence is not overwritten. Generated figures are written to [figures/](figures/).
+The checker compares every case-study output, checks the merge-worker traces, validates all 72 loop-versus-copies records, and rechecks all 3,600 planning results with an independent oracle. It uses temporary directories so saved evidence is not overwritten. Generated figures are written to [figures/](figures/). Section 7 follows published chart types from the group: bars for counts and task comparisons and lines for scaling or ordered measurements ([Pasta, Figs. 16–17 and 20](https://doi.org/10.1145/3698832)). Execution times use box-and-whisker plots ([Amber, Figs. 10–11](https://www.vldb.org/pvldb/vol13/p740-kumar.pdf#page=10)). The WAFFLE boxes use quartiles and the full observed range of five runs.
 
 ## Run new measurements
 

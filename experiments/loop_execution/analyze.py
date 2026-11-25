@@ -38,7 +38,7 @@ def plot(summary, measurements, output, additional=None):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
-    from matplotlib.lines import Line2D
+    from matplotlib.patches import Patch
 
     with measurements.open(encoding='utf-8') as source:
         runs = [r for r in csv.DictReader(source) if r['warmup'] == 'False']
@@ -52,8 +52,8 @@ def plot(summary, measurements, output, additional=None):
         runs.extend(extra_runs)
         summary = dict(summary, summary=summary['summary'] + extra['summary'])
     sizes = sorted({r['points'] for r in summary['summary']})
-    strategies = [('loop', -0.16, 'o', 'black', 'Loop'),
-                  ('copies', 0.16, 's', 'white', 'Explicit copies')]
+    strategies = [('loop', -0.20, '#86aebf', 'Loop'),
+                  ('copies', 0.20, 'white', 'Explicit copies')]
     plt.rcParams.update({'font.size': 8, 'pdf.fonttype': 42})
     widths = [len({r['iterations'] for r in summary['summary'] if r['points'] == n}) + 0.5 for n in sizes]
     fig, axes = plt.subplots(1, len(sizes), figsize=(3.4, 1.95), sharey=True, squeeze=False,
@@ -61,25 +61,26 @@ def plot(summary, measurements, output, additional=None):
     for ax, size in zip(axes[0], sizes):
         settings = sorted({r['iterations'] for r in summary['summary'] if r['points'] == size})
         for x, k_count in enumerate(settings):
-            for strategy, offset, marker, face, _ in strategies:
+            for strategy, offset, face, _ in strategies:
                 group = sorted((r for r in runs if r['case'] == f'n{size}-i{k_count}'
                                 and r['strategy'] == strategy), key=lambda r: int(r['pair']))
                 times = [int(r['execution_ns']) / 1e9 for r in group]
-                center = x + offset
-                for index, seconds in enumerate(times):
-                    pos = center + 0.046 * (index - (len(group) - 1) / 2)
-                    ax.plot(pos, seconds, marker, ms=2.7, mfc=face, mec='black', mew=0.55)
-                ax.hlines(statistics.median(times), center - 0.125, center + 0.125,
-                          color='black', linewidth=0.8)
+                if len(times) != 5:
+                    raise ValueError(f"Expected five execution times for {size}, {k_count}, {strategy}")
+                ax.boxplot(times, positions=[x + offset], widths=0.31, whis=(0, 100),
+                           manage_ticks=False, patch_artist=True, showfliers=False,
+                           boxprops=dict(facecolor=face, edgecolor='black', linewidth=0.8),
+                           medianprops=dict(color='black', linewidth=1.1),
+                           whiskerprops=dict(color='black', linewidth=0.7),
+                           capprops=dict(color='black', linewidth=0.7))
         ax.set(xlim=(-0.5, len(settings) - 0.5), xticks=range(len(settings)),
                xticklabels=settings)
         ax.set_title(f'{size:,} points', fontsize=8)
         ax.grid(axis='y', alpha=0.2)
     axes[0, 0].set_ylim(0, max(r['max_s'] for r in summary['summary']) * 1.08)
     axes[0, 0].set_ylabel('Workflow time (s)')
-    handles = [Line2D([], [], linestyle='none', marker=m, markersize=3.5,
-                      markeredgecolor='black', markerfacecolor=f, label=label)
-               for _, _, m, f, label in strategies]
+    handles = [Patch(facecolor=face, edgecolor='black', label=label)
+               for _, _, face, label in strategies]
     fig.legend(handles=handles, loc='upper center', ncol=2, frameon=False, fontsize=7)
     fig.text(0.56, 0.015, 'Number of K values', ha='center')
     fig.tight_layout(rect=(0, 0.075, 1, 0.87), pad=0.45, w_pad=0.6)

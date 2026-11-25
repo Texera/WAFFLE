@@ -33,28 +33,19 @@ def draw(output):
     observations_by_worker = observations()
     workers = sorted(range(8), key=lambda w: observations_by_worker[w, 2][0])
     with plt.rc_context({"font.family": "DejaVu Serif", "font.size": 8, "pdf.fonttype": 42}):
-        fig, ax = plt.subplots(figsize=(3.39, 1.42))
-        fig.subplots_adjust(left=0.21, right=0.98, bottom=0.36, top=0.78)
-        for i, worker in enumerate(workers):
-            ax.vlines(i, 0, 1, color="#e0e3e5", lw=0.7, zorder=0)
-            for y, k in enumerate((2, 3)):
-                _, kept = observations_by_worker[worker, k]
-                ax.plot(i, y, marker="o" if kept else "x", color="#195e7b" if kept else "#873f22",
-                        markersize=5.3, markeredgewidth=1.2, linestyle="none")
-        ax.set(xlim=(-0.45, 7.45), ylim=(1.4, -0.4))
-        ax.set_yticks([0, 1], ["K = 2", "K = 3"])
-        ax.set_xticks(range(8), [observations_by_worker[w, 2][0] for w in workers])
-        ax.spines[:].set_visible(False)
-        ax.tick_params(length=0, pad=2)
-        upper = ax.secondary_xaxis("top")
-        upper.set_xticks(range(8), workers)
-        upper.spines[:].set_visible(False)
-        upper.tick_params(length=0, pad=2)
-        ax.text(-0.06, 1.12, "Worker", ha="right", va="center", transform=ax.transAxes)
-        ax.text(-0.06, -0.14, "First x", ha="right", va="center", transform=ax.transAxes)
-        for marker, color, label in (("o", "#195e7b", "Passed"), ("x", "#873f22", "Filtered out")):
-            ax.plot([], [], marker=marker, color=color, markersize=5, linestyle="none", label=label)
-        fig.legend(loc="lower center", ncol=2, frameon=False, fontsize=7.6, handlelength=1, columnspacing=1.6)
+        fig, ax = plt.subplots(figsize=(3.39, 1.52))
+        fig.subplots_adjust(left=0.15, right=0.98, bottom=0.30, top=0.73)
+        ax.bar(range(len(workers)), [observations_by_worker[w, 2][0] for w in workers],
+               width=0.60, color="#9abdc9", edgecolor="#2a5364", linewidth=0.6)
+        for threshold, style in ((2, "--"), (3, ":")):
+            ax.axhline(threshold, linestyle=style, color="#20272b", linewidth=1.1,
+                       label=f"K = {threshold}")
+        ax.set(ylim=(0, 7.5), yticks=(0, 2, 3, 5, 7), xlabel="Worker", ylabel="First input x")
+        ax.set_xticks(range(len(workers)), workers)
+        ax.spines[["top", "right"]].set_visible(False)
+        ax.tick_params(length=2, pad=2)
+        fig.legend(*ax.get_legend_handles_labels(), loc="upper center", ncol=2,
+                   frameon=False, fontsize=7.5)
         fig.savefig(output, metadata={"CreationDate": None, "ModDate": None})
         plt.close(fig)
 
