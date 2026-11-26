@@ -28,6 +28,8 @@
 | KNIME required filter and sink connections | KNIME | 0/12 | 3/12 | 35 |
 | Twelfth prompt repeated | WAFFLE | 8/12 | 10/12 | 16 |
 | KNIME continue flag and updates after filtering | KNIME | 0/12 | 3/12 | 35 |
+| Thirteenth prompt repeated | WAFFLE | 7/12 | 9/12 | 17 |
+| KNIME pre-submission wiring check | KNIME | 1/12 | 3/12 | 34 |
 
 All eight successful WAFFLE sessions with the wiring diagram passed on the first submission. Compared with the solved example, both cooldown sessions recovered and both running-sum sessions continued to fail. The two successful KNIME sessions with the diagram solved a recurrence and a running sum. With the solved example, its two successes were on the advance and crossing tasks.
 
@@ -50,6 +52,8 @@ In condition eleven, the KNIME feedback filter read directly from the node assig
 In condition twelve, KNIME passed three sessions on both held-out inputs: cooldown (seed 397, submission two), running sum (811, submission three), and zigzag (811, submission three). All three passed the public example as well. The feedback input read directly from a filter and the sink read directly from the loop end in 15 of 35 submitted graphs, compared with 19 of 36 in condition eleven. This counts the two connections even when a graph contains errors elsewhere. Running sum and cooldown used both connections. The successful zigzag graph placed its filter before the state updates and returned the updated row to the feedback input. The primary score measures output sequences. With the same prompts and seeds, WAFFLE again solved the same ten sessions within three attempts and solved eight on the first attempt, compared with seven previously.
 
 In condition thirteen, KNIME passed three sessions on the public example and both held-out inputs: advance (seed 811, submission three), crossing (397, submission two), and cooldown (811, submission three). All three task–seed pairs differed from the three that passed in condition twelve. Advance returned the filtered row directly to the feedback port. Crossing updated x after filtering. Cooldown updated x and its counter. Both sent the updated row to the feedback port. The WAFFLE rerun passed the same ten sessions within budget and again passed eight on the first submission.
+
+In condition fourteen, KNIME passed cooldown (seed 811) on the first submission and crossing (811) and recurrence (397) on the third. It again solved three of twelve sessions within budget. Condition thirteen also solved cooldown on seed 811, along with advance on seed 811 and crossing on seed 397. The proportion of submitted graphs with all three requested wiring properties was 16/34 in condition fourteen and 12/35 in condition thirteen. The audit traces the feedback input through any intervening state updates to its filter, checks the filter directly reads the assignment to the tested column, checks both loop-end inputs refer to preceding nodes, and checks that the sink directly reads the loop end. Graphs can satisfy those checks and still have errors in other connections, formulas or output rows. With the same WAFFLE prompts and seeds, first-submission successes fell from eight to seven and successes within three from ten to nine. Cooldown on seed 397 exhausted the public-example budget.
 
 Reference workflows produced every expected trace in both engines (six tasks × two held-out inputs × two systems). A session that passed the public input stopped receiving repair feedback, even when its graph subsequently failed on a hidden input.
 
@@ -83,9 +87,11 @@ We froze condition twelve at commit `7617e51` before collecting its 24 fresh ses
 
 We froze condition thirteen at commit `1059a5c` before generating any graphs. We replaced the two KNIME instructions that had required all state updates before filtering and a direct edge from the filter to the loop end. The revised wording defines 1 as continue and 0 as stop. After filtering, a retained row may go directly to feedback or pass through state-update nodes. The filter still reads its flag setter and the sink still reads the loop end. The instruction gives no task formula or node index. WAFFLE received its condition-twelve prompts in fresh sessions.
 
+Condition fourteen was frozen at commit `a3821eb` before inference. Each KNIME prompt asked the agent to check the three wiring properties and correct errors before returning its graph. The text used the same wording for all six tasks and supplied no solution or indexes. The prompt retained the option to update state after the filter. The model submitted through the existing interface with the same feedback and attempt limit. WAFFLE repeated its thirteenth-condition prompts in fresh sessions.
+
 ### Reproduce the comparison
 
-From this directory, run `python evidence.py results` to verify the prompt hashes, all 312 sessions, their native held-out outputs, and the independently authored feasibility controls for each task in both systems. The recorded prompts are reconstructed from `protocol.py` and `worked_example.py`. The model responses, public-example errors, token usage, and submitted graphs are in `results/sessions.jsonl`. Each record in `results/native.jsonl` contains one engine's actual output for the graph and fixture identified by its hash. `results/outcomes.csv` gives one row per session. Two sessions per task are repeat measurements of the same task.
+From this directory, run `python evidence.py results` to verify the prompt hashes, all 336 sessions, their native held-out outputs, and the independently authored feasibility controls for each task in both systems. The recorded prompts are reconstructed from `protocol.py` and `worked_example.py`. The model responses, public-example errors, token usage, and submitted graphs are in `results/sessions.jsonl`. Each record in `results/native.jsonl` contains one engine's actual output for the graph and fixture identified by its hash. `results/outcomes.csv` gives one row per session. Two sessions per task are repeat measurements of the same task.
 
 The inference service used vLLM's four-bit W4A16 checkpoint of Qwen3.8-Flash-Next-Uncensored, served as `flash-next`, with thinking disabled. Sessions share no chat history. A new submission follows a public diagnostic within the same session. The interface accepts node connections and expressions, supplies native serialization, and bounds execution at eight iterations. WAFFLE has a fixed five-node pattern in this catalog. KNIME's recursive loop has separate collection and feedback inputs, and the agent can add formula and filter nodes. The worked example shows both wiring patterns explicitly. This is an interface-specific comparison on six numeric loop tasks.
 
@@ -105,6 +111,7 @@ python trials.py RUN/feedback --endpoint ENDPOINT --model MODEL --feedback-filte
 python trials.py RUN/flag-source --endpoint ENDPOINT --model MODEL --flag-source
 python trials.py RUN/required-connections --endpoint ENDPOINT --model MODEL --required-connections
 python trials.py RUN/filtered-updates --endpoint ENDPOINT --model MODEL --filtered-updates
+python trials.py RUN/wiring-check --endpoint ENDPOINT --model MODEL --wiring-check
 python native.py prepare RUN/native --trials RUN/trials
 python native.py prepare RUN/native-worked --trials RUN/worked
 python native.py prepare RUN/native-wiring --trials RUN/wiring
@@ -118,10 +125,11 @@ python native.py prepare RUN/native-feedback --trials RUN/feedback
 python native.py prepare RUN/native-flag-source --trials RUN/flag-source
 python native.py prepare RUN/native-required-connections --trials RUN/required-connections
 python native.py prepare RUN/native-filtered-updates --trials RUN/filtered-updates
+python native.py prepare RUN/native-wiring-check --trials RUN/wiring-check
 python controls.py RUN/controls
 ```
 
-Run the following two commands for each PACKAGE (`RUN/native`, `RUN/native-worked`, `RUN/native-wiring`, `RUN/native-timing`, `RUN/native-rules`, `RUN/native-ports`, `RUN/native-assignments`, `RUN/native-numbering`, `RUN/native-expressions`, `RUN/native-feedback`, `RUN/native-flag-source`, `RUN/native-required-connections`, `RUN/native-filtered-updates`, and `RUN/controls/engines`). The first uses portable KNIME Analytics Platform 5.5.3 on Windows. The second uses the existing native CaseExecutionSpec with the WAFFLE engine revision `a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6`. See the loop execution experiment for its Java, Python, sbt, and database prerequisites. Independent WAFFLE runs may be partitioned across manifests in separate subdirectories, retaining the graph identifiers and output rows.
+Run the following two commands for each PACKAGE (`RUN/native`, `RUN/native-worked`, `RUN/native-wiring`, `RUN/native-timing`, `RUN/native-rules`, `RUN/native-ports`, `RUN/native-assignments`, `RUN/native-numbering`, `RUN/native-expressions`, `RUN/native-feedback`, `RUN/native-flag-source`, `RUN/native-required-connections`, `RUN/native-filtered-updates`, `RUN/native-wiring-check`, and `RUN/controls/engines`). The first uses portable KNIME Analytics Platform 5.5.3 on Windows. The second uses the existing native CaseExecutionSpec with the WAFFLE engine revision `a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6`. See the loop execution experiment for its Java, Python, sbt, and database prerequisites. Independent WAFFLE runs may be partitioned across manifests in separate subdirectories, retaining the graph identifiers and output rows.
 
 ```text
 python native.py knime PACKAGE --runtime KNIME_DIRECTORY
@@ -129,4 +137,4 @@ python ../loop_execution/run_native.py PACKAGE --case-study --repo ENGINE_CHECKO
 python evidence.py YOUR_RESULTS --collect RUN
 ```
 
-Run the evidence command after all fourteen packages finish. The scoring program rejects missing engine outputs and fails if any reference workflow produces the wrong trace.
+Run the evidence command after all fifteen packages finish. The scoring program rejects missing engine outputs and fails if any reference workflow produces the wrong trace.
