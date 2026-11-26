@@ -6,6 +6,7 @@
 {"case":"knime-2769d7193af06e34","engine":"KNIME 5.5.3","exit":0,"rows":[[5.0,-1.0],[4.0,0.0],[4.0,1.0],[5.0,2.0]]}
 {"case":"knime-283765caca237057","engine":"KNIME 5.5.3","exit":0,"rows":[[3.0,-2.0]]}
 {"case":"knime-2b11e67f4e64ef7f","engine":"KNIME 5.5.3","exit":0,"rows":[]}
+{"case":"knime-2e087aa89c03a74f","engine":"KNIME 5.5.3","exit":0,"rows":[[3.0,-2.0]]}
 {"case":"knime-36e606656336fb4d","engine":"KNIME 5.5.3","exit":0,"rows":[]}
 {"case":"knime-38c8345bd1546ca3","engine":"KNIME 5.5.3","exit":0,"rows":[[1.0,5.0]]}
 {"case":"knime-3ed702d11f592dd8","engine":"KNIME 5.5.3","exit":0,"rows":[[4.0,2.0]]}
@@ -13,13 +14,17 @@
 {"case":"knime-54d94c07fad0b80f","engine":"KNIME 5.5.3","exit":0,"rows":[]}
 {"case":"knime-560716f3e6ad9d81","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,2.0],[1.0,2.0]]}
 {"case":"knime-59c01a18489e8a1b","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,2.0],[1.0,2.0]]}
+{"case":"knime-5b43ffb444512634","engine":"KNIME 5.5.3","exit":0,"rows":[[4.0,2.0]]}
 {"case":"knime-627690f237178cb0","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,3.0],[1.0,3.0],[3.0,3.0],[5.0,3.0]]}
 {"case":"knime-62b7b6053e4e3eb2","engine":"KNIME 5.5.3","exit":0,"rows":[[-2.0,3.0],[3.0,1.0],[1.0,4.0],[4.0,5.0]]}
 {"case":"knime-643722c17cf13c52","engine":"KNIME 5.5.3","exit":0,"rows":[[-2.0,3.0],[3.0,1.0],[1.0,4.0],[4.0,5.0]]}
 {"case":"knime-66f67c6e00b4eeb4","engine":"KNIME 5.5.3","exit":0,"rows":[[4.0,2.0]]}
+{"case":"knime-760fec814e477db8","engine":"KNIME 5.5.3","exit":0,"rows":[[1.0,-3.0],[3.0,0.0],[4.0,4.0],[5.0,9.0]]}
+{"case":"knime-7650bc5cf88bac29","engine":"KNIME 5.5.3","exit":0,"rows":[[3.0,5.0]]}
 {"case":"knime-829464951c754b47","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,-3.0],[0.0,-3.0],[1.0,-2.0],[2.0,0.0]]}
 {"case":"knime-847399c8b8d3625c","engine":"KNIME 5.5.3","exit":0,"rows":[[1.0,-3.0],[3.0,0.0],[4.0,4.0],[5.0,9.0]]}
 {"case":"knime-85ab6d637f576940","engine":"KNIME 5.5.3","exit":0,"rows":[[3.0,-2.0]]}
+{"case":"knime-885dde3b587e2b5c","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,2.0],[1.0,2.0],[3.0,2.0]]}
 {"case":"knime-8b26966690d97148","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,2.0],[1.0,2.0]]}
 {"case":"knime-92718dedfe249dd9","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,-3.0],[0.0,-3.0],[1.0,-2.0],[2.0,0.0]]}
 {"case":"knime-99d2c98bc32e51e1","engine":"KNIME 5.5.3","exit":0,"rows":[[-2.0,3.0],[3.0,1.0],[1.0,4.0],[4.0,5.0]]}
@@ -35,6 +40,7 @@
 {"case":"knime-d0f8e679a0232ec6","engine":"KNIME 5.5.3","exit":0,"rows":[[1.0,5.0]]}
 {"case":"knime-d6b733f2e38f989d","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,3.0],[1.0,3.0],[3.0,3.0],[5.0,3.0]]}
 {"case":"knime-d8171a4f01d2ec03","engine":"KNIME 5.5.3","exit":0,"rows":[[1.0,5.0]]}
+{"case":"knime-d9b91ebb2bc90ce4","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,3.0],[1.0,3.0],[3.0,3.0],[5.0,3.0]]}
 {"case":"knime-dcc26e70e81833d4","engine":"KNIME 5.5.3","exit":0,"rows":[[3.0,-2.0]]}
 {"case":"knime-e1b1cfd7412d3f4f","engine":"KNIME 5.5.3","exit":0,"rows":[[1.0,-3.0],[3.0,0.0],[4.0,4.0],[5.0,9.0]]}
 {"case":"knime-e66472e04f247920","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,2.0],[1.0,2.0]]}
@@ -119,6 +125,7 @@
 {"case":"waffle-77ac534b641c55d9","engine":"WAFFLE","execution_id":197455888,"rows":[[-3,2]]}
 {"case":"waffle-7888e003c3392e1d","engine":"WAFFLE","execution_id":629985608,"rows":[[-2,3],[3,1],[1,4],[4,5]]}
 {"case":"waffle-7b5a6d00ba881b7e","engine":"WAFFLE","execution_id":950717407,"rows":[[-3,2]]}
+{"case":"waffle-7cf04f32d86c7eed","engine":"WAFFLE","execution_id":214318334,"rows":[[1,-3],[3,0],[4,4],[5,9]]}
 {"case":"waffle-7e55b7050adbbd36","engine":"WAFFLE","execution_id":247625237,"rows":[[5,-1],[4,0],[4,1],[5,2]]}
 {"case":"waffle-7f7075323fb4978d","engine":"WAFFLE","execution_id":213478342,"rows":[[1,5]]}
 {"case":"waffle-7f746f5ffc0bcbc9","engine":"WAFFLE","execution_id":917955978,"rows":[[5,-1],[4,0],[4,1],[5,2]]}
@@ -194,6 +201,7 @@
 {"case":"waffle-e7ff0f07a794228d","engine":"WAFFLE","execution_id":130638325,"rows":[[-3,2]]}
 {"case":"waffle-e8b0eeb44db946cd","engine":"WAFFLE","execution_id":1024538770,"rows":[[4,2]]}
 {"case":"waffle-e96e83c0eeadf28c","engine":"WAFFLE","execution_id":247625234,"rows":[[-3,2]]}
+{"case":"waffle-ebeb74dad7197e0d","engine":"WAFFLE","execution_id":550750664,"rows":[[3,5]]}
 {"case":"waffle-ed716851089b2602","engine":"WAFFLE","execution_id":404222908,"rows":[[-3,2]]}
 {"case":"waffle-ee0b987089adf578","engine":"WAFFLE","execution_id":130638323,"rows":[[3,5]]}
 {"case":"waffle-ee0fb6bd55ccc886","engine":"WAFFLE","execution_id":1024538772,"rows":[[-3,2]]}
