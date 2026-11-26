@@ -88,7 +88,19 @@ KNIME_END_PORTS = (
 )
 
 
+WAFFLE_ASSIGNMENTS = (
+    "In every START assignment, write the initializer as a JSON string containing "
+    "an expression. This applies to numeric constants too. Store any temporary "
+    "value in a declared scratch field (i, u, v, or flag)."
+)
+
+
 def condition_prompt(system, task, condition):
+    if condition == "assignment_format":
+        previous = condition_prompt(system, task, "end_ports")
+        if system == "waffle":
+            return previous.replace("\n\nTask:", "\n" + WAFFLE_ASSIGNMENTS + "\n\nTask:")
+        return previous
     base = prompt(system, task)
     if condition == "documentation":
         return base
