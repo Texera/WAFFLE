@@ -119,6 +119,9 @@ if __name__ == "__main__":
         "--wiring-only", dest="condition", action="store_const", const="wiring_only"
     )
     parser.set_defaults(condition="documentation")
+    condition.add_argument(
+        "--wiring-timing", dest="condition", action="store_const", const="wiring_timing"
+    )
     parser.add_argument("--key-file", type=Path)
     args = parser.parse_args()
     token = (
