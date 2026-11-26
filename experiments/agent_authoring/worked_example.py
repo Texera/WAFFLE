@@ -79,23 +79,34 @@ GRAPH_RULE = {
 }
 
 
+KNIME_END_PORTS = (
+    "END has two independent inputs. Its first input (collection) determines which rows "
+    "appear in the output. An empty collection input adds no row for that iteration. "
+    "Its second input (feedback) supplies the next iteration. Empty feedback stops "
+    "the loop, including when the collection input has a row. The sink must read "
+    "directly from END to receive the collected rows."
+)
+
+
 def condition_prompt(system, task, condition):
     base = prompt(system, task)
     if condition == "documentation":
         return base
     if condition == "worked_example":
         extra = documentation(system)
-    elif condition in ("wiring_only", "wiring_timing", "wiring_rules"):
+    elif condition in ("wiring_only", "wiring_timing", "wiring_rules", "end_ports"):
         extra = (
             "\nWiring-only example (symbolic diagram). Arrows show connections. "
             "Question marks leave the task logic open. Choose every expression for the actual task.\n"
             + WIRING[system]
             + "\nSubmit a complete graph using the documented JSON node forms and indexes."
         )
-        if condition in ("wiring_timing", "wiring_rules"):
+        if condition in ("wiring_timing", "wiring_rules", "end_ports"):
             extra += "\nIteration semantics: " + TIMING[system]
-        if condition == "wiring_rules":
+        if condition in ("wiring_rules", "end_ports"):
             extra += "\nGraph rule: " + GRAPH_RULE[system]
+        if condition == "end_ports" and system == "knime":
+            extra += "\nLoop end and sink: " + KNIME_END_PORTS
     else:
         raise ValueError(f"Unknown prompt condition: {condition}")
     return base.replace("\n\nTask:", extra + "\n\nTask:")

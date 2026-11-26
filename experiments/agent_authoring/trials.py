@@ -126,6 +126,9 @@ if __name__ == "__main__":
     condition.add_argument(
         "--wiring-rules", dest="condition", action="store_const", const="wiring_rules"
     )
+    condition.add_argument(
+        "--end-ports", dest="condition", action="store_const", const="end_ports"
+    )
     args = parser.parse_args()
     token = (
         args.key_file.read_text().strip()
