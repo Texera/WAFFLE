@@ -105,7 +105,19 @@ EXPRESSION_STRINGS = (
 )
 
 
+FEEDBACK_FILTER = (
+    "On the feedback path, compute the continuation flag from the row after its state updates. "
+    "Pass that row through a filter that keeps it when the flag is true and drops it when "
+    "the flag is false. Connect the filtered output to END's feedback input."
+)
+
+
 def condition_prompt(system, task, condition):
+    if condition == "feedback_filter":
+        previous = condition_prompt(system, task, "expression_strings")
+        if system == "knime":
+            return previous.replace("\n\nTask:", "\n" + FEEDBACK_FILTER + "\n\nTask:")
+        return previous
     if condition == "expression_strings":
         previous = condition_prompt(system, task, "row_numbering")
         if system == "waffle":

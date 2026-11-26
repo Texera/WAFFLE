@@ -138,6 +138,9 @@ if __name__ == "__main__":
     condition.add_argument(
         "--expression-strings", dest="condition", action="store_const", const="expression_strings"
     )
+    condition.add_argument(
+        "--feedback-filter", dest="condition", action="store_const", const="feedback_filter"
+    )
     args = parser.parse_args()
     token = (
         args.key_file.read_text().strip()
