@@ -11,7 +11,13 @@ from graphs import preview
 from protocol import HIDDEN, PUBLIC, SEEDS, TASKS, TRIES, oracle
 from worked_example import condition_prompt
 
-CONDITIONS = ("documentation", "worked_example", "wiring_only", "wiring_timing")
+CONDITIONS = (
+    "documentation",
+    "worked_example",
+    "wiring_only",
+    "wiring_timing",
+    "wiring_rules",
+)
 
 
 def key_for(system, plan, data):
@@ -40,13 +46,13 @@ def collect(root, out):
     engine_dirs = [
         root / name for name in ("native", "native-worked", "controls/engines")
     ]
-    wiring = root / "native-wiring"
-    timing = root / "native-timing"
+    extensions = [
+        root / name for name in ("native-rules", "native-timing", "native-wiring")
+    ]
     # Retain the archived execution ID if an identical graph was run previously.
-    paths = (
-        sorted(timing.rglob("native.jsonl"))
-        + sorted(wiring.rglob("native.jsonl"))
-        + sorted(p for folder in engine_dirs for p in folder.rglob("native.jsonl"))
+    paths = [p for folder in extensions for p in sorted(folder.rglob("native.jsonl"))]
+    paths.extend(
+        sorted(p for folder in engine_dirs for p in folder.rglob("native.jsonl"))
     )
     for path in paths:
         for row in lines(path):
@@ -61,7 +67,7 @@ def collect(root, out):
                 execution_id=row["execution_id"],
                 rows=observed,
             )
-    for folder in [timing, wiring, *engine_dirs]:
+    for folder in [*extensions, *engine_dirs]:
         for path in folder.glob("knime-*/result.json"):
             row = json.loads(path.read_text())
             if row["exit"] != 0:
@@ -77,7 +83,7 @@ def collect(root, out):
                 rows=row["rows"],
             )
     for sub, condition in zip(
-        ("trials", "worked", "wiring", "timing"), CONDITIONS, strict=True
+        ("trials", "worked", "wiring", "timing", "rules"), CONDITIONS, strict=True
     ):
         for path in sorted((root / sub).glob("*.json")):
             row = json.loads(path.read_text(encoding="utf8"))
