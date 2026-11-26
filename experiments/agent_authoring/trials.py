@@ -135,6 +135,9 @@ if __name__ == "__main__":
     condition.add_argument(
         "--row-numbering", dest="condition", action="store_const", const="row_numbering"
     )
+    condition.add_argument(
+        "--expression-strings", dest="condition", action="store_const", const="expression_strings"
+    )
     args = parser.parse_args()
     token = (
         args.key_file.read_text().strip()

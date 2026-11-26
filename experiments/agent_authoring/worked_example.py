@@ -98,7 +98,19 @@ WAFFLE_ASSIGNMENTS = (
 ROW_NUMBERING = "The first row emitted is output row 1, even when the workflow counter starts at 0."
 
 
+EXPRESSION_STRINGS = (
+    "Supply the two EMIT output expressions as separate arguments, each a plain JSON string. "
+    "Supply the END continuation test as one plain JSON string. "
+    "Write these three strings directly in their argument positions, without enclosing them in arrays."
+)
+
+
 def condition_prompt(system, task, condition):
+    if condition == "expression_strings":
+        previous = condition_prompt(system, task, "row_numbering")
+        if system == "waffle":
+            return previous.replace("\n\nTask:", "\n" + EXPRESSION_STRINGS + "\n\nTask:")
+        return previous
     if condition == "row_numbering":
         previous = condition_prompt(system, task, "assignment_format")
         return previous.replace("\n\nTask:", "\n" + ROW_NUMBERING + "\n\nTask:")
