@@ -8,10 +8,10 @@ import json
 from pathlib import Path
 from controls import controls
 from graphs import preview
-from protocol import HIDDEN, PUBLIC, SEEDS, TASKS, TRIES, oracle, prompt
-from worked_example import documentation
+from protocol import HIDDEN, PUBLIC, SEEDS, TASKS, TRIES, oracle
+from worked_example import condition_prompt
 
-CONDITIONS = ("documentation", "worked_example")
+CONDITIONS = ("documentation", "worked_example", "wiring_only")
 
 
 def key_for(system, plan, data):
@@ -40,32 +40,40 @@ def collect(root, out):
     engine_dirs = [
         root / name for name in ("native", "native-worked", "controls/engines")
     ]
-    for path in sorted(
+    wiring = root / "native-wiring"
+    # Retain the archived execution ID if an identical graph was run previously.
+    paths = sorted(wiring.rglob("native.jsonl")) + sorted(
         p for folder in engine_dirs for p in folder.rglob("native.jsonl")
-    ):
+    )
+    for path in paths:
         for row in lines(path):
             if row.get("strategy") != "authored":
                 continue
+            observed = [[r["x"], r["y"]] for r in row["rows"]]
+            if row["case"] in checks and checks[row["case"]]["rows"] != observed:
+                raise ValueError(f"Repeated executions disagree for {row['case']}")
             checks[row["case"]] = dict(
                 case=row["case"],
                 engine="WAFFLE",
                 execution_id=row["execution_id"],
-                rows=[[r["x"], r["y"]] for r in row["rows"]],
+                rows=observed,
             )
-    for folder in engine_dirs:
+    for folder in [wiring, *engine_dirs]:
         for path in folder.glob("knime-*/result.json"):
             row = json.loads(path.read_text())
             if row["exit"] != 0:
                 raise ValueError(
                     f"Engine infrastructure or graph failure, inspect {path}"
                 )
+            if row["case"] in checks and checks[row["case"]]["rows"] != row["rows"]:
+                raise ValueError(f"Repeated executions disagree for {row['case']}")
             checks[row["case"]] = dict(
                 case=row["case"],
                 engine="KNIME 5.5.3",
                 exit=row["exit"],
                 rows=row["rows"],
             )
-    for sub, condition in zip(("trials", "worked"), CONDITIONS):
+    for sub, condition in zip(("trials", "worked", "wiring"), CONDITIONS, strict=True):
         for path in sorted((root / sub).glob("*.json")):
             row = json.loads(path.read_text(encoding="utf8"))
             sessions.append(dict(condition=condition, **row))
@@ -84,9 +92,7 @@ def score(path):
         identity = c, s, t, seed
         assert identity not in seen
         seen.add(identity)
-        text = prompt(s, t)
-        if c == "worked_example":
-            text = text.replace("\n\nTask:", documentation(s) + "\n\nTask:")
+        text = condition_prompt(s, t, c)
         assert hashlib.sha256(text.encode()).hexdigest() == session["prompt_hash"]
         attempts = session["attempts"]
         assert 1 <= len(attempts) <= TRIES and not any(
@@ -163,7 +169,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--collect",
         type=Path,
-        help="local run root containing trials, worked, native, native-worked and controls",
+        help="local root containing the three prompt and native run directories and feasibility controls",
     )
     args = parser.parse_args()
     if args.collect:
