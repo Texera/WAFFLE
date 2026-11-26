@@ -17,6 +17,7 @@ CONDITIONS = (
     "wiring_only",
     "wiring_timing",
     "wiring_rules",
+    "end_ports",
 )
 
 
@@ -47,7 +48,8 @@ def collect(root, out):
         root / name for name in ("native", "native-worked", "controls/engines")
     ]
     extensions = [
-        root / name for name in ("native-rules", "native-timing", "native-wiring")
+        root / name
+        for name in ("native-ports", "native-rules", "native-timing", "native-wiring")
     ]
     # Retain the archived execution ID if an identical graph was run previously.
     paths = [p for folder in extensions for p in sorted(folder.rglob("native.jsonl"))]
@@ -83,7 +85,9 @@ def collect(root, out):
                 rows=row["rows"],
             )
     for sub, condition in zip(
-        ("trials", "worked", "wiring", "timing", "rules"), CONDITIONS, strict=True
+        ("trials", "worked", "wiring", "timing", "rules", "ports"),
+        CONDITIONS,
+        strict=True,
     ):
         for path in sorted((root / sub).glob("*.json")):
             row = json.loads(path.read_text(encoding="utf8"))
@@ -174,6 +178,36 @@ def totals(observations):
     return groups
 
 
+def has_direct_sink(response):
+    """Check the sink edge independently of other graph validation errors."""
+    raw = response.strip()
+    if raw.startswith("```") and raw.endswith("```"):
+        raw = raw.partition("\n")[2][:-3].strip()
+    try:
+        nodes = json.loads(raw)
+    except json.JSONDecodeError:
+        return False
+    if not isinstance(nodes, list):
+        return False
+    sinks = [
+        i
+        for i, node in enumerate(nodes)
+        if isinstance(node, list) and node[:1] == ["sink"]
+    ]
+    if len(sinks) != 1:
+        return False
+    i = sinks[0]
+    if len(nodes[i]) != 2:
+        return False
+    source = nodes[i][1]
+    return (
+        type(source) is int
+        and 0 <= source < i
+        and isinstance(nodes[source], list)
+        and nodes[source][:1] == ["end"]
+    )
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("results", type=Path)
@@ -195,3 +229,14 @@ if __name__ == "__main__":
             writer.writerows(observations)
     for group, count in totals(observations).items():
         print(*group, dict(count))
+    sessions = lines(args.results / "sessions.jsonl")
+    for condition in ("wiring_rules", "end_ports"):
+        connections = [
+            has_direct_sink(a["text"])
+            for session in sessions
+            if session["system"] == "knime" and session["condition"] == condition
+            for a in session["attempts"]
+        ]
+        print(
+            f"{condition} KNIME direct sink: {sum(connections)}/{len(connections)} submissions"
+        )
