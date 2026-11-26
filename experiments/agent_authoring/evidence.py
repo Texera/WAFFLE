@@ -11,7 +11,7 @@ from graphs import preview
 from protocol import HIDDEN, PUBLIC, SEEDS, TASKS, TRIES, oracle
 from worked_example import condition_prompt
 
-CONDITIONS = ("documentation", "worked_example", "wiring_only")
+CONDITIONS = ("documentation", "worked_example", "wiring_only", "wiring_timing")
 
 
 def key_for(system, plan, data):
@@ -41,9 +41,12 @@ def collect(root, out):
         root / name for name in ("native", "native-worked", "controls/engines")
     ]
     wiring = root / "native-wiring"
+    timing = root / "native-timing"
     # Retain the archived execution ID if an identical graph was run previously.
-    paths = sorted(wiring.rglob("native.jsonl")) + sorted(
-        p for folder in engine_dirs for p in folder.rglob("native.jsonl")
+    paths = (
+        sorted(timing.rglob("native.jsonl"))
+        + sorted(wiring.rglob("native.jsonl"))
+        + sorted(p for folder in engine_dirs for p in folder.rglob("native.jsonl"))
     )
     for path in paths:
         for row in lines(path):
@@ -58,7 +61,7 @@ def collect(root, out):
                 execution_id=row["execution_id"],
                 rows=observed,
             )
-    for folder in [wiring, *engine_dirs]:
+    for folder in [timing, wiring, *engine_dirs]:
         for path in folder.glob("knime-*/result.json"):
             row = json.loads(path.read_text())
             if row["exit"] != 0:
@@ -73,7 +76,9 @@ def collect(root, out):
                 exit=row["exit"],
                 rows=row["rows"],
             )
-    for sub, condition in zip(("trials", "worked", "wiring"), CONDITIONS, strict=True):
+    for sub, condition in zip(
+        ("trials", "worked", "wiring", "timing"), CONDITIONS, strict=True
+    ):
         for path in sorted((root / sub).glob("*.json")):
             row = json.loads(path.read_text(encoding="utf8"))
             sessions.append(dict(condition=condition, **row))
@@ -169,7 +174,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--collect",
         type=Path,
-        help="local root containing the three prompt and native run directories and feasibility controls",
+        help="local root containing the prompt and native run directories and feasibility controls",
     )
     args = parser.parse_args()
     if args.collect:
