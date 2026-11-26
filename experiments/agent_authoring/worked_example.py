@@ -125,7 +125,27 @@ REQUIRED_CONNECTIONS = (
 )
 
 
+CONTINUE_FLAG = (
+    "The flag means continue. Set it to 1 to continue and 0 to stop, using the state "
+    "needed for that decision. The filter passes the row on 1 and drops it on 0."
+)
+
+FILTERED_UPDATES = (
+    "Every graph must include a feedback filter (keep). A retained row may go directly "
+    "to the loop end's feedback input or through state-update nodes first. Connect the "
+    "last node on that path to the feedback input. Connect the sink directly to the "
+    "loop end's output."
+)
+
+
 def condition_prompt(system, task, condition):
+    if condition == "filtered_updates":
+        previous = condition_prompt(system, task, "required_connections")
+        if system == "knime":
+            return previous.replace(FEEDBACK_FILTER, CONTINUE_FLAG).replace(
+                REQUIRED_CONNECTIONS, FILTERED_UPDATES
+            )
+        return previous
     if condition == "required_connections":
         previous = condition_prompt(system, task, "flag_source")
         if system == "knime":
