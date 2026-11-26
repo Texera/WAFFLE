@@ -19,12 +19,18 @@ def freeze(
     state_and_branch=False,
     literal_repeat=False,
     carry_keep=False,
+    cumulative_collect=False,
 ):
     folder.mkdir(parents=True, exist_ok=False)
     for system, control in task.controls().items():
         (folder / f"{system}-prompt.txt").write_text(
             task.prompt(
-                system, clarified, state_and_branch, literal_repeat, carry_keep
+                system,
+                clarified,
+                state_and_branch,
+                literal_repeat,
+                carry_keep,
+                cumulative_collect,
             ),
             encoding="utf8",
         )
@@ -166,6 +172,11 @@ if __name__ == "__main__":
     p.add_argument("--endpoint")
     p.add_argument("--model", default="flash-next")
     p.add_argument(
+        "--cumulative-collect",
+        action="store_true",
+        help="extend the fifth prompt with cumulative fields and KNIME collection columns",
+    )
+    p.add_argument(
         "--carry-keep",
         action="store_true",
         help="add state retention and keep-filter semantics to the literal and repetition condition",
@@ -189,7 +200,12 @@ if __name__ == "__main__":
     a = p.parse_args()
     if a.command == "freeze":
         freeze(
-            a.folder, a.clarified, a.state_and_branch, a.literal_repeat, a.carry_keep
+            a.folder,
+            a.clarified,
+            a.state_and_branch,
+            a.literal_repeat,
+            a.carry_keep,
+            a.cumulative_collect,
         )
     elif a.command == "sessions":
         sessions(a.folder, a.endpoint, a.model, a.key_file)

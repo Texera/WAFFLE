@@ -1,0 +1,71 @@
+{
+  "system": "knime",
+  "task": "karate_bfs",
+  "seed": 397,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "a95c50eda5347029fb2938eef277ef1324034355b2cb5b22fb2547a45e2c2669",
+  "attempts": [
+    {
+      "text": "[\n[\"input\"],\n[\"set\", 0, \"i\", \"0\"],\n[\"set\", 1, \"u\", \"y\"],\n[\"set\", 2, \"v\", \"neighbors(u)\"],\n[\"set\", 3, \"v\", \"difference(v, u)\"],\n[\"set\", 4, \"flag\", \"v != 0\"],\n[\"start\", 4],\n[\"set\", 5, \"i\", \"i + 1\"],\n[\"set\", 6, \"u\", \"union(u, v)\"],\n[\"set\", 7, \"v\", \"difference(neighbors(v), u)\"],\n[\"set\", 8, \"flag\", \"v != 0\"],\n[\"set\", 5, \"x\", \"i\"],\n[\"set\", 5, \"y\", \"difference(neighbors(difference(u, difference(u, v))), u)\"],\n[\"end\", 11, 9],\n[\"sink\", 12]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1102,
+        "total_tokens": 1317,
+        "completion_tokens": 215,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: set operations take column names; store an intermediate first."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"i\",\"0\"],\n[\"set\",1,\"u\",\"y\"],\n[\"set\",2,\"v\",\"neighbors(u)\"],\n[\"set\",3,\"v\",\"difference(v,u)\"],\n[\"set\",4,\"flag\",\"v != 0\"],\n[\"start\",4],\n[\"set\",5,\"i\",\"i + 1\"],\n[\"set\",6,\"u\",\"union(u,v)\"],\n[\"set\",7,\"v\",\"neighbors(v)\"],\n[\"set\",8,\"v\",\"difference(v,u)\"],\n[\"set\",9,\"flag\",\"v != 0\"],\n[\"set\",5,\"x\",\"i\"],\n[\"set\",10,\"y\",\"v\"],\n[\"end\",11,9],\n[\"sink\",12]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1350,
+        "total_tokens": 1523,
+        "completion_tokens": 173,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: sink must read the loop end."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"i\",\"0\"],\n[\"set\",1,\"u\",\"y\"],\n[\"set\",2,\"v\",\"neighbors(u)\"],\n[\"set\",3,\"v\",\"difference(v,u)\"],\n[\"set\",4,\"flag\",\"v != 0\"],\n[\"start\",4],\n[\"set\",5,\"i\",\"i + 1\"],\n[\"set\",6,\"u\",\"union(u,v)\"],\n[\"set\",7,\"v\",\"neighbors(v)\"],\n[\"set\",8,\"v\",\"difference(v,u)\"],\n[\"set\",9,\"flag\",\"v != 0\"],\n[\"set\",5,\"x\",\"i\"],\n[\"set\",10,\"y\",\"v\"],\n[\"end\",11,9],\n[\"sink\",12]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1552,
+        "total_tokens": 1725,
+        "completion_tokens": 173,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: sink must read the loop end."
+    }
+  ]
+}

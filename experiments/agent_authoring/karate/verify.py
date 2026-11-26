@@ -46,11 +46,19 @@ def verify():
         literal_repeat=True,
     )
     verify_sessions(RESULTS / "carry-keep", clarified=True, carry_keep=True)
+    verify_sessions(
+        RESULTS / "cumulative-collect", clarified=True, cumulative_collect=True
+    )
     print(f"All {len(controls)} native reference outputs match NetworkX.")
 
 
 def verify_sessions(
-    folder, clarified, state_and_branch=False, literal_repeat=False, carry_keep=False
+    folder,
+    clarified,
+    state_and_branch=False,
+    literal_repeat=False,
+    carry_keep=False,
+    cumulative_collect=False,
 ):
     expected = task.expected(task.PUBLIC_ROOT)
     outputs = json.loads((folder / "agent-outputs.json").read_text())
@@ -73,9 +81,23 @@ def verify_sessions(
         successful = 0
         prompt = (folder / f"{system}-prompt.txt").read_text(encoding="utf8")
         assert prompt == task.prompt(
-            system, clarified, state_and_branch, literal_repeat, carry_keep
+            system,
+            clarified,
+            state_and_branch,
+            literal_repeat,
+            carry_keep,
+            cumulative_collect,
         )
-        if carry_keep:
+        if cumulative_collect:
+            extra = task.CUMULATIVE_REMINDER
+            if system == "knime":
+                extra += " " + task.COLLECTION_REMINDER
+            previous = (RESULTS / "carry-keep" / f"{system}-prompt.txt").read_text(
+                encoding="utf8"
+            )
+            assert prompt.count(extra) == 1
+            assert prompt.replace(extra + "\n\n", "") == previous
+        elif carry_keep:
             assert prompt.replace(task.CARRY_KEEP_REMINDER[system] + "\n\n", "") == (
                 RESULTS / "literal-repeat" / f"{system}-prompt.txt"
             ).read_text(encoding="utf8")

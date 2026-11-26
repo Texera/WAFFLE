@@ -1,0 +1,71 @@
+{
+  "system": "waffle",
+  "task": "karate_bfs",
+  "seed": 811,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "53a149a99df7e20b6bc9416e88b8be0cfa55502b9f0b774e8c114d243b999866",
+  "attempts": [
+    {
+      "text": "[\n[\"input\"],\n[\"start\",0,[[\"frontier\",\"y\"],[\"visited\",\"y\"],[\"dist\",\"0\"]]],\n[\"emit\",1,\"dist\",\"frontier\"],\n[\"end\",2,[[\"frontier\",\"difference(neighbors(frontier), visited)\"],[\"visited\",\"union(visited, frontier)\"],[\"dist\",\"dist + 1\"]],\"frontier > 0\"],\n[\"sink\",3]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1007,
+        "total_tokens": 1095,
+        "completion_tokens": 88,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: unknown writable field frontier."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"start\",0,[[\"u\",\"y\"],[\"v\",\"y\"],[\"i\",\"0\"],[\"flag\",\"1\"]]],\n[\"emit\",1,\"i\",\"u\"],\n[\"end\",2,[[\"u\",\"difference(neighbors(u), v)\"],[\"v\",\"union(v, u)\"],[\"i\",\"i + 1\"],[\"flag\",\"u > 0\"]],\"flag\"],\n[\"sink\",3]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1122,
+        "total_tokens": 1212,
+        "completion_tokens": 90,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: set operations take column names; store an intermediate first."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"start\",0,[[\"u\",\"y\"],[\"v\",\"y\"],[\"i\",\"0\"],[\"flag\",\"1\"]]],\n[\"emit\",1,\"i\",\"u\"],\n[\"end\",2,[[\"u\",\"difference(neighbors(u), v)\"],[\"v\",\"union(v, u)\"],[\"i\",\"i + 1\"],[\"flag\",\"u > 0\"]],\"flag\"],\n[\"sink\",3]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1245,
+        "total_tokens": 1335,
+        "completion_tokens": 90,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: set operations take column names; store an intermediate first."
+    }
+  ]
+}

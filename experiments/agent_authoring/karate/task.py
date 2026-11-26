@@ -159,12 +159,27 @@ CARRY_KEEP_REMINDER = {
 }
 
 
+CUMULATIVE_REMINDER = (
+    "When a loop needs both a current value and a cumulative value, keep them in "
+    "separate declared fields. Initialize the cumulative field once. At each "
+    "update, combine its previous value with this iteration's contribution. Keep "
+    "the current value available for computations that use just this iteration."
+)
+
+COLLECTION_REMINDER = (
+    "The loop end collects x and y from the row on its collection input. To emit "
+    "values computed in scratch fields, assign those values to x and y on the "
+    "collection branch before the row reaches the loop end."
+)
+
+
 def prompt(
     system,
     clarified=False,
     state_and_branch=False,
     literal_repeat=False,
     carry_keep=False,
+    cumulative_collect=False,
 ):
     common = COMMON.replace(
         "No function calls.",
@@ -184,6 +199,7 @@ def prompt(
         "start vertex, n and goal are unused zeros. Other starts will be tested."
     )
     documentation = DOC[system]
+    carry_keep = carry_keep or cumulative_collect
     if clarified or state_and_branch or literal_repeat or carry_keep:
         documentation += "\n\n" + FORMAT_REMINDER
     if state_and_branch or literal_repeat or carry_keep:
@@ -192,6 +208,10 @@ def prompt(
         documentation += "\n\n" + LITERAL_REPEAT_REMINDER
     if carry_keep:
         documentation += "\n\n" + CARRY_KEEP_REMINDER[system]
+    if cumulative_collect:
+        documentation += "\n\n" + CUMULATIVE_REMINDER
+        if system == "knime":
+            documentation += " " + COLLECTION_REMINDER
     return "\n\n".join(
         (
             common,

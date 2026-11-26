@@ -1,0 +1,23 @@
+Return one JSON array. Each element is a native graph node in topological order, encoded as a positional array. References to earlier nodes are their integer indexes starting at zero. All graphs must include an input, loop, and sink. Input has ONE row with numeric columns x,y,n,goal and scratch columns i,u,v,flag initialized to zero. Each input can differ at execution. All arithmetic expressions are JSON strings written in a common restricted Python syntax: column names, integer constants, +, -, *, %, comparisons, and/or/not, and a if test else b. Use numeric 0/1 for flags. Three additional functions are available identically in both systems. A vertex set is a nonnegative integer mask, with bit v for vertex v; 0 is empty. neighbors(a) is the union of all immediate neighbors of members of a in the fixed undirected graph; union(a,b) and difference(a,b) are set union and a minus b. Each function argument must be an existing column name. Store intermediate results in declared columns. These functions perform no traversal and hold no state. The output is the complete ordered sequence of (x,y) pairs at the sink. A safety limit stops runaway loops after 8 iterations. Do not hardcode the example. The interface supplies serialization only. Return JSON without commentary.
+
+Node forms:
+["input"]
+["start",source,assignments] opens a WAFFLE loop. All input columns become named loop variables once. Then apply assignments once in order. An assignment list is zero or more [column,"expression"] pairs.
+["emit",start,"x expression","y expression"] emits one result row per iteration, using the current loop variables. Both expressions read the same state, and emitting does not modify it.
+["end",emit,assignments,"continue expression"] collects the emitted row, then applies assignments sequentially to loop variables and evaluates continue on the updated variables. True runs another iteration. In update and condition, out_x and out_y are also available for the row just emitted.
+["sink",end] exports all rows. Exactly one of each node in this catalog is required.
+
+Scratch fields: the four names are i, u, v, and flag. Use those exact names for temporary storage. An assignment can overwrite an existing column but cannot create a column or an alias. Set operations: each argument must be a bare column name inside the expression string. To use the result of another call or expression as an argument, first store that result in an existing column, then pass its name. Submission format: return one valid JSON array of node arrays. Double-quote strings, separate consecutive elements with commas, and close every array. Omit trailing commas, comments, Markdown fences, and text outside the array.
+
+Output and state: emit evaluates its two expressions using the current fields. The values written to the output row can differ from the values kept in those fields. Emitting a row leaves the stored fields unchanged. The end node's assignments determine the state carried into the next iteration.
+
+Integer literals written in an expression must be between -1000 and 1000 inclusive. Input fields and computed results may hold larger values. Define the loop body once in the graph. On each iteration the engine runs those same nodes again using the state carried forward. Repetition across iterations requires no additional copies of the body nodes.
+
+The start node initializes fields once. A field keeps its value across iterations until an assignment overwrites it. End-node assignments run in order. If a later assignment needs the value that a preceding assignment will overwrite, save it in a declared field before that assignment.
+
+When a loop needs both a current value and a cumulative value, keep them in separate declared fields. Initialize the cumulative field once. At each update, combine its previous value with this iteration's contribution. Keep the current value available for computations that use just this iteration.
+
+Task: On Zachary's karate club friendship graph (NetworkX vertices 0 through 33), traverse all reachable vertices in increasing unweighted shortest-path distance from the given start vertex. Emit one (distance, vertex-set mask) pair per nonempty layer, including the starting vertex at distance zero. Each vertex belongs in exactly one layer. The input x is zero, y holds the singleton mask of the chosen start vertex, n and goal are unused zeros. Other starts will be tested.
+
+Example input (x,y,n,goal): (0, 1, 0, 0)
+Required output: [[0, 1], [1, 2150252030], [2, 14411694592], [3, 617922560]]

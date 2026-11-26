@@ -1,0 +1,71 @@
+{
+  "system": "knime",
+  "task": "karate_bfs",
+  "seed": 811,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "a95c50eda5347029fb2938eef277ef1324034355b2cb5b22fb2547a45e2c2669",
+  "attempts": [
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"i\",\"0\"],\n[\"set\",1,\"v\",\"y\"],\n[\"set\",2,\"u\",\"neighbors(v)\"],\n[\"set\",3,\"u\",\"difference(u,v)\"],\n[\"set\",4,\"u\",\"difference(u,0)\"],\n[\"keep\",5,\"u\"],\n[\"set\",6,\"x\",\"i\"],\n[\"set\",7,\"y\",\"v\"],\n[\"end\",8,9],\n[\"sink\",10]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1102,
+        "total_tokens": 1212,
+        "completion_tokens": 110,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: set operations take column names; store an intermediate first."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"i\",\"0\"],\n[\"set\",1,\"v\",\"y\"],\n[\"set\",2,\"u\",\"neighbors(v)\"],\n[\"set\",3,\"u\",\"difference(u,v)\"],\n[\"keep\",4,\"u\"],\n[\"set\",5,\"x\",\"i\"],\n[\"set\",6,\"y\",\"v\"],\n[\"set\",7,\"v\",\"union(v,u)\"],\n[\"set\",8,\"u\",\"difference(neighbors(v),v)\"],\n[\"end\",9,10],\n[\"sink\",11]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1245,
+        "total_tokens": 1371,
+        "completion_tokens": 126,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: set operations take column names; store an intermediate first."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"i\",\"0\"],\n[\"set\",1,\"v\",\"y\"],\n[\"set\",2,\"u\",\"neighbors(v)\"],\n[\"set\",3,\"u\",\"difference(u,v)\"],\n[\"keep\",4,\"u\"],\n[\"set\",5,\"x\",\"i\"],\n[\"set\",6,\"y\",\"v\"],\n[\"set\",7,\"v\",\"union(v,u)\"],\n[\"set\",8,\"u\",\"neighbors(v)\"],\n[\"set\",9,\"u\",\"difference(u,v)\"],\n[\"end\",10,11],\n[\"sink\",12]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1404,
+        "total_tokens": 1540,
+        "completion_tokens": 136,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: node 11: use indexes of preceding nodes."
+    }
+  ]
+}
