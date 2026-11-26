@@ -36,12 +36,24 @@ def verify():
     for r in controls:
         assert r["match"] and native[r["case"]] == r["rows"] == task.expected(r["root"])
 
-    attempts = 0
+    verify_sessions(RESULTS, clarified=False)
+    verify_sessions(RESULTS / "clarified", clarified=True)
+    print(f"All {len(controls)} native reference outputs match NetworkX.")
+
+
+def verify_sessions(folder, clarified):
+    expected = task.expected(task.PUBLIC_ROOT)
     for system in task.controls():
-        prompt = (RESULTS / f"{system}-prompt.txt").read_text(encoding="utf8")
-        assert prompt == task.prompt(system)
+        executable = 0
+        prompt = (folder / f"{system}-prompt.txt").read_text(encoding="utf8")
+        assert prompt == task.prompt(system, clarified)
+        if clarified:
+            assert prompt.replace(task.FORMAT_REMINDER + "\n\n", "") == task.prompt(
+                system
+            )
         for seed in SEEDS:
-            record = read(f"sessions/{task.TASK}-{seed}-{system}.json")
+            path = folder / f"sessions/{task.TASK}-{seed}-{system}.json"
+            record = json.loads(path.read_text(encoding="utf8"))
             assert (record["system"], record["task"], record["seed"]) == (
                 system,
                 task.TASK,
@@ -58,8 +70,9 @@ def verify():
                 if content.startswith("```") and content.endswith("```"):
                     content = content.partition("\n")[2][:-3].strip()
                 try:
-                    task.public_preview(
-                        json.loads(content), system, task.fixture(task.PUBLIC_ROOT)
+                    graph = json.loads(content)
+                    rows = task.public_preview(
+                        graph, system, task.fixture(task.PUBLIC_ROOT)
                     )
                 except (
                     ValueError,
@@ -71,14 +84,18 @@ def verify():
                 ) as exc:
                     assert item["feedback"] == f"Invalid graph: {str(exc)[:300]}."
                 else:
-                    raise AssertionError(
-                        "recorded invalid submission now passes validation"
+                    assert graph == item["plan"]
+                    assert rows == item["public_rows"] and rows != expected
+                    assert (
+                        item["feedback"]
+                        == "The public example produced " + json.dumps(rows) + "."
                     )
-                attempts += 1
-    assert read("agent-outputs.json") == []
-    print(
-        f"{attempts} invalid submissions reproduced. All {len(controls)} native control outputs match NetworkX."
-    )
+                    executable += 1
+        assert executable == (2 if clarified else 0)
+        print(
+            f"{folder.name} {system}: {executable}/{len(SEEDS) * TRIES} executable, 0/{len(SEEDS)} successful sessions."
+        )
+    assert json.loads((folder / "agent-outputs.json").read_text()) == []
 
 
 if __name__ == "__main__":

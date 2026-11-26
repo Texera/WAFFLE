@@ -1,0 +1,154 @@
+{
+  "system": "knime",
+  "task": "karate_bfs",
+  "seed": 397,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "3c49b675376fa9e5b2cc0f329a0c04a760a78214de2a4f626351dec2e6ba54d7",
+  "attempts": [
+    {
+      "text": "[\n  [\"input\"],\n  [\"set\", 0, \"i\", \"0\"],\n  [\"set\", 0, \"u\", \"y\"],\n  [\"set\", 0, \"v\", \"y\"],\n  [\"set\", 0, \"flag\", \"1\"],\n  [\"start\", 4],\n  [\"set\", 5, \"v\", \"neighbors(u)\"],\n  [\"set\", 6, \"v\", \"difference(v, u)\"],\n  [\"set\", 7, \"flag\", \"(v != 0) if 1 else 0\"],\n  [\"keep\", 8, \"flag\"],\n  [\"set\", 9, \"x\", \"x + 1\"],\n  [\"set\", 9, \"u\", \"union(u, v)\"],\n  [\"end\", 5, 10],\n  [\"sink\", 11]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 816,
+        "total_tokens": 1014,
+        "completion_tokens": 198,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: sink must read the loop end."
+    },
+    {
+      "text": "[\n  [\"input\"],\n  [\"set\", 0, \"i\", \"0\"],\n  [\"set\", 0, \"u\", \"y\"],\n  [\"set\", 0, \"v\", \"y\"],\n  [\"set\", 0, \"flag\", \"1\"],\n  [\"start\", 4],\n  [\"set\", 5, \"v\", \"neighbors(u)\"],\n  [\"set\", 6, \"v\", \"difference(v, u)\"],\n  [\"set\", 7, \"flag\", \"(v != 0) if 1 else 0\"],\n  [\"keep\", 8, \"flag\"],\n  [\"set\", 9, \"x\", \"x + 1\"],\n  [\"set\", 9, \"u\", \"union(u, v)\"],\n  [\"end\", 5, 10],\n  [\"sink\", 11]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1043,
+        "total_tokens": 1241,
+        "completion_tokens": 198,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: sink must read the loop end."
+    },
+    {
+      "text": "[\n  [\"input\"],\n  [\"set\", 0, \"i\", \"0\"],\n  [\"set\", 0, \"u\", \"y\"],\n  [\"set\", 0, \"v\", \"y\"],\n  [\"set\", 0, \"flag\", \"1\"],\n  [\"start\", 4],\n  [\"set\", 5, \"v\", \"neighbors(u)\"],\n  [\"set\", 6, \"v\", \"difference(v, u)\"],\n  [\"set\", 7, \"flag\", \"(v != 0) if 1 else 0\"],\n  [\"keep\", 8, \"flag\"],\n  [\"set\", 9, \"x\", \"x + 1\"],\n  [\"set\", 9, \"u\", \"union(u, v)\"],\n  [\"end\", 5, 10],\n  [\"sink\", 12]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1270,
+        "total_tokens": 1468,
+        "completion_tokens": 198,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "plan": [
+        [
+          "input"
+        ],
+        [
+          "set",
+          0,
+          "i",
+          "0"
+        ],
+        [
+          "set",
+          0,
+          "u",
+          "y"
+        ],
+        [
+          "set",
+          0,
+          "v",
+          "y"
+        ],
+        [
+          "set",
+          0,
+          "flag",
+          "1"
+        ],
+        [
+          "start",
+          4
+        ],
+        [
+          "set",
+          5,
+          "v",
+          "neighbors(u)"
+        ],
+        [
+          "set",
+          6,
+          "v",
+          "difference(v, u)"
+        ],
+        [
+          "set",
+          7,
+          "flag",
+          "(v != 0) if 1 else 0"
+        ],
+        [
+          "keep",
+          8,
+          "flag"
+        ],
+        [
+          "set",
+          9,
+          "x",
+          "x + 1"
+        ],
+        [
+          "set",
+          9,
+          "u",
+          "union(u, v)"
+        ],
+        [
+          "end",
+          5,
+          10
+        ],
+        [
+          "sink",
+          12
+        ]
+      ],
+      "public_rows": [
+        [
+          0,
+          1
+        ]
+      ],
+      "public_pass": false,
+      "feedback": "The public example produced [[0, 1]]."
+    }
+  ]
+}

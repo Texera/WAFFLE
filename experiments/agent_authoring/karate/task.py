@@ -104,7 +104,20 @@ def public_preview(plan, system, data):
     return preview(plan, system, data, render)
 
 
-def prompt(system):
+FORMAT_REMINDER = (
+    "Scratch fields: the four names are i, u, v, and flag. Use those exact names "
+    "for temporary storage. An assignment can overwrite an existing column but "
+    "cannot create a column or an alias. "
+    "Set operations: each argument must be a bare column name inside the expression "
+    "string. To use the result of another call or expression as an argument, first "
+    "store that result in an existing column, then pass its name. "
+    "Submission format: return one valid JSON array of node arrays. Double-quote "
+    "strings, separate consecutive elements with commas, and close every array. "
+    "Omit trailing commas, comments, Markdown fences, and text outside the array."
+)
+
+
+def prompt(system, clarified=False):
     common = COMMON.replace(
         "No function calls.",
         "Three additional functions are available identically in both systems. "
@@ -122,10 +135,13 @@ def prompt(system):
         "exactly one layer. The input x is zero, y holds the singleton mask of the chosen "
         "start vertex, n and goal are unused zeros. Other starts will be tested."
     )
+    documentation = DOC[system]
+    if clarified:
+        documentation += "\n\n" + FORMAT_REMINDER
     return "\n\n".join(
         (
             common,
-            DOC[system],
+            documentation,
             "Task: " + task,
             f"Example input (x,y,n,goal): {fixture(PUBLIC_ROOT)}\n"
             f"Required output: {json.dumps(expected(PUBLIC_ROOT))}",
