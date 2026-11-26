@@ -7,3 +7,29 @@ The agent gets deterministic graph diagnostics or the public example's actual ou
 Both arms expose a restricted catalog and the same arithmetic expression syntax. The agent specifies all graph nodes and their connections. The adapter serializes them and supplies fixed input and output plumbing. The catalogs exercise single-row numeric loops. They do not measure GUI manipulation or performance across unrestricted operator catalogs. Repeated identical graphs can share a native verification run for the same input. Infrastructure failures must be reported separately from task failures.
 
 After inspecting graph-construction errors in the original sessions, we fixed a second condition before collecting its responses. Both arms now receive an equivalent complete worked example for a separate task, emitting the same pair exactly twice. The tasks, inputs, sessions, budgets, success criterion, and evaluator are otherwise identical. Report the two conditions separately. This checks how sensitive the result is to showing the model a valid wiring pattern.
+
+### Reproduce the comparison
+
+From this directory, run `python evidence.py results` to verify the prompt hashes, all 48 sessions, their native held-out outputs, and the independently authored feasibility controls for each task in both systems. The recorded prompts are reconstructed from `protocol.py` and `worked_example.py`. The model responses, public-example errors, token usage, and submitted graphs are in `results/sessions.jsonl`. Each record in `results/native.jsonl` contains one engine's actual output for the graph and fixture identified by its hash. `results/outcomes.csv` gives one row per session. Two sessions per task are repeat measurements of the same task.
+
+The inference service used vLLM's four-bit W4A16 checkpoint of Qwen3.8-Flash-Next-Uncensored, served as `flash-next`, with thinking disabled. Sessions share no chat history. A new submission follows a public diagnostic within the same session. The interface accepts node connections and expressions, supplies native serialization, and bounds execution at eight iterations. WAFFLE has a fixed five-node pattern in this catalog. KNIME's recursive loop has separate collection and feedback inputs, and the agent can add formula and filter nodes. The worked example shows both wiring patterns explicitly. This is an interface-specific comparison on six numeric loop tasks.
+
+To repeat generation, provide an OpenAI-compatible inference endpoint and a token through the environment (`INFERENCE_TOKEN`). Run the following commands with fresh output directories, using Python 3.12 with `requests`. The feasibility-control graphs in `controls.py` are never included in prompts.
+
+```text
+python trials.py RUN/trials --endpoint ENDPOINT --model MODEL
+python trials.py RUN/worked --endpoint ENDPOINT --model MODEL --worked-example
+python native.py prepare RUN/native --trials RUN/trials
+python native.py prepare RUN/native-worked --trials RUN/worked
+python controls.py RUN/controls
+```
+
+Run the following two commands for each PACKAGE (`RUN/native`, `RUN/native-worked`, and `RUN/controls/engines`). The first uses portable KNIME Analytics Platform 5.5.3 on Windows. The second uses the existing native CaseExecutionSpec with the WAFFLE engine revision `a6e394bae138738c2e0aaa03a5bb7f8ec83c6ac6`. See the loop execution experiment for its Java, Python, sbt, and database prerequisites. Independent WAFFLE runs may be partitioned across manifests in separate subdirectories, retaining the graph identifiers and output rows.
+
+```text
+python native.py knime PACKAGE --runtime KNIME_DIRECTORY
+python ../loop_execution/run_native.py PACKAGE --case-study --repo ENGINE_CHECKOUT --java JAVA --python PYTHON --sbt-launch SBT_LAUNCH_JAR
+python evidence.py YOUR_RESULTS --collect RUN
+```
+
+Run the evidence command after all three packages finish. The scoring program rejects missing engine outputs and fails if any reference workflow produces the wrong trace.

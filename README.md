@@ -6,6 +6,7 @@ Experimental scripts, data, recorded results, and figure generation for the WAFF
 | --- | --- | --- |
 | §7.2: translate KNIME loop examples | [case_study](experiments/case_study) | WAFFLE, n8n, and RapidMiner each match all 241 KNIME scalar output rows across eight examples; the [recursive example](experiments/case_study/recursive) adds 40 rows and the [hierarchy workflow](experiments/case_study/hierarchy) adds 11 rows with changing feedback tables (292 final rows in ten workflows) |
 | §7.2: published loop plans | [published_loops](experiments/case_study/published_loops) | 1,198 distinct plans with connected boundaries, including 801 single-pair plans with 41 boundary-type combinations |
+| §7.2: agent-authored workflows | [agent_authoring](experiments/agent_authoring) | Paired WAFFLE and KNIME graph submissions for six numeric loop tasks, native output checks on hidden inputs, and a worked-example sensitivity comparison |
 | §7.2: public catalogs | [public_catalogs](experiments/case_study/public_catalogs) | Source inventories and verified structural loop evidence from three comparison systems |
 | §7.2: generated loop computations | [generated_loops](experiments/generated_loops) | 16,104 graphs on three inputs each, with every visited score and output row checked |
 | Supplemental K-means loop rules | [loop_policies](experiments/loop_policies) | Four control rules on four inputs across four engines, with fixed-range and score-threshold comparisons |
