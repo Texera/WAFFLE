@@ -8,8 +8,8 @@ import os
 import time
 from pathlib import Path
 import requests
-from worked_example import documentation
-from protocol import PUBLIC, TASKS, SEEDS, TRIES, dump, oracle, prompt
+from worked_example import condition_prompt
+from protocol import PUBLIC, TASKS, SEEDS, TRIES, dump, oracle
 from graphs import preview
 
 
@@ -18,11 +18,7 @@ def session(spec):
     path = args.out / f"{task}-{seed}-{system}.json"
     if path.exists():
         return
-    instructions = prompt(system, task)
-    if args.worked_example:
-        instructions = instructions.replace(
-            "\n\nTask:", documentation(system) + "\n\nTask:"
-        )
+    instructions = condition_prompt(system, task, args.condition)
     chat = [
         {
             "role": "system",
@@ -112,7 +108,17 @@ if __name__ == "__main__":
     parser.add_argument("out", type=Path)
     parser.add_argument("--endpoint", required=True)
     parser.add_argument("--model", default="flash-next")
-    parser.add_argument("--worked-example", action="store_true")
+    condition = parser.add_mutually_exclusive_group()
+    condition.add_argument(
+        "--worked-example",
+        dest="condition",
+        action="store_const",
+        const="worked_example",
+    )
+    condition.add_argument(
+        "--wiring-only", dest="condition", action="store_const", const="wiring_only"
+    )
+    parser.set_defaults(condition="documentation")
     parser.add_argument("--key-file", type=Path)
     args = parser.parse_args()
     token = (
