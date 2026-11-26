@@ -138,7 +138,21 @@ FILTERED_UPDATES = (
 )
 
 
+WIRING_CHECK = (
+    "Before submitting each graph, check the node indexes in your array. "
+    "The feedback filter must read directly from the node that sets the flag it tests. "
+    "The two nodes referenced by the loop end (collection and feedback) must both "
+    "appear before the loop end. The sink must read directly from the loop end. "
+    "Correct any wiring errors before returning the graph."
+)
+
+
 def condition_prompt(system, task, condition):
+    if condition == "wiring_check":
+        previous = condition_prompt(system, task, "filtered_updates")
+        if system == "knime":
+            return previous.replace("\n\nTask:", "\n" + WIRING_CHECK + "\n\nTask:")
+        return previous
     if condition == "filtered_updates":
         previous = condition_prompt(system, task, "required_connections")
         if system == "knime":

@@ -25,6 +25,7 @@ CONDITIONS = (
     "flag_source",
     "required_connections",
     "filtered_updates",
+    "wiring_check",
 )
 
 
@@ -56,7 +57,7 @@ def collect(root, out):
     ]
     extensions = [
         root / name
-        for name in ("native-filtered-updates", "native-required-connections", "native-flag-source", "native-feedback", "native-expressions", "native-numbering", "native-assignments", "native-ports", "native-rules", "native-timing", "native-wiring")
+        for name in ("native-wiring-check", "native-filtered-updates", "native-required-connections", "native-flag-source", "native-feedback", "native-expressions", "native-numbering", "native-assignments", "native-ports", "native-rules", "native-timing", "native-wiring")
     ]
     # Retain the archived execution ID if an identical graph was run previously.
     paths = [p for folder in extensions for p in sorted(folder.rglob("native.jsonl"))]
@@ -92,7 +93,7 @@ def collect(root, out):
                 rows=row["rows"],
             )
     for sub, condition in zip(
-        ("trials", "worked", "wiring", "timing", "rules", "ports", "assignments", "numbering", "expressions", "feedback", "flag-source", "required-connections", "filtered-updates"),
+        ("trials", "worked", "wiring", "timing", "rules", "ports", "assignments", "numbering", "expressions", "feedback", "flag-source", "required-connections", "filtered-updates", "wiring-check"),
         CONDITIONS,
         strict=True,
     ):
@@ -256,6 +257,34 @@ def has_direct_sink(response):
     )
 
 
+def passes_wiring_check(response):
+    """Check the specified KNIME edges, permitting state updates after the filter."""
+    nodes = submitted_nodes(response)
+    if not has_direct_sink(response):
+        return False
+    ends = [i for i, node in enumerate(nodes) if isinstance(node, list) and node[:1] == ["end"]]
+    if len(ends) != 1:
+        return False
+    end = ends[0]
+    if len(nodes[end]) != 3 or any(type(i) is not int or not 0 <= i < end for i in nodes[end][1:]):
+        return False
+    source = nodes[end][2]
+    while True:
+        node = nodes[source]
+        if not isinstance(node, list) or len(node) < 2:
+            return False
+        parent = node[1]
+        if type(parent) is not int or not 0 <= parent < source:
+            return False
+        if node[0] == "keep" and len(node) == 3:
+            setter = nodes[parent]
+            return (isinstance(setter, list) and len(setter) == 4 and setter[0] == "set"
+                    and isinstance(node[2], str) and setter[2] == node[2])
+        if node[0] != "set" or len(node) != 4:
+            return False
+        source = parent
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("results", type=Path)
@@ -321,3 +350,11 @@ if __name__ == "__main__":
         ]
         connected = sum(has_feedback_filter(a) and has_direct_sink(a) for a in attempts)
         print(f"{condition} KNIME filter to feedback and end to sink: {connected}/{len(attempts)} submissions")
+
+    for condition in ("filtered_updates", "wiring_check"):
+        attempts = [
+            a["text"] for session in sessions
+            if session["system"] == "knime" and session["condition"] == condition
+            for a in session["attempts"]
+        ]
+        print(f"{condition} KNIME wiring check: {sum(map(passes_wiring_check, attempts))}/{len(attempts)} submissions")
