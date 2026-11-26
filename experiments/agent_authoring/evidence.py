@@ -181,17 +181,31 @@ def totals(observations):
     return groups
 
 
-def has_direct_sink(response):
-    """Check the sink edge independently of other graph validation errors."""
+def submitted_nodes(response):
+    """Read the submitted node array, including graphs that failed validation."""
     raw = response.strip()
     if raw.startswith("```") and raw.endswith("```"):
         raw = raw.partition("\n")[2][:-3].strip()
     try:
         nodes = json.loads(raw)
     except json.JSONDecodeError:
+        return []
+    return nodes if isinstance(nodes, list) else []
+
+
+def has_expression_strings(response):
+    """Check the two output argument types and the continuation argument type."""
+    nodes = submitted_nodes(response)
+    emit = [n for n in nodes if isinstance(n, list) and n[:1] == ["emit"]]
+    end = [n for n in nodes if isinstance(n, list) and n[:1] == ["end"]]
+    if len(emit) != 1 or len(end) != 1 or len(emit[0]) != 4 or len(end[0]) != 4:
         return False
-    if not isinstance(nodes, list):
-        return False
+    return all(isinstance(value, str) for value in (*emit[0][2:], end[0][3]))
+
+
+def has_direct_sink(response):
+    """Check the sink edge independently of other graph validation errors."""
+    nodes = submitted_nodes(response)
     sinks = [
         i
         for i, node in enumerate(nodes)
@@ -243,3 +257,11 @@ if __name__ == "__main__":
         print(
             f"{condition} KNIME direct sink: {sum(connections)}/{len(connections)} submissions"
         )
+    for condition in ("row_numbering", "expression_strings"):
+        formats = [
+            has_expression_strings(a["text"])
+            for session in sessions
+            if session["system"] == "waffle" and session["condition"] == condition
+            for a in session["attempts"]
+        ]
+        print(f"{condition} WAFFLE expression strings: {sum(formats)}/{len(formats)} submissions")
