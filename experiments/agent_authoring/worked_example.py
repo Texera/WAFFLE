@@ -119,7 +119,18 @@ FLAG_SOURCE = (
 )
 
 
+REQUIRED_CONNECTIONS = (
+    "Every graph must include a feedback filter (keep). Connect its output directly "
+    "to the loop end's feedback input. Connect the sink directly to the loop end's output."
+)
+
+
 def condition_prompt(system, task, condition):
+    if condition == "required_connections":
+        previous = condition_prompt(system, task, "flag_source")
+        if system == "knime":
+            return previous.replace("\n\nTask:", "\n" + REQUIRED_CONNECTIONS + "\n\nTask:")
+        return previous
     if condition == "flag_source":
         previous = condition_prompt(system, task, "feedback_filter")
         if system == "knime":

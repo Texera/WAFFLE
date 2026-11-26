@@ -144,6 +144,9 @@ if __name__ == "__main__":
     condition.add_argument(
         "--flag-source", dest="condition", action="store_const", const="flag_source"
     )
+    condition.add_argument(
+        "--required-connections", dest="condition", action="store_const", const="required_connections"
+    )
     args = parser.parse_args()
     token = (
         args.key_file.read_text().strip()

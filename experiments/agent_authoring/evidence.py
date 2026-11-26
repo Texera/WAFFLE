@@ -23,6 +23,7 @@ CONDITIONS = (
     "expression_strings",
     "feedback_filter",
     "flag_source",
+    "required_connections",
 )
 
 
@@ -54,7 +55,7 @@ def collect(root, out):
     ]
     extensions = [
         root / name
-        for name in ("native-flag-source", "native-feedback", "native-expressions", "native-numbering", "native-assignments", "native-ports", "native-rules", "native-timing", "native-wiring")
+        for name in ("native-required-connections", "native-flag-source", "native-feedback", "native-expressions", "native-numbering", "native-assignments", "native-ports", "native-rules", "native-timing", "native-wiring")
     ]
     # Retain the archived execution ID if an identical graph was run previously.
     paths = [p for folder in extensions for p in sorted(folder.rglob("native.jsonl"))]
@@ -90,7 +91,7 @@ def collect(root, out):
                 rows=row["rows"],
             )
     for sub, condition in zip(
-        ("trials", "worked", "wiring", "timing", "rules", "ports", "assignments", "numbering", "expressions", "feedback", "flag-source"),
+        ("trials", "worked", "wiring", "timing", "rules", "ports", "assignments", "numbering", "expressions", "feedback", "flag-source", "required-connections"),
         CONDITIONS,
         strict=True,
     ):
@@ -310,3 +311,12 @@ if __name__ == "__main__":
             for a in session["attempts"]
         ]
         print(f"{condition} KNIME flag setter to filter to feedback: {sum(chains)}/{len(chains)} submissions")
+
+    for condition in ("flag_source", "required_connections"):
+        attempts = [
+            a["text"] for session in sessions
+            if session["system"] == "knime" and session["condition"] == condition
+            for a in session["attempts"]
+        ]
+        connected = sum(has_feedback_filter(a) and has_direct_sink(a) for a in attempts)
+        print(f"{condition} KNIME filter to feedback and end to sink: {connected}/{len(attempts)} submissions")
