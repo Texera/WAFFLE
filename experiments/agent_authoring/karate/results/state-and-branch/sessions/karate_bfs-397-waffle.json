@@ -1,0 +1,153 @@
+{
+  "system": "waffle",
+  "task": "karate_bfs",
+  "seed": 397,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "53db3fb6deb59635e5fc1066e4649cb02a1aa7f35bbb7f42398fed4e862fa812",
+  "attempts": [
+    {
+      "text": "[\n[\"input\"],\n[\"start\",0,[[\"u\",\"y\"],[\"v\",\"0\"],[\"i\",\"0\"],[\"flag\",\"1\"]]],\n[\"emit\",1,\"i\",\"u\"],\n[\"end\",2,[[\"v\",\"union(v,u)\"],[\"u\",\"difference(neighbors(u),v)\"],[\"i\",\"i + 1\"],[\"flag\",\"u > 0\"]],\"flag\"]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 828,
+        "total_tokens": 911,
+        "completion_tokens": 83,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: expected one input, one start, one end and one final sink."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"start\",0,[[\"u\",\"y\"],[\"v\",\"0\"],[\"i\",\"0\"],[\"flag\",\"1\"]]],\n[\"emit\",1,\"i\",\"u\"],\n[\"end\",2,[[\"v\",\"union(v,u)\"],[\"u\",\"difference(neighbors(u),v)\"],[\"i\",\"i + 1\"],[\"flag\",\"u > 0\"]],\"flag\"],\n[\"sink\",3]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 947,
+        "total_tokens": 1036,
+        "completion_tokens": 89,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: set operations take column names; store an intermediate first."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"start\",0,[[\"u\",\"y\"],[\"v\",\"0\"],[\"i\",\"0\"],[\"flag\",\"1\"]]],\n[\"emit\",1,\"i\",\"u\"],\n[\"end\",2,[[\"v\",\"union(v,u)\"],[\"u\",\"neighbors(u)\"],[\"u\",\"difference(u,v)\"],[\"i\",\"i + 1\"],[\"flag\",\"u > 0\"]],\"flag\"],\n[\"sink\",3]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1069,
+        "total_tokens": 1161,
+        "completion_tokens": 92,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "plan": [
+        [
+          "input"
+        ],
+        [
+          "start",
+          0,
+          [
+            [
+              "u",
+              "y"
+            ],
+            [
+              "v",
+              "0"
+            ],
+            [
+              "i",
+              "0"
+            ],
+            [
+              "flag",
+              "1"
+            ]
+          ]
+        ],
+        [
+          "emit",
+          1,
+          "i",
+          "u"
+        ],
+        [
+          "end",
+          2,
+          [
+            [
+              "v",
+              "union(v,u)"
+            ],
+            [
+              "u",
+              "neighbors(u)"
+            ],
+            [
+              "u",
+              "difference(u,v)"
+            ],
+            [
+              "i",
+              "i + 1"
+            ],
+            [
+              "flag",
+              "u > 0"
+            ]
+          ],
+          "flag"
+        ],
+        [
+          "sink",
+          3
+        ]
+      ],
+      "public_rows": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2150252030
+        ],
+        [
+          2,
+          14411694592
+        ],
+        [
+          3,
+          617922560
+        ]
+      ],
+      "public_pass": true,
+      "feedback": "The public example produced [[0, 1], [1, 2150252030], [2, 14411694592], [3, 617922560]]."
+    }
+  ]
+}

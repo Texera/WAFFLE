@@ -38,16 +38,37 @@ def verify():
 
     verify_sessions(RESULTS, clarified=False)
     verify_sessions(RESULTS / "clarified", clarified=True)
+    verify_sessions(RESULTS / "state-and-branch", clarified=True, state_and_branch=True)
     print(f"All {len(controls)} native reference outputs match NetworkX.")
 
 
-def verify_sessions(folder, clarified):
+def verify_sessions(folder, clarified, state_and_branch=False):
     expected = task.expected(task.PUBLIC_ROOT)
+    outputs = json.loads((folder / "agent-outputs.json").read_text())
+    native_path = folder / "agent-native.jsonl"
+    native = {}
+    if native_path.exists():
+        for line in native_path.read_text().splitlines():
+            entry = json.loads(line)
+            assert entry["case"] not in native
+            native[entry["case"]] = [[row["x"], row["y"]] for row in entry["rows"]]
+    knime_path = folder / "agent-knime.json"
+    if knime_path.exists():
+        for entry in json.loads(knime_path.read_text()):
+            assert entry["exit"] == 0 and entry["case"] not in native
+            native[entry["case"]] = entry["rows"]
+    scored = set()
     for system in task.controls():
         executable = 0
+        submissions = 0
+        successful = 0
         prompt = (folder / f"{system}-prompt.txt").read_text(encoding="utf8")
-        assert prompt == task.prompt(system, clarified)
-        if clarified:
+        assert prompt == task.prompt(system, clarified, state_and_branch)
+        if state_and_branch:
+            assert prompt.replace(
+                task.OUTPUT_REMINDER[system] + "\n\n", ""
+            ) == task.prompt(system, True)
+        elif clarified:
             assert prompt.replace(task.FORMAT_REMINDER + "\n\n", "") == task.prompt(
                 system
             )
@@ -60,12 +81,14 @@ def verify_sessions(folder, clarified):
                 seed,
             )
             assert record["model"] == "flash-next" and record["temperature"] == 0.6
-            assert record["max_tokens"] == 4096 and len(record["attempts"]) == TRIES
+            attempts = record["attempts"]
+            assert record["max_tokens"] == 4096 and 1 <= len(attempts) <= TRIES
+            assert not any(item["public_pass"] for item in attempts[:-1])
+            assert attempts[-1]["public_pass"] or len(attempts) == TRIES
             assert record["prompt_hash"] == hashlib.sha256(prompt.encode()).hexdigest()
-            for item in record["attempts"]:
-                assert (
-                    item["served_model"] == record["model"] and not item["public_pass"]
-                )
+            for item in attempts:
+                submissions += 1
+                assert item["served_model"] == record["model"]
                 content = item["text"].strip()
                 if content.startswith("```") and content.endswith("```"):
                     content = content.partition("\n")[2][:-3].strip()
@@ -82,20 +105,39 @@ def verify_sessions(folder, clarified):
                     KeyError,
                     ArithmeticError,
                 ) as exc:
+                    assert not item["public_pass"]
                     assert item["feedback"] == f"Invalid graph: {str(exc)[:300]}."
                 else:
                     assert graph == item["plan"]
-                    assert rows == item["public_rows"] and rows != expected
+                    assert (
+                        rows == item["public_rows"]
+                        and (rows == expected) == item["public_pass"]
+                    )
                     assert (
                         item["feedback"]
                         == "The public example produced " + json.dumps(rows) + "."
                     )
                     executable += 1
-        assert executable == (2 if clarified else 0)
+            records = [r for r in outputs if (r["system"], r["seed"]) == (system, seed)]
+            if not attempts[-1]["public_pass"]:
+                assert not records
+                continue
+            roots = (task.PUBLIC_ROOT, *task.HELD_OUT)
+            assert len(records) == len(roots) and {r["root"] for r in records} == set(
+                roots
+            )
+            for r in records:
+                key = hashlib.sha256(
+                    json.dumps([attempts[-1]["plan"], r["root"]]).encode()
+                ).hexdigest()[:16]
+                assert r["case"] == f"{system}-{key}" and r["rows"] == native[r["case"]]
+                assert r["match"] == (r["rows"] == task.expected(r["root"]))
+                scored.add(r["case"])
+            successful += all(r["match"] for r in records)
         print(
-            f"{folder.name} {system}: {executable}/{len(SEEDS) * TRIES} executable, 0/{len(SEEDS)} successful sessions."
+            f"{folder.name} {system}: {executable}/{submissions} executable, {successful}/{len(SEEDS)} successful sessions."
         )
-    assert json.loads((folder / "agent-outputs.json").read_text()) == []
+    assert {r["case"] for r in outputs} == scored == set(native)
 
 
 if __name__ == "__main__":

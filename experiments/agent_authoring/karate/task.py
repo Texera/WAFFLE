@@ -117,7 +117,24 @@ FORMAT_REMINDER = (
 )
 
 
-def prompt(system, clarified=False):
+OUTPUT_REMINDER = {
+    "waffle": (
+        "Output and state: emit evaluates its two expressions using the current "
+        "fields. The values written to the output row can differ from the values "
+        "kept in those fields. Emitting a row leaves the stored fields unchanged. "
+        "The end node's assignments determine the state carried into the next iteration."
+    ),
+    "knime": (
+        "Output and state: the collected row and the row carried into the next "
+        "iteration can contain different values. Each node input reads only the "
+        "row on its connected branch. A field assignment or filter affects its "
+        "downstream nodes; sibling branches do not inherit it. The loop end reads "
+        "its collection and feedback inputs independently."
+    ),
+}
+
+
+def prompt(system, clarified=False, state_and_branch=False):
     common = COMMON.replace(
         "No function calls.",
         "Three additional functions are available identically in both systems. "
@@ -136,8 +153,10 @@ def prompt(system, clarified=False):
         "start vertex, n and goal are unused zeros. Other starts will be tested."
     )
     documentation = DOC[system]
-    if clarified:
+    if clarified or state_and_branch:
         documentation += "\n\n" + FORMAT_REMINDER
+    if state_and_branch:
+        documentation += "\n\n" + OUTPUT_REMINDER[system]
     return "\n\n".join(
         (
             common,

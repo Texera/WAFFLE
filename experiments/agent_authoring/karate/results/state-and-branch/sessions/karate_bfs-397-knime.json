@@ -1,0 +1,71 @@
+{
+  "system": "knime",
+  "task": "karate_bfs",
+  "seed": 397,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "5463a45bbcb18848c3d47c85379df0b4d9c59954cd17602eb6a43e8e7f18c280",
+  "attempts": [
+    {
+      "text": "[\n[\"input\"],\n[\"start\",0],\n[\"set\",1,\"u\",\"difference(34359738367, y)\"],\n[\"keep\",2,\"x\"],\n[\"set\",3,\"v\",\"neighbors(u)\"],\n[\"set\",4,\"u\",\"difference(u, v)\"],\n[\"set\",5,\"flag\",\"v > 0\"],\n[\"keep\",6,\"flag\"],\n[\"set\",7,\"x\",\"x + 1\"],\n[\"set\",8,\"y\",\"v\"],\n[\"end\",8,4],\n[\"sink\",9]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 877,
+        "total_tokens": 1008,
+        "completion_tokens": 131,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: set operations take column names; store an intermediate first."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"u\",\"34359738367\"],\n[\"set\",1,\"u\",\"difference(u, y)\"],\n[\"start\",1],\n[\"set\",3,\"v\",\"neighbors(u)\"],\n[\"set\",4,\"u\",\"difference(u, v)\"],\n[\"set\",5,\"flag\",\"v > 0\"],\n[\"keep\",6,\"flag\"],\n[\"set\",7,\"x\",\"x + 1\"],\n[\"set\",8,\"y\",\"v\"],\n[\"end\",8,4],\n[\"sink\",9]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1041,
+        "total_tokens": 1173,
+        "completion_tokens": 132,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: unsupported expression element: 34359738367."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"start\",0],\n[\"set\",1,\"u\",\"34359738367\"],\n[\"set\",2,\"u\",\"difference(u, y)\"],\n[\"keep\",3,\"x\"],\n[\"set\",4,\"v\",\"neighbors(u)\"],\n[\"set\",5,\"u\",\"difference(u, v)\"],\n[\"set\",6,\"flag\",\"v > 0\"],\n[\"keep\",7,\"flag\"],\n[\"set\",8,\"x\",\"x + 1\"],\n[\"set\",9,\"y\",\"v\"],\n[\"end\",9,5],\n[\"sink\",10]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1212,
+        "total_tokens": 1353,
+        "completion_tokens": 141,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: unsupported expression element: 34359738367."
+    }
+  ]
+}
