@@ -22,6 +22,7 @@ CONDITIONS = (
     "row_numbering",
     "expression_strings",
     "feedback_filter",
+    "flag_source",
 )
 
 
@@ -53,7 +54,7 @@ def collect(root, out):
     ]
     extensions = [
         root / name
-        for name in ("native-feedback", "native-expressions", "native-numbering", "native-assignments", "native-ports", "native-rules", "native-timing", "native-wiring")
+        for name in ("native-flag-source", "native-feedback", "native-expressions", "native-numbering", "native-assignments", "native-ports", "native-rules", "native-timing", "native-wiring")
     ]
     # Retain the archived execution ID if an identical graph was run previously.
     paths = [p for folder in extensions for p in sorted(folder.rglob("native.jsonl"))]
@@ -89,7 +90,7 @@ def collect(root, out):
                 rows=row["rows"],
             )
     for sub, condition in zip(
-        ("trials", "worked", "wiring", "timing", "rules", "ports", "assignments", "numbering", "expressions", "feedback"),
+        ("trials", "worked", "wiring", "timing", "rules", "ports", "assignments", "numbering", "expressions", "feedback", "flag-source"),
         CONDITIONS,
         strict=True,
     ):

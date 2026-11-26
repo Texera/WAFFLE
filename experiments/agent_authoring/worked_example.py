@@ -112,7 +112,19 @@ FEEDBACK_FILTER = (
 )
 
 
+FLAG_SOURCE = (
+    "The input index of the feedback filter must point directly to the node that "
+    "sets the flag the filter tests. This passes the row containing the newly "
+    "assigned flag to the filter."
+)
+
+
 def condition_prompt(system, task, condition):
+    if condition == "flag_source":
+        previous = condition_prompt(system, task, "feedback_filter")
+        if system == "knime":
+            return previous.replace("\n\nTask:", "\n" + FLAG_SOURCE + "\n\nTask:")
+        return previous
     if condition == "feedback_filter":
         previous = condition_prompt(system, task, "expression_strings")
         if system == "knime":

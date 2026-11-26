@@ -141,6 +141,9 @@ if __name__ == "__main__":
     condition.add_argument(
         "--feedback-filter", dest="condition", action="store_const", const="feedback_filter"
     )
+    condition.add_argument(
+        "--flag-source", dest="condition", action="store_const", const="flag_source"
+    )
     args = parser.parse_args()
     token = (
         args.key_file.read_text().strip()
