@@ -204,6 +204,22 @@ def has_expression_strings(response):
     return all(isinstance(value, str) for value in (*emit[0][2:], end[0][3]))
 
 
+def has_feedback_filter(response):
+    """Count a loop end that directly reads a preceding filter on its feedback port."""
+    nodes = submitted_nodes(response)
+    ends = [(i, n) for i, n in enumerate(nodes) if isinstance(n, list) and n[:1] == ["end"]]
+    if len(ends) != 1:
+        return False
+    index, end = ends[0]
+    if len(end) != 3:
+        return False
+    source = end[2]
+    if type(source) is not int or not 0 <= source < index:
+        return False
+    node = nodes[source]
+    return isinstance(node, list) and len(node) == 3 and node[0] == "keep"
+
+
 def has_direct_sink(response):
     """Check the sink edge independently of other graph validation errors."""
     nodes = submitted_nodes(response)
@@ -266,3 +282,11 @@ if __name__ == "__main__":
             for a in session["attempts"]
         ]
         print(f"{condition} WAFFLE expression strings: {sum(formats)}/{len(formats)} submissions")
+    for condition in ("expression_strings", "feedback_filter"):
+        filters = [
+            has_feedback_filter(a["text"])
+            for session in sessions
+            if session["system"] == "knime" and session["condition"] == condition
+            for a in session["attempts"]
+        ]
+        print(f"{condition} KNIME filtered feedback: {sum(filters)}/{len(filters)} submissions")

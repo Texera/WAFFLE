@@ -13,6 +13,7 @@
 {"case":"knime-59c01a18489e8a1b","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,2.0],[1.0,2.0]]}
 {"case":"knime-627690f237178cb0","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,3.0],[1.0,3.0],[3.0,3.0],[5.0,3.0]]}
 {"case":"knime-62b7b6053e4e3eb2","engine":"KNIME 5.5.3","exit":0,"rows":[[-2.0,3.0],[3.0,1.0],[1.0,4.0],[4.0,5.0]]}
+{"case":"knime-643722c17cf13c52","engine":"KNIME 5.5.3","exit":0,"rows":[[-2.0,3.0],[3.0,1.0],[1.0,4.0],[4.0,5.0]]}
 {"case":"knime-66f67c6e00b4eeb4","engine":"KNIME 5.5.3","exit":0,"rows":[[4.0,2.0]]}
 {"case":"knime-829464951c754b47","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,-3.0],[0.0,-3.0],[1.0,-2.0],[2.0,0.0]]}
 {"case":"knime-85ab6d637f576940","engine":"KNIME 5.5.3","exit":0,"rows":[[3.0,-2.0]]}
@@ -33,6 +34,7 @@
 {"case":"knime-e1b1cfd7412d3f4f","engine":"KNIME 5.5.3","exit":0,"rows":[[1.0,-3.0],[3.0,0.0],[4.0,4.0],[5.0,9.0]]}
 {"case":"knime-e66472e04f247920","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,2.0],[1.0,2.0]]}
 {"case":"knime-ea7a21e0db4d41af","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,2.0],[1.0,2.0],[3.0,2.0]]}
+{"case":"knime-f2bac8069636758a","engine":"KNIME 5.5.3","exit":0,"rows":[[5.0,2.0]]}
 {"case":"knime-fac03c8adf927853","engine":"KNIME 5.5.3","exit":0,"rows":[[5.0,2.0]]}
 {"case":"knime-fc28077a666696be","engine":"KNIME 5.5.3","exit":0,"rows":[[-1.0,-3.0],[0.0,-3.0],[1.0,-2.0],[2.0,0.0]]}
 {"case":"knime-ff358fba5d3ad3b1","engine":"KNIME 5.5.3","exit":0,"rows":[[3.0,5.0]]}
@@ -42,6 +44,7 @@
 {"case":"waffle-067b0d2eb3befa6e","engine":"WAFFLE","execution_id":629985607,"rows":[[4,2]]}
 {"case":"waffle-0bf5b8a9559ab47f","engine":"WAFFLE","execution_id":403476356,"rows":[[4,2]]}
 {"case":"waffle-0cb101e6cec7b833","engine":"WAFFLE","execution_id":746002486,"rows":[[-1,2],[1,2],[3,2]]}
+{"case":"waffle-0e15601663a6d8c6","engine":"WAFFLE","execution_id":194855792,"rows":[[-3,2]]}
 {"case":"waffle-12cd631f477d2b65","engine":"WAFFLE","execution_id":361126780,"rows":[[4,2]]}
 {"case":"waffle-14a46f28d56047e1","engine":"WAFFLE","execution_id":932746948,"rows":[[-3,2]]}
 {"case":"waffle-14dc89431e19a655","engine":"WAFFLE","execution_id":737282941,"rows":[[-3,2]]}
@@ -99,6 +102,7 @@
 {"case":"waffle-6fbd8f5ba74d2335","engine":"WAFFLE","execution_id":302822149,"rows":[[5,-1],[4,0],[4,1],[5,2]]}
 {"case":"waffle-70ec1c7d4984c129","engine":"WAFFLE","execution_id":196993021,"rows":[[5,-1],[4,0],[4,1],[5,2]]}
 {"case":"waffle-7106ebbf52fa2a2c","engine":"WAFFLE","execution_id":860840110,"rows":[[-3,2]]}
+{"case":"waffle-72b480c2d9f948e9","engine":"WAFFLE","execution_id":378385835,"rows":[[5,-1],[4,0],[4,1],[5,2]]}
 {"case":"waffle-73ecd01703344004","engine":"WAFFLE","execution_id":247625225,"rows":[[-1,2],[1,2]]}
 {"case":"waffle-740645bf83e985db","engine":"WAFFLE","execution_id":197455887,"rows":[[-1,2],[1,2]]}
 {"case":"waffle-76427257a0a20932","engine":"WAFFLE","execution_id":247625226,"rows":[[5,2]]}
@@ -108,6 +112,7 @@
 {"case":"waffle-7b5a6d00ba881b7e","engine":"WAFFLE","execution_id":950717407,"rows":[[-3,2]]}
 {"case":"waffle-7e55b7050adbbd36","engine":"WAFFLE","execution_id":247625237,"rows":[[5,-1],[4,0],[4,1],[5,2]]}
 {"case":"waffle-7f7075323fb4978d","engine":"WAFFLE","execution_id":213478342,"rows":[[1,5]]}
+{"case":"waffle-7f746f5ffc0bcbc9","engine":"WAFFLE","execution_id":917955978,"rows":[[5,-1],[4,0],[4,1],[5,2]]}
 {"case":"waffle-803ad9f809b9a570","engine":"WAFFLE","execution_id":161718338,"rows":[[1,5]]}
 {"case":"waffle-80e28db9d8753f85","engine":"WAFFLE","execution_id":305678654,"rows":[[5,-1],[4,0],[4,1],[5,2]]}
 {"case":"waffle-81a6d0aeaa01f386","engine":"WAFFLE","execution_id":975801489,"rows":[[4,2]]}
@@ -124,6 +129,7 @@
 {"case":"waffle-8f61b1cd7e2f2885","engine":"WAFFLE","execution_id":629985609,"rows":[[-3,2]]}
 {"case":"waffle-926cd61534d74527","engine":"WAFFLE","execution_id":519297315,"rows":[[5,2]]}
 {"case":"waffle-97b6a0771074f234","engine":"WAFFLE","execution_id":403476355,"rows":[[-1,3],[1,3],[3,3],[5,3]]}
+{"case":"waffle-98a9f45957a6fe17","engine":"WAFFLE","execution_id":828446713,"rows":[[-1,-3],[0,-3],[1,-2],[2,0]]}
 {"case":"waffle-9ae46474fa80560e","engine":"WAFFLE","execution_id":161718339,"rows":[[5,-1],[4,0],[4,1],[5,2]]}
 {"case":"waffle-9bd282ac7446c3d2","engine":"WAFFLE","execution_id":333961250,"rows":[[-1,2],[1,2]]}
 {"case":"waffle-9c997e9ff5a6d612","engine":"WAFFLE","execution_id":528167288,"rows":[[-2,3],[3,1],[1,4],[4,5]]}
@@ -134,7 +140,9 @@
 {"case":"waffle-a56ee1a9b7e90566","engine":"WAFFLE","execution_id":247625221,"rows":[[1,-3],[3,0],[4,4],[5,9]]}
 {"case":"waffle-a6772332dd756650","engine":"WAFFLE","execution_id":552031606,"rows":[[5,2]]}
 {"case":"waffle-a75c3a53414a94e7","engine":"WAFFLE","execution_id":440794940,"rows":[[5,-1],[4,0],[4,1],[5,2]]}
+{"case":"waffle-aa0db96b318233d1","engine":"WAFFLE","execution_id":194855789,"rows":[[1,-3],[3,0],[4,4],[5,9]]}
 {"case":"waffle-ab96cdfdad6ca0a4","engine":"WAFFLE","execution_id":305678651,"rows":[[3,5]]}
+{"case":"waffle-ac5519b554e4dbb3","engine":"WAFFLE","execution_id":917955977,"rows":[[1,5]]}
 {"case":"waffle-ac8c491725bfae05","engine":"WAFFLE","execution_id":247625231,"rows":[[-1,-3],[0,-3],[1,-2],[2,0]]}
 {"case":"waffle-ac925dbaee8c530a","engine":"WAFFLE","execution_id":949241436,"rows":[[-1,3],[1,3],[3,3],[5,3]]}
 {"case":"waffle-b0463a97252324fb","engine":"WAFFLE","execution_id":741325142,"rows":[[1,-3],[3,0],[4,4],[5,9]]}
@@ -154,6 +162,7 @@
 {"case":"waffle-c47aa45ca78010e8","engine":"WAFFLE","execution_id":247315345,"rows":[[-1,-3],[0,-3],[1,-2],[2,0]]}
 {"case":"waffle-c6dcc70d82cafc1f","engine":"WAFFLE","execution_id":247625220,"rows":[[3,5]]}
 {"case":"waffle-c7424d8e4ef4130f","engine":"WAFFLE","execution_id":333961249,"rows":[[3,5]]}
+{"case":"waffle-ca5558f9f0981a1b","engine":"WAFFLE","execution_id":828446711,"rows":[[1,-3],[3,0],[4,4],[5,9]]}
 {"case":"waffle-cae15039581d7af6","engine":"WAFFLE","execution_id":712155229,"rows":[[3,5]]}
 {"case":"waffle-cafc9f74ca716514","engine":"WAFFLE","execution_id":196993020,"rows":[[5,2]]}
 {"case":"waffle-cb98c2e0dfc1e2e3","engine":"WAFFLE","execution_id":1024538769,"rows":[[1,-3],[3,0],[4,4],[5,9]]}
@@ -168,17 +177,20 @@
 {"case":"waffle-dc85e34c33c22cd0","engine":"WAFFLE","execution_id":741325144,"rows":[[-1,-3],[0,-3],[1,-2],[2,0]]}
 {"case":"waffle-e029c6ddab9b90a3","engine":"WAFFLE","execution_id":754648908,"rows":[[5,2]]}
 {"case":"waffle-e46f781b9e2bbd7a","engine":"WAFFLE","execution_id":790927135,"rows":[[-2,3],[3,1],[1,4],[4,5]]}
+{"case":"waffle-e573ebbb5c99c327","engine":"WAFFLE","execution_id":378385832,"rows":[[3,5]]}
 {"case":"waffle-e67b457929c7f8b2","engine":"WAFFLE","execution_id":440794937,"rows":[[4,2]]}
 {"case":"waffle-e6cf77d8345bce54","engine":"WAFFLE","execution_id":247625219,"rows":[[1,-3],[3,0],[4,4],[5,9]]}
 {"case":"waffle-e72bf3b387ceb0ce","engine":"WAFFLE","execution_id":302298294,"rows":[[3,5]]}
 {"case":"waffle-e8b0eeb44db946cd","engine":"WAFFLE","execution_id":1024538770,"rows":[[4,2]]}
 {"case":"waffle-e96e83c0eeadf28c","engine":"WAFFLE","execution_id":247625234,"rows":[[-3,2]]}
+{"case":"waffle-ed716851089b2602","engine":"WAFFLE","execution_id":404222908,"rows":[[-3,2]]}
 {"case":"waffle-ee0fb6bd55ccc886","engine":"WAFFLE","execution_id":1024538772,"rows":[[-3,2]]}
 {"case":"waffle-ee68b497b30b2f2d","engine":"WAFFLE","execution_id":247625216,"rows":[[3,-2]]}
 {"case":"waffle-eeb8c17f842c51d3","engine":"WAFFLE","execution_id":884679875,"rows":[[-2,3],[3,1],[1,4],[4,5]]}
 {"case":"waffle-f004b9819a0b9198","engine":"WAFFLE","execution_id":247625235,"rows":[[5,-1],[4,0],[4,1],[5,2]]}
 {"case":"waffle-f04ac334318d1b8f","engine":"WAFFLE","execution_id":746002485,"rows":[[1,-3],[3,0],[4,4],[5,9]]}
 {"case":"waffle-f1acd57c6c58fcf1","engine":"WAFFLE","execution_id":790927133,"rows":[[1,-3],[3,0],[4,4],[5,9]]}
+{"case":"waffle-f2b75cfc2d478022","engine":"WAFFLE","execution_id":917955975,"rows":[[3,5]]}
 {"case":"waffle-f315fd3849067e6c","engine":"WAFFLE","execution_id":1090416566,"rows":[[-1,-3],[0,-3],[1,-2],[2,0]]}
 {"case":"waffle-f3b5aa28746eff6c","engine":"WAFFLE","execution_id":552031604,"rows":[[3,5]]}
 {"case":"waffle-f3dbc4150321bcb2","engine":"WAFFLE","execution_id":688052871,"rows":[[-1,2],[1,2]]}
