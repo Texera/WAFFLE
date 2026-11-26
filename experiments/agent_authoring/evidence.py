@@ -205,8 +205,8 @@ def has_expression_strings(response):
     return all(isinstance(value, str) for value in (*emit[0][2:], end[0][3]))
 
 
-def has_feedback_filter(response):
-    """Count a loop end that directly reads a preceding filter on its feedback port."""
+def has_feedback_filter(response, *, direct_flag_source=False):
+    """Check the feedback port's filter and optionally its upstream flag assignment."""
     nodes = submitted_nodes(response)
     ends = [(i, n) for i, n in enumerate(nodes) if isinstance(n, list) and n[:1] == ["end"]]
     if len(ends) != 1:
@@ -218,7 +218,18 @@ def has_feedback_filter(response):
     if type(source) is not int or not 0 <= source < index:
         return False
     node = nodes[source]
-    return isinstance(node, list) and len(node) == 3 and node[0] == "keep"
+    if not (isinstance(node, list) and len(node) == 3 and node[0] == "keep"):
+        return False
+    if not direct_flag_source:
+        return True
+    parent = node[1]
+    if type(parent) is not int or not 0 <= parent < source:
+        return False
+    setter = nodes[parent]
+    return (
+        isinstance(setter, list) and len(setter) == 4 and setter[0] == "set"
+        and isinstance(node[2], str) and setter[2] == node[2]
+    )
 
 
 def has_direct_sink(response):
@@ -291,3 +302,11 @@ if __name__ == "__main__":
             for a in session["attempts"]
         ]
         print(f"{condition} KNIME filtered feedback: {sum(filters)}/{len(filters)} submissions")
+    for condition in ("feedback_filter", "flag_source"):
+        chains = [
+            has_feedback_filter(a["text"], direct_flag_source=True)
+            for session in sessions
+            if session["system"] == "knime" and session["condition"] == condition
+            for a in session["attempts"]
+        ]
+        print(f"{condition} KNIME flag setter to filter to feedback: {sum(chains)}/{len(chains)} submissions")
