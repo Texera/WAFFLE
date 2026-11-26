@@ -123,6 +123,9 @@ if __name__ == "__main__":
         "--wiring-timing", dest="condition", action="store_const", const="wiring_timing"
     )
     parser.add_argument("--key-file", type=Path)
+    condition.add_argument(
+        "--wiring-rules", dest="condition", action="store_const", const="wiring_rules"
+    )
     args = parser.parse_args()
     token = (
         args.key_file.read_text().strip()

@@ -65,21 +65,37 @@ TIMING = {
 }
 
 
+GRAPH_RULE = {
+    "waffle": (
+        "The available scratch fields are i, u, v, and flag. All four start at zero. "
+        "An assignment may write an input field (x, y, n, goal) or one of those four "
+        "scratch fields. The graph cannot declare additional fields."
+    ),
+    "knime": (
+        "Number nodes by their positions in the submitted array, starting at zero. "
+        "Every input reference must be smaller than the position of the node that "
+        "uses it. This rule applies to both input references on the end node."
+    ),
+}
+
+
 def condition_prompt(system, task, condition):
     base = prompt(system, task)
     if condition == "documentation":
         return base
     if condition == "worked_example":
         extra = documentation(system)
-    elif condition in ("wiring_only", "wiring_timing"):
+    elif condition in ("wiring_only", "wiring_timing", "wiring_rules"):
         extra = (
             "\nWiring-only example (symbolic diagram). Arrows show connections. "
             "Question marks leave the task logic open. Choose every expression for the actual task.\n"
             + WIRING[system]
             + "\nSubmit a complete graph using the documented JSON node forms and indexes."
         )
-        if condition == "wiring_timing":
+        if condition in ("wiring_timing", "wiring_rules"):
             extra += "\nIteration semantics: " + TIMING[system]
+        if condition == "wiring_rules":
+            extra += "\nGraph rule: " + GRAPH_RULE[system]
     else:
         raise ValueError(f"Unknown prompt condition: {condition}")
     return base.replace("\n\nTask:", extra + "\n\nTask:")
