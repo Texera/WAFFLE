@@ -1,0 +1,71 @@
+{
+  "system": "waffle",
+  "task": "karate_bfs",
+  "seed": 811,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "435329943eadb0016cc74ecb0f0c050e27d5b0725bea925e746281b2e0f70158",
+  "attempts": [
+    {
+      "text": "[\n  [\"input\"],\n  [\"start\", 0, [[\"u\", \"y\"], [\"v\", \"0\"], [\"i\", \"1\"], [\"flag\", \"1\"]]],\n  [\"emit\", 1, [\"i - 1\", \"u\"]],\n  [\"end\", 2, [[\"v\", \"union(v, u)\"], [\"u\", \"difference(neighbors(u), v)\"], [\"i\", \"i + 1\"], [\"flag\", \"u\"]], \"flag\"]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 953,
+        "total_tokens": 1062,
+        "completion_tokens": 109,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: node 2: unsupported node form ['emit', 1, ['i - 1', 'u']]."
+    },
+    {
+      "text": "[\n  [\"input\"],\n  [\"start\", 0, [[\"u\", \"y\"], [\"v\", \"0\"], [\"i\", \"1\"], [\"flag\", \"1\"]]],\n  [\"emit\", 1, \"i - 1\", \"u\"],\n  [\"end\", 2, [[\"v\", \"union(v, u)\"], [\"u\", \"difference(neighbors(u), v)\"], [\"i\", \"i + 1\"], [\"flag\", \"u\"]], \"flag\"]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1106,
+        "total_tokens": 1214,
+        "completion_tokens": 108,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: expected one input, one start, one end and one final sink."
+    },
+    {
+      "text": "[\n  [\"input\"],\n  [\"start\", 0, [[\"u\", \"y\"], [\"v\", \"0\"], [\"i\", \"1\"], [\"flag\", \"1\"]]],\n  [\"emit\", 1, \"i - 1\", \"u\"],\n  [\"end\", 2, [[\"v\", \"union(v, u)\"], [\"u\", \"difference(neighbors(u), v)\"], [\"i\", \"i + 1\"], [\"flag\", \"u\"]], \"flag\"],\n  [\"sink\", 3]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1250,
+        "total_tokens": 1366,
+        "completion_tokens": 116,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: set operations take column names; store an intermediate first."
+    }
+  ]
+}

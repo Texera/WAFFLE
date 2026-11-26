@@ -143,7 +143,29 @@ LITERAL_REPEAT_REMINDER = (
 )
 
 
-def prompt(system, clarified=False, state_and_branch=False, literal_repeat=False):
+CARRY_KEEP_REMINDER = {
+    "waffle": (
+        "The start node initializes fields once. A field keeps its value across "
+        "iterations until an assignment overwrites it. End-node assignments run "
+        "in order. If a later assignment needs the value that a preceding assignment "
+        "will overwrite, save it in a declared field before that assignment."
+    ),
+    "knime": (
+        "The loop start reads the input row on the first iteration and the feedback "
+        "row on later iterations. Preserve fields needed on the next iteration in "
+        "the row sent to feedback. A keep node passes its input row only when its "
+        "named field equals 1. Every other value drops the row."
+    ),
+}
+
+
+def prompt(
+    system,
+    clarified=False,
+    state_and_branch=False,
+    literal_repeat=False,
+    carry_keep=False,
+):
     common = COMMON.replace(
         "No function calls.",
         "Three additional functions are available identically in both systems. "
@@ -162,12 +184,14 @@ def prompt(system, clarified=False, state_and_branch=False, literal_repeat=False
         "start vertex, n and goal are unused zeros. Other starts will be tested."
     )
     documentation = DOC[system]
-    if clarified or state_and_branch or literal_repeat:
+    if clarified or state_and_branch or literal_repeat or carry_keep:
         documentation += "\n\n" + FORMAT_REMINDER
-    if state_and_branch or literal_repeat:
+    if state_and_branch or literal_repeat or carry_keep:
         documentation += "\n\n" + OUTPUT_REMINDER[system]
-    if literal_repeat:
+    if literal_repeat or carry_keep:
         documentation += "\n\n" + LITERAL_REPEAT_REMINDER
+    if carry_keep:
+        documentation += "\n\n" + CARRY_KEEP_REMINDER[system]
     return "\n\n".join(
         (
             common,

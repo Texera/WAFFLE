@@ -1,0 +1,263 @@
+{
+  "system": "knime",
+  "task": "karate_bfs",
+  "seed": 397,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "9b806e790b26d7691675215c8fc15e181d38cccbe6043381b1a5e4d5a56b14db",
+  "attempts": [
+    {
+      "text": "[\n  [\"input\"],\n  [\"start\", 0],\n  [\"set\", 1, \"u\", \"y\"],\n  [\"set\", 2, \"v\", \"neighbors(u)\"],\n  [\"set\", 3, \"v\", \"difference(v, u)\"],\n  [\"set\", 4, \"flag\", \"v > 0\"],\n  [\"keep\", 4, \"flag\"],\n  [\"set\", 5, \"i\", \"i + 1\"],\n  [\"end\", 5, 5],\n  [\"sink\", 7]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1006,
+        "total_tokens": 1135,
+        "completion_tokens": 129,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: sink must read the loop end."
+    },
+    {
+      "text": "[\n  [\"input\"],\n  [\"start\", 0],\n  [\"set\", 1, \"u\", \"y\"],\n  [\"set\", 2, \"v\", \"neighbors(u)\"],\n  [\"set\", 3, \"v\", \"difference(v, u)\"],\n  [\"set\", 4, \"flag\", \"v > 0\"],\n  [\"keep\", 4, \"flag\"],\n  [\"set\", 5, \"i\", \"i + 1\"],\n  [\"end\", 5, 5],\n  [\"sink\", 8]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1164,
+        "total_tokens": 1293,
+        "completion_tokens": 129,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "plan": [
+        [
+          "input"
+        ],
+        [
+          "start",
+          0
+        ],
+        [
+          "set",
+          1,
+          "u",
+          "y"
+        ],
+        [
+          "set",
+          2,
+          "v",
+          "neighbors(u)"
+        ],
+        [
+          "set",
+          3,
+          "v",
+          "difference(v, u)"
+        ],
+        [
+          "set",
+          4,
+          "flag",
+          "v > 0"
+        ],
+        [
+          "keep",
+          4,
+          "flag"
+        ],
+        [
+          "set",
+          5,
+          "i",
+          "i + 1"
+        ],
+        [
+          "end",
+          5,
+          5
+        ],
+        [
+          "sink",
+          8
+        ]
+      ],
+      "public_rows": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "public_pass": false,
+      "feedback": "The public example produced [[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]]."
+    },
+    {
+      "text": "[\n  [\"input\"],\n  [\"set\", 0, \"u\", \"y\"],\n  [\"set\", 1, \"v\", \"neighbors(u)\"],\n  [\"set\", 2, \"v\", \"difference(v, u)\"],\n  [\"set\", 3, \"flag\", \"v > 0\"],\n  [\"start\", 4],\n  [\"set\", 5, \"u\", \"v\"],\n  [\"set\", 6, \"v\", \"neighbors(u)\"],\n  [\"set\", 7, \"v\", \"difference(v, u)\"],\n  [\"set\", 8, \"flag\", \"v > 0\"],\n  [\"keep\", 9, \"flag\"],\n  [\"end\", 5, 10],\n  [\"sink\", 11]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1364,
+        "total_tokens": 1543,
+        "completion_tokens": 179,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "plan": [
+        [
+          "input"
+        ],
+        [
+          "set",
+          0,
+          "u",
+          "y"
+        ],
+        [
+          "set",
+          1,
+          "v",
+          "neighbors(u)"
+        ],
+        [
+          "set",
+          2,
+          "v",
+          "difference(v, u)"
+        ],
+        [
+          "set",
+          3,
+          "flag",
+          "v > 0"
+        ],
+        [
+          "start",
+          4
+        ],
+        [
+          "set",
+          5,
+          "u",
+          "v"
+        ],
+        [
+          "set",
+          6,
+          "v",
+          "neighbors(u)"
+        ],
+        [
+          "set",
+          7,
+          "v",
+          "difference(v, u)"
+        ],
+        [
+          "set",
+          8,
+          "flag",
+          "v > 0"
+        ],
+        [
+          "keep",
+          9,
+          "flag"
+        ],
+        [
+          "end",
+          5,
+          10
+        ],
+        [
+          "sink",
+          11
+        ]
+      ],
+      "public_rows": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "public_pass": false,
+      "feedback": "The public example produced [[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]]."
+    }
+  ]
+}

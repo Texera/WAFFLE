@@ -12,8 +12,10 @@ We asked Qwen to build a loop that emits one row per nonempty distance layer, st
 | Format plus output and state, KNIME | 0/2 | 0/6 | 0/6 |
 | Plus literal limit and loop repetition, WAFFLE | 0/2 | 3/6 | 0/6 |
 | Plus literal limit and loop repetition, KNIME | 0/2 | 2/6 | 0/6 |
+| Plus state retention and keep-filter semantics, WAFFLE | 0/2 | 2/6 | 0/6 |
+| Plus state retention and keep-filter semantics, KNIME | 0/2 | 2/6 | 0/6 |
 
-All four conditions used the same Qwen3.8-Flash-Next-Uncensored W4A16 checkpoint, seeds 397 and 811, and a limit of three submissions per session. Each retry received the diagnostic for its preceding submission. The parent harness specifies decoding and increments the request seed by one at each retry. Both graph interfaces provided the same one-hop neighbor lookup, set union and set difference on named columns. The agent had to keep track of the visited vertices, emit each layer, and stop the loop. The public example started at vertex 0. We reserved vertices 16 and 33 for native scoring.
+All five conditions used the same Qwen3.8-Flash-Next-Uncensored W4A16 checkpoint, seeds 397 and 811, and a limit of three submissions per session. Each retry received the diagnostic for its preceding submission. The parent harness specifies decoding and increments the request seed by one at each retry. Both graph interfaces provided the same one-hop neighbor lookup, set union and set difference on named columns. The agent had to keep track of the visited vertices, emit each layer, and stop the loop. The public example started at vertex 0. We reserved vertices 16 and 33 for native scoring.
 
 With the original instructions, six submissions referred to undeclared fields, four supplied expressions where set operations required column names, and two contained invalid JSON. These are the first diagnostics for each submission. Hand-authored controls in WAFFLE and KNIME 5.5.3 produced exactly the rows computed independently by NetworkX for all three roots. Scoring compares every vertex in each layer.
 
@@ -25,9 +27,11 @@ WAFFLE seed 397 passed on attempt 3. The submitted loop emitted the current laye
 
 The [fourth condition](results/literal-repeat) adds identical text to both third-condition prompts. It specifies the inclusive range from −1,000 to 1,000 for integer literals and explains that the engine runs the same body nodes again each iteration. WAFFLE seed 397 attempt 2 reintroduced the starting vertex at distance two. For seed 811, attempt 2 emitted cumulative sets and attempt 3 emitted empty sets after the starting vertex. KNIME seed 397 attempts 2 and 3 returned no rows. All three KNIME seed 811 submissions were complete 15-node graphs, but failed validation. None of the four sessions qualified for native scoring.
 
-The [records](results) include the fixed prompts, full responses and repair feedback, edge list, expected rows, reference plans, and native outputs. Run `python verify.py` with NetworkX 3.4.2 to replay all 48 attempts and compare archived native outputs with shortest-path distances.
+The [fifth condition](results/carry-keep) explains how WAFFLE carries fields across iterations and how KNIME carries the feedback row and passes a row through its keep filter only when the named field equals 1. In both systems, attempts 2 and 3 from seed 397 ran. In WAFFLE they submitted the same plan, which overwrote the current layer without retaining the full set of visited vertices. It included vertex 0 again at distance two. In KNIME both plans collected the original distance and vertex set on every iteration, yielding eight copies of the starting row in the bounded public preview. All six submissions from seed 811 failed validation. None qualified for native scoring.
 
-To repeat the experiment, supply the same model endpoint and the engine dependencies listed in the [parent experiment](../README.md). Use a fresh working directory for RUN in each condition. Add `--clarified` for condition two, `--state-and-branch` for condition three, or `--literal-repeat` for condition four to the freeze command.
+The [records](results) include the fixed prompts, full responses and repair feedback, edge list, expected rows, reference plans, and native outputs. Run `python verify.py` with NetworkX 3.4.2 to replay all 60 attempts and compare archived native outputs with shortest-path distances.
+
+To repeat the experiment, supply the same model endpoint and the engine dependencies listed in the [parent experiment](../README.md). Use a fresh working directory for RUN in each condition. Add `--clarified` for condition two, `--state-and-branch` for condition three, `--literal-repeat` for condition four, or `--carry-keep` for condition five to the freeze command.
 
 ```text
 python run.py freeze RUN

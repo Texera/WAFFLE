@@ -13,11 +13,19 @@ from protocol import SEEDS, dump
 from trials import run_session
 
 
-def freeze(folder, clarified=False, state_and_branch=False, literal_repeat=False):
+def freeze(
+    folder,
+    clarified=False,
+    state_and_branch=False,
+    literal_repeat=False,
+    carry_keep=False,
+):
     folder.mkdir(parents=True, exist_ok=False)
     for system, control in task.controls().items():
         (folder / f"{system}-prompt.txt").write_text(
-            task.prompt(system, clarified, state_and_branch, literal_repeat),
+            task.prompt(
+                system, clarified, state_and_branch, literal_repeat, carry_keep
+            ),
             encoding="utf8",
         )
         for root in task.VERTICES:
@@ -158,6 +166,11 @@ if __name__ == "__main__":
     p.add_argument("--endpoint")
     p.add_argument("--model", default="flash-next")
     p.add_argument(
+        "--carry-keep",
+        action="store_true",
+        help="add state retention and keep-filter semantics to the literal and repetition condition",
+    )
+    p.add_argument(
         "--literal-repeat",
         action="store_true",
         help="extend the state and branch condition with literal bounds and loop repetition",
@@ -175,7 +188,9 @@ if __name__ == "__main__":
     p.add_argument("--runtime", type=Path)
     a = p.parse_args()
     if a.command == "freeze":
-        freeze(a.folder, a.clarified, a.state_and_branch, a.literal_repeat)
+        freeze(
+            a.folder, a.clarified, a.state_and_branch, a.literal_repeat, a.carry_keep
+        )
     elif a.command == "sessions":
         sessions(a.folder, a.endpoint, a.model, a.key_file)
     elif a.command == "prepare":

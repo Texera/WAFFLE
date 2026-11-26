@@ -45,10 +45,13 @@ def verify():
         state_and_branch=True,
         literal_repeat=True,
     )
+    verify_sessions(RESULTS / "carry-keep", clarified=True, carry_keep=True)
     print(f"All {len(controls)} native reference outputs match NetworkX.")
 
 
-def verify_sessions(folder, clarified, state_and_branch=False, literal_repeat=False):
+def verify_sessions(
+    folder, clarified, state_and_branch=False, literal_repeat=False, carry_keep=False
+):
     expected = task.expected(task.PUBLIC_ROOT)
     outputs = json.loads((folder / "agent-outputs.json").read_text())
     native_path = folder / "agent-native.jsonl"
@@ -70,9 +73,13 @@ def verify_sessions(folder, clarified, state_and_branch=False, literal_repeat=Fa
         successful = 0
         prompt = (folder / f"{system}-prompt.txt").read_text(encoding="utf8")
         assert prompt == task.prompt(
-            system, clarified, state_and_branch, literal_repeat
+            system, clarified, state_and_branch, literal_repeat, carry_keep
         )
-        if literal_repeat:
+        if carry_keep:
+            assert prompt.replace(task.CARRY_KEEP_REMINDER[system] + "\n\n", "") == (
+                RESULTS / "literal-repeat" / f"{system}-prompt.txt"
+            ).read_text(encoding="utf8")
+        elif literal_repeat:
             assert prompt.replace(
                 task.LITERAL_REPEAT_REMINDER + "\n\n", ""
             ) == task.prompt(system, state_and_branch=True)

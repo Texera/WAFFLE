@@ -1,0 +1,71 @@
+{
+  "system": "knime",
+  "task": "karate_bfs",
+  "seed": 811,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "9b806e790b26d7691675215c8fc15e181d38cccbe6043381b1a5e4d5a56b14db",
+  "attempts": [
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"i\",\"0\"],\n[\"set\",0,\"u\",\"y\"],\n[\"set\",0,\"v\",\"0\"],\n[\"start\",3],\n[\"set\",4,\"v\",\"neighbors(u)\"],\n[\"set\",5,\"v\",\"v - u\"],\n[\"set\",6,\"flag\",\"v != 0\"],\n[\"keep\",7,\"flag\"],\n[\"end\",5,7],\n[\"sink\",8]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1006,
+        "total_tokens": 1109,
+        "completion_tokens": 103,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: sink must read the loop end."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"i\",\"0\"],\n[\"set\",0,\"u\",\"y\"],\n[\"set\",0,\"v\",\"0\"],\n[\"start\",3],\n[\"set\",4,\"v\",\"neighbors(u)\"],\n[\"set\",5,\"v\",\"v - u\"],\n[\"set\",6,\"flag\",\"v != 0\"],\n[\"keep\",7,\"flag\"],\n[\"end\",5,7],\n[\"sink\",8]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1138,
+        "total_tokens": 1241,
+        "completion_tokens": 103,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: sink must read the loop end."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"i\",\"0\"],\n[\"set\",0,\"u\",\"y\"],\n[\"set\",0,\"v\",\"0\"],\n[\"start\",3],\n[\"set\",4,\"v\",\"neighbors(u)\"],\n[\"set\",5,\"v\",\"v - u\"],\n[\"set\",6,\"flag\",\"v != 0\"],\n[\"keep\",7,\"flag\"],\n[\"end\",5,7],\n[\"sink\",8]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1270,
+        "total_tokens": 1373,
+        "completion_tokens": 103,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: sink must read the loop end."
+    }
+  ]
+}
