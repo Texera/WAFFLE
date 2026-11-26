@@ -95,7 +95,13 @@ WAFFLE_ASSIGNMENTS = (
 )
 
 
+ROW_NUMBERING = "The first row emitted is output row 1, even when the workflow counter starts at 0."
+
+
 def condition_prompt(system, task, condition):
+    if condition == "row_numbering":
+        previous = condition_prompt(system, task, "assignment_format")
+        return previous.replace("\n\nTask:", "\n" + ROW_NUMBERING + "\n\nTask:")
     if condition == "assignment_format":
         previous = condition_prompt(system, task, "end_ports")
         if system == "waffle":
