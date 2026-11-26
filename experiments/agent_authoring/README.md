@@ -1,0 +1,7 @@
+# Paired loop-workflow authoring experiment
+
+The fixed protocol uses six tasks, two fresh sessions per task and system, and up to three graph submissions per session. Each matched pair uses the same model alias, seed, temperature (0.6), token budget (4096 per submission), task and public example. System order alternates across pairs. The task setter provides node documentation and one input/output example. No starter graph or repair from a human is supplied.
+
+The agent gets deterministic graph diagnostics or the public example's actual output after each failed submission. A session ends at the first graph that passes that example or after three submissions. Two additional fixtures per task are withheld from the model. Success requires exact ordered outputs from the native engine on both held-out inputs and a passing public example. Record first-submission success and success by the budget, keeping failures in the denominator. The sessions share six tasks and one model. Input fixtures and generated output rows are checks within a session.
+
+Both arms expose a restricted catalog and the same arithmetic expression syntax. The agent specifies all graph nodes and their connections. The adapter serializes them and supplies fixed input and output plumbing. The catalogs exercise single-row numeric loops. They do not measure GUI manipulation or performance across unrestricted operator catalogs. Repeated identical graphs can share a native verification run for the same input. Infrastructure failures must be reported separately from task failures.
