@@ -134,7 +134,16 @@ OUTPUT_REMINDER = {
 }
 
 
-def prompt(system, clarified=False, state_and_branch=False):
+LITERAL_REPEAT_REMINDER = (
+    "Integer literals written in an expression must be between -1000 and 1000 "
+    "inclusive. Input fields and computed results may hold larger values. "
+    "Define the loop body once in the graph. On each iteration the engine runs "
+    "those same nodes again using the state carried forward. Repetition across "
+    "iterations requires no additional copies of the body nodes."
+)
+
+
+def prompt(system, clarified=False, state_and_branch=False, literal_repeat=False):
     common = COMMON.replace(
         "No function calls.",
         "Three additional functions are available identically in both systems. "
@@ -153,10 +162,12 @@ def prompt(system, clarified=False, state_and_branch=False):
         "start vertex, n and goal are unused zeros. Other starts will be tested."
     )
     documentation = DOC[system]
-    if clarified or state_and_branch:
+    if clarified or state_and_branch or literal_repeat:
         documentation += "\n\n" + FORMAT_REMINDER
-    if state_and_branch:
+    if state_and_branch or literal_repeat:
         documentation += "\n\n" + OUTPUT_REMINDER[system]
+    if literal_repeat:
+        documentation += "\n\n" + LITERAL_REPEAT_REMINDER
     return "\n\n".join(
         (
             common,

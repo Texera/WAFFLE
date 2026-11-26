@@ -39,10 +39,16 @@ def verify():
     verify_sessions(RESULTS, clarified=False)
     verify_sessions(RESULTS / "clarified", clarified=True)
     verify_sessions(RESULTS / "state-and-branch", clarified=True, state_and_branch=True)
+    verify_sessions(
+        RESULTS / "literal-repeat",
+        clarified=True,
+        state_and_branch=True,
+        literal_repeat=True,
+    )
     print(f"All {len(controls)} native reference outputs match NetworkX.")
 
 
-def verify_sessions(folder, clarified, state_and_branch=False):
+def verify_sessions(folder, clarified, state_and_branch=False, literal_repeat=False):
     expected = task.expected(task.PUBLIC_ROOT)
     outputs = json.loads((folder / "agent-outputs.json").read_text())
     native_path = folder / "agent-native.jsonl"
@@ -63,8 +69,14 @@ def verify_sessions(folder, clarified, state_and_branch=False):
         submissions = 0
         successful = 0
         prompt = (folder / f"{system}-prompt.txt").read_text(encoding="utf8")
-        assert prompt == task.prompt(system, clarified, state_and_branch)
-        if state_and_branch:
+        assert prompt == task.prompt(
+            system, clarified, state_and_branch, literal_repeat
+        )
+        if literal_repeat:
+            assert prompt.replace(
+                task.LITERAL_REPEAT_REMINDER + "\n\n", ""
+            ) == task.prompt(system, state_and_branch=True)
+        elif state_and_branch:
             assert prompt.replace(
                 task.OUTPUT_REMINDER[system] + "\n\n", ""
             ) == task.prompt(system, True)

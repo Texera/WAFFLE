@@ -1,0 +1,165 @@
+{
+  "system": "waffle",
+  "task": "karate_bfs",
+  "seed": 397,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "8868b34af984aa528f52aa273afd145fc5c935f59a779a5df602274036d961cf",
+  "attempts": [
+    {
+      "text": "[\n[\"input\"],\n[\"start\",0,[[\"i\",\"0\"],[\"u\",\"y\"],[\"v\",\"0\"],[\"flag\",\"1\"]]],\n[\"emit\",1,\"i\",\"u\"],\n[\"end\",2,[[\"v\",\"neighbors(u)\"],[\"u\",\"difference(v,u)\"],[\"i\",\"i + 1\"],[\"flag\",\"u\"]],\"flag\"]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 900,
+        "total_tokens": 976,
+        "completion_tokens": 76,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: expected one input, one start, one end and one final sink."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"start\",0,[[\"i\",\"0\"],[\"u\",\"y\"],[\"v\",\"0\"],[\"flag\",\"1\"]]],\n[\"emit\",1,\"i\",\"u\"],\n[\"end\",2,[[\"v\",\"neighbors(u)\"],[\"u\",\"difference(v,u)\"],[\"i\",\"i + 1\"],[\"flag\",\"u\"]],\"flag\"],\n[\"sink\",3]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1012,
+        "total_tokens": 1094,
+        "completion_tokens": 82,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "plan": [
+        [
+          "input"
+        ],
+        [
+          "start",
+          0,
+          [
+            [
+              "i",
+              "0"
+            ],
+            [
+              "u",
+              "y"
+            ],
+            [
+              "v",
+              "0"
+            ],
+            [
+              "flag",
+              "1"
+            ]
+          ]
+        ],
+        [
+          "emit",
+          1,
+          "i",
+          "u"
+        ],
+        [
+          "end",
+          2,
+          [
+            [
+              "v",
+              "neighbors(u)"
+            ],
+            [
+              "u",
+              "difference(v,u)"
+            ],
+            [
+              "i",
+              "i + 1"
+            ],
+            [
+              "flag",
+              "u"
+            ]
+          ],
+          "flag"
+        ],
+        [
+          "sink",
+          3
+        ]
+      ],
+      "public_rows": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2150252030
+        ],
+        [
+          2,
+          14411694593
+        ],
+        [
+          3,
+          2768174590
+        ],
+        [
+          4,
+          14411694593
+        ],
+        [
+          5,
+          2768174590
+        ],
+        [
+          6,
+          14411694593
+        ],
+        [
+          7,
+          2768174590
+        ]
+      ],
+      "public_pass": false,
+      "feedback": "The public example produced [[0, 1], [1, 2150252030], [2, 14411694593], [3, 2768174590], [4, 14411694593], [5, 2768174590], [6, 14411694593], [7, 2768174590]]."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"start\",0,[[\"i\",\"0\"],[\"u\",\"y\"],[\"v\",\"0\"],[\"flag\",\"1\"]]],\n[\"emit\",1,\"i\",\"u\"],\n[\"end\",2,[[\"v\",\"difference(neighbors(u),u)\"],[\"u\",\"difference(v,u)\"],[\"i\",\"i + 1\"],[\"flag\",\"v\"]],\"flag\"],\n[\"sink\",3]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 1231,
+        "total_tokens": 1317,
+        "completion_tokens": 86,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: set operations take column names; store an intermediate first."
+    }
+  ]
+}
