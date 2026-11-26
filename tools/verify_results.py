@@ -25,6 +25,8 @@ def read(path):
 
 
 def main():
+    authoring = ROOT / 'experiments/agent_authoring'
+    print(run(authoring / 'evidence.py', authoring / 'results').strip())
     with tempfile.TemporaryDirectory(prefix='waffle-verify-') as folder:
         temp = Path(folder)
         case = ROOT / 'experiments/case_study'

@@ -1,5 +1,14 @@
 # Paired loop-workflow authoring experiment
 
+| Instructions | System | Correct on first submission | Correct within three submissions | Submissions used |
+| --- | --- | ---: | ---: | ---: |
+| Node documentation | WAFFLE | 6/12 | 10/12 | 18 |
+| Node documentation | KNIME | 0/12 | 0/12 | 35 |
+| Documentation and worked example | WAFFLE | 5/12 | 6/12 | 22 |
+| Documentation and worked example | KNIME | 0/12 | 2/12 | 34 |
+
+Reference workflows produced every expected trace in both engines (six tasks × two held-out inputs × two systems). The two instructions produced different success rates with the same model. A session that passed the public input stopped receiving repair feedback, even when its graph subsequently failed on a hidden input.
+
 The fixed protocol uses six tasks, two fresh sessions per task and system, and up to three graph submissions per session. Each matched pair uses the same model alias, seed, temperature (0.6), token budget (4096 per submission), task and public example. System order alternates across pairs. The task setter provides node documentation and one input/output example. No starter graph or repair from a human is supplied.
 
 The agent gets deterministic graph diagnostics or the public example's actual output after each failed submission. A session ends at the first graph that passes that example or after three submissions. Two additional fixtures per task are withheld from the model. Success requires exact ordered outputs from the native engine on both held-out inputs and a passing public example. Record first-submission success and success by the budget, keeping failures in the denominator. The sessions share six tasks and one model. Input fixtures and generated output rows are checks within a session.
