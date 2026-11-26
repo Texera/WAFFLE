@@ -66,24 +66,24 @@ def expression(source, names, jep=False):
     return visit(ast.parse(source.strip(), mode="eval").body)
 
 
-def evaluate(source, values):
-    return eval(expression(source, values), {"__builtins__": {}}, values)
+def evaluate(source, values, render=expression):
+    return eval(render(source, values), {"__builtins__": {}}, values)
 
 
 def initial(data):
     return dict(zip(FIELDS, [*data, 0, 0, 0, 0]))
 
 
-def assign(pairs, state):
+def assign(pairs, state, render=expression):
     if not isinstance(pairs, list):
         raise ValueError("assignments must be an array of pairs")
     for name, expr in pairs:
         if name not in FIELDS:
             raise ValueError(f"unknown writable field {name}")
-        state[name] = evaluate(expr, state)
+        state[name] = evaluate(expr, state, render)
 
 
-def validate(plan, system):
+def validate(plan, system, render=expression):
     if not isinstance(plan, list) or not 4 <= len(plan) <= 64:
         raise ValueError("expected a graph array with 4 to 64 nodes")
     sizes = (
@@ -107,7 +107,7 @@ def validate(plan, system):
         if node[0] == "set":
             if node[2] not in FIELDS:
                 raise ValueError("unknown set column")
-            expression(node[3], FIELDS)
+            render(node[3], FIELDS)
         if node[0] == "keep" and node[2] not in FIELDS:
             raise ValueError("unknown filter column")
     kinds = [node[0] for node in plan]
@@ -137,18 +137,18 @@ def validate(plan, system):
     return plan
 
 
-def preview(plan, system, data):
-    validate(plan, system)
+def preview(plan, system, data, render=expression):
+    validate(plan, system, render)
     state = initial(data)
     rows = []
     if system == "waffle":
-        assign(plan[1][2], state)
+        assign(plan[1][2], state, render)
         for _ in range(LIMIT):
-            x, y = [evaluate(e, state) for e in plan[2][2:]]
+            x, y = [evaluate(e, state, render) for e in plan[2][2:]]
             rows.append([x, y])
             state.update(out_x=x, out_y=y)
-            assign(plan[3][2], state)
-            if not evaluate(plan[3][3], state):
+            assign(plan[3][2], state, render)
+            if not evaluate(plan[3][3], state, render):
                 break
     else:
         feedback = None
@@ -164,7 +164,7 @@ def preview(plan, system, data):
                     value = streams[node[1]]
                     if value is not None:
                         value = dict(value)
-                        value[node[2]] = evaluate(node[3], value)
+                        value[node[2]] = evaluate(node[3], value, render)
                 elif kind == "keep":
                     value = streams[node[1]]
                     if value is not None and value[node[2]] != 1:

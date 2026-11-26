@@ -1,0 +1,14 @@
+Return one JSON array. Each element is a native graph node in topological order, encoded as a positional array. References to earlier nodes are their integer indexes starting at zero. All graphs must include an input, loop, and sink. Input has ONE row with numeric columns x,y,n,goal and scratch columns i,u,v,flag initialized to zero. Each input can differ at execution. All arithmetic expressions are JSON strings written in a common restricted Python syntax: column names, integer constants, +, -, *, %, comparisons, and/or/not, and a if test else b. Use numeric 0/1 for flags. Three additional functions are available identically in both systems. A vertex set is a nonnegative integer mask, with bit v for vertex v; 0 is empty. neighbors(a) is the union of all immediate neighbors of members of a in the fixed undirected graph; union(a,b) and difference(a,b) are set union and a minus b. Each function argument must be an existing column name. Store intermediate results in declared columns. These functions perform no traversal and hold no state. The output is the complete ordered sequence of (x,y) pairs at the sink. A safety limit stops runaway loops after 8 iterations. Do not hardcode the example. The interface supplies serialization only. Return JSON without commentary.
+
+Node forms:
+["input"]
+["start",source] opens a KNIME Recursive Loop Start. First iteration uses the input row. Every later iteration uses the feedback row.
+["set",source,"column","expression"] is a Math Formula node. It returns the row with the named column replaced. Other columns stay the same. You may chain nodes or branch by referencing the same source twice.
+["keep",source,"column"] is a Row Filter passing rows whose named column equals 1. Set a numeric flag with a formula to implement an arbitrary continuation condition.
+["end",collect,feedback] is a Recursive Loop End. It appends (x,y) from collect on EVERY iteration and feeds the row from feedback to the start. Empty feedback ends the loop. Collect and feedback may branch off at any node inside the loop.
+["sink",end] exports all collected rows. Use exactly one input, start, end and sink, and as many formula/filter nodes as needed. A set may also be placed before start.
+
+Task: On Zachary's karate club friendship graph (NetworkX vertices 0 through 33), traverse all reachable vertices in increasing unweighted shortest-path distance from the given start vertex. Emit one (distance, vertex-set mask) pair per nonempty layer, including the starting vertex at distance zero. Each vertex belongs in exactly one layer. The input x is zero, y holds the singleton mask of the chosen start vertex, n and goal are unused zeros. Other starts will be tested.
+
+Example input (x,y,n,goal): (0, 1, 0, 0)
+Required output: [[0, 1], [1, 2150252030], [2, 14411694592], [3, 617922560]]

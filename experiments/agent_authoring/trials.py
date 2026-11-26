@@ -14,11 +14,34 @@ from graphs import preview
 
 
 def session(spec):
+    system, task, _ = spec
+    return run_session(
+        spec,
+        args.out,
+        args.endpoint,
+        args.model,
+        token,
+        condition_prompt(system, task, args.condition),
+        PUBLIC,
+        oracle(task, PUBLIC),
+    )
+
+
+def run_session(
+    spec,
+    out,
+    endpoint,
+    model,
+    token,
+    instructions,
+    public,
+    expected,
+    preview_graph=preview,
+):
     system, task, seed = spec
-    path = args.out / f"{task}-{seed}-{system}.json"
+    path = out / f"{task}-{seed}-{system}.json"
     if path.exists():
         return
-    instructions = condition_prompt(system, task, args.condition)
     chat = [
         {
             "role": "system",
@@ -30,7 +53,7 @@ def session(spec):
         system=system,
         task=task,
         seed=seed,
-        model=args.model,
+        model=model,
         temperature=0.6,
         max_tokens=4096,
         prompt_hash=hashlib.sha256(chat[1]["content"].encode()).hexdigest(),
@@ -38,7 +61,7 @@ def session(spec):
     )
     for attempt in range(1, TRIES + 1):
         payload = dict(
-            model=args.model,
+            model=model,
             messages=chat,
             seed=seed + attempt - 1,
             temperature=0.6,
@@ -48,7 +71,7 @@ def session(spec):
         for retry in range(3):
             try:
                 res = requests.post(
-                    args.endpoint.rstrip("/") + "/chat/completions",
+                    endpoint.rstrip("/") + "/chat/completions",
                     headers={"Authorization": "Bearer " + token},
                     json=payload,
                     timeout=300,
@@ -73,9 +96,9 @@ def session(spec):
             if raw.startswith("\x60\x60\x60") and raw.endswith("\x60\x60\x60"):
                 raw = raw.partition("\n")[2][:-3].strip()
             plan = json.loads(raw)
-            observed = preview(plan, system, PUBLIC)
+            observed = preview_graph(plan, system, public)
             item.update(plan=plan, public_rows=observed)
-            ok = observed == oracle(task, PUBLIC)
+            ok = observed == expected
             feedback = "The public example produced " + json.dumps(observed) + "."
         except (
             ValueError,

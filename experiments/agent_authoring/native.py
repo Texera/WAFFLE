@@ -14,16 +14,21 @@ EXP = Path(__file__).resolve().parents[1]
 TEMPLATE = EXP / "case_study/recursive/results/sum-waffle.json"
 
 
-def statements(pairs, names):
-    return [f"{name} = {expression(expr, names)}" for name, expr in pairs]
+def statements(pairs, names, render=expression):
+    return [f"{name} = {render(expr, names)}" for name, expr in pairs]
 
 
-def waffle(plan, data):
+def waffle(plan, data, render=expression, column_type="integer"):
     graph = json.loads(TEMPLATE.read_text())
-    source, start, body, end, _ = [
+    source, start, body, end, sink = [
         op["operatorProperties"] for op in graph["operators"]
     ]
-    source["columns"] = [dict(attributeName=k, attributeType="integer") for k in FIELDS]
+    for op in (body, sink):
+        for column in op["outputColumns"]:
+            column["attributeType"] = column_type
+    source["columns"] = [
+        dict(attributeName=k, attributeType=column_type) for k in FIELDS
+    ]
     source["code"] = (
         "from pytexera import *\nclass Input(UDFSourceOperator):\n    def produce(self):\n        yield "
         + repr(initial(data))
@@ -32,7 +37,7 @@ def waffle(plan, data):
     start["initialization"] = "\n".join(
         [f"{k} = int(D.iloc[0]['{k}'])" for k in FIELDS]
         + ["safety_round = 0"]
-        + statements(plan[1][2], FIELDS)
+        + statements(plan[1][2], FIELDS, render)
     )
     start["output"] = "D"
     code = [
@@ -43,7 +48,7 @@ def waffle(plan, data):
         "    def process_tuple(self, row, port):",
     ] + [f"        {k} = self.state['{k}']" for k in FIELDS]
     for name, expr in zip(("out_x", "out_y"), plan[2][2:]):
-        code.append(f"        self.{name} = int({expression(expr, FIELDS)})")
+        code.append(f"        self.{name} = int({render(expr, FIELDS)})")
     code += [
         "        yield dict(x=self.out_x, y=self.out_y)",
         "    def produce_state_on_finish(self, port):",
@@ -51,12 +56,14 @@ def waffle(plan, data):
     ]
     body["code"] = "\n".join(code) + "\n"
     names = FIELDS + ["out_x", "out_y"]
-    end["update"] = "\n".join(statements(plan[3][2], names) + ["safety_round += 1"])
-    end["condition"] = f"safety_round < {LIMIT} and ({expression(plan[3][3], names)})"
+    end["update"] = "\n".join(
+        statements(plan[3][2], names, render) + ["safety_round += 1"]
+    )
+    end["condition"] = f"safety_round < {LIMIT} and ({render(plan[3][3], names)})"
     return graph
 
 
-def knime(plan, data, folder):
+def knime(plan, data, folder, render=expression):
     sys.path.insert(0, str(EXP / "loop_policies/native_controls"))
     from knime_native import Graph, BASE, entries, cfg
 
@@ -73,9 +80,7 @@ def knime(plan, data, folder):
             )
             graph.link(ids[node[1]], idx)
         elif kind == "set":
-            idx = graph.formula(
-                ids[node[1]], node[2], expression(node[3], FIELDS, True)
-            )
+            idx = graph.formula(ids[node[1]], node[2], render(node[3], FIELDS, True))
         elif kind == "keep":
             idx, m = graph.node(
                 "Filter " + node[2], BASE + "preproc.filter.row.RowFilterNodeFactory"

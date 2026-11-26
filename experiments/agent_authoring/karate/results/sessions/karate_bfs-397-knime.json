@@ -1,0 +1,71 @@
+{
+  "system": "knime",
+  "task": "karate_bfs",
+  "seed": 397,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "2a75f09e94b722251990772e2457857a6e019db6759da8bcb4fb42a7af5d7f70",
+  "attempts": [
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"scratch_i\", \"0\"],\n[\"start\",2],\n[\"set\",3,\"scratch_u\", \"y\"],\n[\"set\",4,\"scratch_v\", \"neighbors(scratch_u)\"],\n[\"set\",5,\"scratch_v\", \"difference(scratch_v, y)\"],\n[\"set\",6,\"scratch_v\", \"difference(scratch_v, scratch_u)\"],\n[\"keep\",7,\"scratch_v\"],\n[\"end\",8,7],\n[\"sink\",9]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 688,
+        "total_tokens": 802,
+        "completion_tokens": 114,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: unknown set column."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"scratch_i\", \"0\"],\n[\"set\",1,\"scratch_u\", \"y\"],\n[\"set\",2,\"scratch_v\", \"neighbors(scratch_u)\"],\n[\"set\",3,\"scratch_v\", \"difference(scratch_v, y)\"],\n[\"set\",4,\"scratch_v\", \"difference(scratch_v, scratch_u)\"],\n[\"set\",5,\"scratch_flag\", \"scratch_v\"],\n[\"start\",6],\n[\"end\",5,5],\n[\"sink\",7]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 828,
+        "total_tokens": 946,
+        "completion_tokens": 118,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: unknown set column."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"set\",0,\"scratch_i\", \"0\"],\n[\"set\",1,\"scratch_u\", \"y\"],\n[\"set\",2,\"scratch_v\", \"neighbors(scratch_u)\"],\n[\"set\",3,\"scratch_v\", \"difference(scratch_v, y)\"],\n[\"set\",4,\"scratch_v\", \"difference(scratch_v, scratch_u)\"],\n[\"set\",5,\"scratch_flag\", \"scratch_v\"],\n[\"start\",6],\n[\"end\",5,5],\n[\"sink\",7]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 972,
+        "total_tokens": 1090,
+        "completion_tokens": 118,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: unknown set column."
+    }
+  ]
+}

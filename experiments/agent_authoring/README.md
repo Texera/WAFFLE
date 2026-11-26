@@ -138,3 +138,5 @@ python evidence.py YOUR_RESULTS --collect RUN
 ```
 
 Run the evidence command after all fifteen packages finish. The scoring program rejects missing engine outputs and fails if any reference workflow produces the wrong trace.
+
+The [karate club traversal experiment](karate/README.md) applies the documentation-only protocol to a published graph and includes the submissions and native reference outputs.

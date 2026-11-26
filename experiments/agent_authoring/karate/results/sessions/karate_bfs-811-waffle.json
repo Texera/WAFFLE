@@ -1,0 +1,71 @@
+{
+  "system": "waffle",
+  "task": "karate_bfs",
+  "seed": 811,
+  "model": "flash-next",
+  "temperature": 0.6,
+  "max_tokens": 4096,
+  "prompt_hash": "076d5ae7bf44f7ab110bce3d904befd960b434b372481566b84455d8728ca2bd",
+  "attempts": [
+    {
+      "text": "[\n[\"input\"],\n[\"start\", 0, [[\"u\", \"y\"], [\"v\", \"y\"], [\"i\", \"0\"]]],\n[\"emit\", 1, \"i\", \"u\"],\n[\"end\", 2, [[\"v\", \"neighbors(v)\"], [\"v\", \"difference(v, u)\"], [\"u\", \"v\"], [\"i\", \"i + 1\"]], \"u != 0 && i < 8\"]\n[\"sink\", 3]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 644,
+        "total_tokens": 750,
+        "completion_tokens": 106,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: Expecting ',' delimiter: line 6 column 1 (char 198)."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"start\", 0, [[\"u\", \"y\"], [\"v\", \"y\"], [\"i\", \"0\"]]],\n[\"emit\", 1, \"i\", \"u\"],\n[\"end\", 2, [[\"v\", \"difference(neighbors(v), u)\"], [\"u\", \"v\"], [\"i\", \"i + 1\"]], \"u != 0 && i < 8\"]\n[\"sink\", 3]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 790,
+        "total_tokens": 890,
+        "completion_tokens": 100,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: Expecting ',' delimiter: line 6 column 1 (char 186)."
+    },
+    {
+      "text": "[\n[\"input\"],\n[\"start\", 0, [[\"u\", \"y\"], [\"v\", \"y\"], [\"i\", \"0\"]]],\n[\"emit\", 1, \"i\", \"u\"],\n[\"end\", 2, [[\"v\", \"difference(neighbors(v), u)\"], [\"u\", \"v\"], [\"i\", \"i + 1\"]], \"u != 0 && i < 8\"],\n[\"sink\", 3]\n]",
+      "finish_reason": "stop",
+      "usage": {
+        "prompt_tokens": 930,
+        "total_tokens": 1030,
+        "completion_tokens": 100,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "created_cache_tokens": 0,
+          "multimodal_tokens": null
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "served_model": "flash-next",
+      "public_pass": false,
+      "feedback": "Invalid graph: set operations take column names; store an intermediate first."
+    }
+  ]
+}
