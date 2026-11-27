@@ -1,0 +1,151 @@
+{
+  "operators": [
+    {
+      "operatorID": "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c",
+      "operatorType": "PythonUDFSourceV2",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "code": "from pytexera import *\nclass Seed(UDFSourceOperator):\n    def produce(self):\n        yield {'currentIteration': -1}\n",
+        "workers": 1,
+        "defaultEnv": true,
+        "envName": "",
+        "columns": [
+          {
+            "attributeName": "currentIteration",
+            "attributeType": "integer"
+          }
+        ]
+      },
+      "inputPorts": [],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Points",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    },
+    {
+      "operatorID": "LoopStart-operator-4e307707-f16f-5c50-b839-9c940e33dd69",
+      "operatorType": "LoopStart",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "initialization": "i = 0",
+        "output": "D.assign(currentIteration=i)"
+      },
+      "inputPorts": [
+        {
+          "portID": "input-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Loop Start",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    },
+    {
+      "operatorID": "LoopEnd-operator-23b8a13d-6365-58af-a1c6-94dd3c5eca3a",
+      "operatorType": "LoopEnd",
+      "operatorVersion": "N/A",
+      "operatorProperties": {
+        "update": "i += 1",
+        "condition": "i < 5"
+      },
+      "inputPorts": [
+        {
+          "portID": "input-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "outputPorts": [
+        {
+          "portID": "output-0",
+          "displayName": "",
+          "isDynamicPort": false,
+          "allowMultiInputs": false,
+          "disallowMultiInputs": true,
+          "dependencies": []
+        }
+      ],
+      "customDisplayName": "Loop End",
+      "dynamicInputPorts": false,
+      "dynamicOutputPorts": false,
+      "isDisabled": false,
+      "showAdvanced": false,
+      "viewResult": false
+    }
+  ],
+  "links": [
+    {
+      "linkID": "link-0",
+      "source": {
+        "operatorID": "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "LoopStart-operator-4e307707-f16f-5c50-b839-9c940e33dd69",
+        "portID": "input-0"
+      }
+    },
+    {
+      "linkID": "link-1",
+      "source": {
+        "operatorID": "LoopStart-operator-4e307707-f16f-5c50-b839-9c940e33dd69",
+        "portID": "output-0"
+      },
+      "target": {
+        "operatorID": "LoopEnd-operator-23b8a13d-6365-58af-a1c6-94dd3c5eca3a",
+        "portID": "input-0"
+      }
+    }
+  ],
+  "operatorPositions": {
+    "PythonUDFSourceV2-operator-857baaba-cc19-5988-bf8e-bfabf7404b3c": {
+      "x": 0,
+      "y": 100
+    },
+    "LoopStart-operator-4e307707-f16f-5c50-b839-9c940e33dd69": {
+      "x": 180,
+      "y": 100
+    },
+    "LoopEnd-operator-23b8a13d-6365-58af-a1c6-94dd3c5eca3a": {
+      "x": 540,
+      "y": 100
+    }
+  },
+  "commentBoxes": [],
+  "settings": {
+    "dataTransferBatchSize": 400,
+    "executionMode": "MATERIALIZED"
+  }
+}
