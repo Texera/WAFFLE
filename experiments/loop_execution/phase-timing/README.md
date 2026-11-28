@@ -6,6 +6,8 @@ Across five measured pairs, the median paired difference in total latency was 12
 
 The [follow-up trace](residual/) measures table reads and replay, tuple processing, and worker scheduling within that remaining interval.
 
+The [paired tracing comparison](crossover/) switches the detailed timers on and off for both graphs in the same JVM to measure their incremental cost.
+
 | Median time per workflow (s) | LoopBlock (5 workers) | Explicit copies (3 workers) |
 | --- | ---: | ---: |
 | Total execution | 30.79 | 17.94 |

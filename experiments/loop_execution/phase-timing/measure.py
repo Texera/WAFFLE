@@ -16,7 +16,9 @@ ap.add_argument("--python", required=True, type=Path)
 ap.add_argument("--java-home", required=True, type=Path)
 ap.add_argument("--compiler", required=True, type=Path)
 ap.add_argument("--run", required=True, type=Path)
-ap.add_argument("--trace-residual", action="store_true")
+mode = ap.add_mutually_exclusive_group()
+mode.add_argument("--trace-residual", action="store_true")
+mode.add_argument("--compare-tracing", action="store_true")
 args = ap.parse_args()
 repo, artifact = args.repo.resolve(), args.artifact.resolve()
 out = args.run.resolve()
@@ -204,10 +206,18 @@ p.write_text(
     ),
     encoding="utf8",
 )
-if args.trace_residual:
+if args.compare_tracing:
+    coarse = out / "coarse-python"
+    shutil.copytree(py, coarse)
+    env["WAFFLE_COARSE_PYTHON_SRC"] = str(coarse)
+if args.trace_residual or args.compare_tracing:
     from residual.install import install
 
     install(repo, out, py, stage, replace)
+if args.compare_tracing:
+    from crossover.protocol import configure
+
+    configure(out, manifest, replace)
 
 j = args.java_home / "bin/java.exe"
 

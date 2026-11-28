@@ -1,0 +1,177 @@
+{
+  "wall_s_gap_off": {
+    "median": 21.659490899999998,
+    "mean": 22.209811275,
+    "minimum": 10.9969398,
+    "maximum": 32.78379,
+    "positive": 8
+  },
+  "wall_s_gap_on": {
+    "median": 15.6349479,
+    "mean": 16.2664169125,
+    "minimum": 10.0199545,
+    "maximum": 24.2165495,
+    "positive": 8
+  },
+  "wall_s_loop_on_minus_off": {
+    "median": -0.39097505000000154,
+    "mean": -2.8369884875,
+    "minimum": -14.454181400000003,
+    "maximum": 6.947203999999999,
+    "positive": 3
+  },
+  "wall_s_copies_on_minus_off": {
+    "median": 0.3758891999999996,
+    "mean": 3.1064058749999997,
+    "minimum": -2.2887448,
+    "maximum": 24.3920329,
+    "positive": 5
+  },
+  "wall_s_change_in_gap": {
+    "median": -5.519530199999998,
+    "mean": -5.943394362499999,
+    "minimum": -17.4448289,
+    "maximum": 5.3038916,
+    "positive": 4
+  },
+  "outside_s_gap_off": {
+    "median": 15.1341216,
+    "mean": 15.1183854375,
+    "minimum": 8.515322099999999,
+    "maximum": 21.4131265,
+    "positive": 8
+  },
+  "outside_s_gap_on": {
+    "median": 10.47513115,
+    "mean": 11.466213125,
+    "minimum": 7.128762200000001,
+    "maximum": 17.2559953,
+    "positive": 8
+  },
+  "outside_s_loop_on_minus_off": {
+    "median": -0.060038150000000456,
+    "mean": -2.1476473250000003,
+    "minimum": -9.364302200000001,
+    "maximum": 3.663773499999998,
+    "positive": 3
+  },
+  "outside_s_copies_on_minus_off": {
+    "median": -0.08232899999999876,
+    "mean": 1.5045249875,
+    "minimum": -1.937307500000001,
+    "maximum": 12.5747862,
+    "positive": 3
+  },
+  "outside_s_change_in_gap": {
+    "median": -4.411606849999999,
+    "mean": -3.6521723125000003,
+    "minimum": -9.370295900000006,
+    "maximum": 3.7080636999999967,
+    "positive": 3
+  },
+  "startup_s_gap_off": {
+    "median": 5.085255,
+    "mean": 5.2551573875,
+    "minimum": 1.6309144,
+    "maximum": 9.1701436,
+    "positive": 8
+  },
+  "startup_s_gap_on": {
+    "median": 3.75695305,
+    "mean": 3.7284400875,
+    "minimum": 1.101923799999998,
+    "maximum": 6.0676674,
+    "positive": 8
+  },
+  "startup_s_loop_on_minus_off": {
+    "median": -0.28291705,
+    "mean": -0.1859054375,
+    "minimum": -4.090518899999999,
+    "maximum": 4.665642199999999,
+    "positive": 3
+  },
+  "startup_s_copies_on_minus_off": {
+    "median": 0.2171589500000004,
+    "mean": 1.3408118625,
+    "minimum": -1.5054292,
+    "maximum": 10.8810197,
+    "positive": 5
+  },
+  "startup_s_change_in_gap": {
+    "median": -1.2318198500000004,
+    "mean": -1.5267173,
+    "minimum": -6.2153775000000016,
+    "maximum": 1.5834052000000005,
+    "positive": 3
+  },
+  "materialization_s_gap_off": {
+    "median": 1.8665137500000002,
+    "mean": 1.85420455,
+    "minimum": 0.8536953999999999,
+    "maximum": 2.9771725,
+    "positive": 8
+  },
+  "materialization_s_gap_on": {
+    "median": 1.0292344999999998,
+    "mean": 1.0849616,
+    "minimum": 0.5998555999999997,
+    "maximum": 1.7017228999999998,
+    "positive": 8
+  },
+  "materialization_s_loop_on_minus_off": {
+    "median": -0.67600375,
+    "mean": -0.501478275,
+    "minimum": -0.9918057999999998,
+    "maximum": 0.13538150000000027,
+    "positive": 2
+  },
+  "materialization_s_copies_on_minus_off": {
+    "median": 0.17764655000000007,
+    "mean": 0.267764675,
+    "minimum": -0.001515799999999956,
+    "maximum": 0.9545949,
+    "positive": 7
+  },
+  "materialization_s_change_in_gap": {
+    "median": -0.7232061999999999,
+    "mean": -0.76924295,
+    "minimum": -1.8549764,
+    "maximum": 0.014837400000000445,
+    "positive": 1
+  },
+  "overlap_s_gap_off": {
+    "median": 0.019287,
+    "mean": 0.0179361,
+    "minimum": 0.0029920999999999975,
+    "maximum": 0.030720699999999997,
+    "positive": 8
+  },
+  "overlap_s_gap_on": {
+    "median": 0.012283450000000001,
+    "mean": 0.013197899999999999,
+    "minimum": -0.004703600000000002,
+    "maximum": 0.0294712,
+    "positive": 7
+  },
+  "overlap_s_loop_on_minus_off": {
+    "median": 0.003128049999999997,
+    "mean": 0.0019574500000000003,
+    "minimum": -0.0163846,
+    "maximum": 0.022547000000000005,
+    "positive": 4
+  },
+  "overlap_s_copies_on_minus_off": {
+    "median": 0.004869449999999999,
+    "mean": 0.006695649999999999,
+    "minimum": -0.0033309000000000012,
+    "maximum": 0.0194203,
+    "positive": 6
+  },
+  "overlap_s_change_in_gap": {
+    "median": -0.005352149999999998,
+    "mean": -0.0047382,
+    "minimum": -0.014897499999999998,
+    "maximum": 0.004801499999999997,
+    "positive": 3
+  }
+}

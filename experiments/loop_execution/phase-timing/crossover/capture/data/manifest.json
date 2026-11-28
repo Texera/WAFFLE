@@ -1,0 +1,670 @@
+{
+  "runs": [
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": -1,
+      "warmup": true,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 0,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 1,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 2,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 3,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 4,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 5,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 5,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 5,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 5,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 6,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 6,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 6,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 6,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 7,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 7,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": false
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "copies",
+      "pair": 7,
+      "warmup": false,
+      "workflow": "n20000-i1-copies.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    },
+    {
+      "case": "n20000-i1",
+      "strategy": "loop",
+      "pair": 7,
+      "warmup": false,
+      "workflow": "n20000-i1-loop.json",
+      "fields": [
+        "K",
+        "score"
+      ],
+      "expected": [
+        {
+          "K": 2,
+          "score": -345545.1404924168
+        }
+      ],
+      "trace": true
+    }
+  ],
+  "input_hashes": {
+    "n20000-i1-copies.json": "0dd7eaf0bced403d23a1bcd1504601066485478dfb67889e53381eeadeb2fbe7",
+    "n20000-i1-loop.json": "9a94e86b645a45dc2b4997fbbe812be10a2117489fd917ee0418f99e9a3c6816",
+    "points-20000.csv": "a371526401605326b289d772d9cd1816ac935ad6eddcd95fcb452058a46f6d9f"
+  },
+  "seed": 20261114,
+  "counts": [
+    20000
+  ],
+  "iterations": [
+    1
+  ],
+  "pairs": 8,
+  "max_concurrent_regions": 1,
+  "workers_per_operator": 1,
+  "execution_mode": "MATERIALIZED",
+  "timing": "native coordinator and workers through result retrieval; compilation excluded",
+  "baseline": "one explicit body copy per K; branches scheduled sequentially; K order may differ"
+}

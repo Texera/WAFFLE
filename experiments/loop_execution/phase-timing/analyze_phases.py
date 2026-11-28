@@ -23,22 +23,22 @@ def intervals_union(spans):
     return total
 
 
-def read_capture(root):
+def read_capture(root, expected_samples=12):
     rows = [
         json.loads(line)
         for line in (root / "data/native.jsonl").read_text().splitlines()
     ]
     assert (root / "data/exit-code.txt").read_text().strip() == "0"
-    assert [r["sample"] for r in rows] == list(range(12))
+    assert [r["sample"] for r in rows] == list(range(expected_samples))
     verification = json.loads((root / "verification.json").read_text())
     assert (
         verification["coverage_probe_matches"] == 0
         and verification["compiled_classes_scanned"] > 0
     )
     schedule = json.loads((root / "data/manifest.json").read_text())["runs"]
-    assert len(schedule) == 12
-    events = {i: [] for i in range(12)}
-    anchors = {i: {} for i in range(12)}
+    assert len(schedule) == expected_samples
+    events = {i: [] for i in range(expected_samples)}
+    anchors = {i: {} for i in range(expected_samples)}
     for line in (root / "jvm.tsv").read_text().splitlines():
         idx, kind, worker, lo, hi = line.split("\t")
         i, lo, hi = int(idx), int(lo), int(hi)
