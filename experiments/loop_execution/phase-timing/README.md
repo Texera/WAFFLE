@@ -4,6 +4,8 @@ This experiment repeats the 20,000-point, one-candidate comparison in [large-inp
 
 Across five measured pairs, the median paired difference in total latency was 12.76 s. The median paired difference outside both measured phases was 8.28 s.
 
+The [follow-up trace](residual/) measures table reads and replay, tuple processing, and worker scheduling within that remaining interval.
+
 | Median time per workflow (s) | LoopBlock (5 workers) | Explicit copies (3 workers) |
 | --- | ---: | ---: |
 | Total execution | 30.79 | 17.94 |

@@ -1,0 +1,17 @@
+{
+  "tree": "7cb877ac9ebdc8d829ba59b1fb1e20a870e4a344",
+  "compiled_classes_scanned": 3070,
+  "class_sha256_aggregate": "7739ed21b9978a86d1dcd5086c787ecf947cd8edb63efc76156dc538deeb9444",
+  "coverage_probe_matches": 0,
+  "java_flags": [
+    "--add-opens=java.base/java.lang=ALL-UNNAMED",
+    "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+    "--add-opens=java.base/java.util=ALL-UNNAMED",
+    "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED",
+    "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+    "--add-opens=java.base/java.nio=ALL-UNNAMED",
+    "--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED"
+  ],
+  "original_input_sha256": "a371526401605326b289d772d9cd1816ac935ad6eddcd95fcb452058a46f6d9f",
+  "utc": "2026-11-28T09:40:00.303986+00:00"
+}

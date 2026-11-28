@@ -16,6 +16,7 @@ ap.add_argument("--python", required=True, type=Path)
 ap.add_argument("--java-home", required=True, type=Path)
 ap.add_argument("--compiler", required=True, type=Path)
 ap.add_argument("--run", required=True, type=Path)
+ap.add_argument("--trace-residual", action="store_true")
 args = ap.parse_args()
 repo, artifact = args.repo.resolve(), args.artifact.resolve()
 out = args.run.resolve()
@@ -203,6 +204,11 @@ p.write_text(
     ),
     encoding="utf8",
 )
+if args.trace_residual:
+    from residual.install import install
+
+    install(repo, out, py, stage, replace)
+
 j = args.java_home / "bin/java.exe"
 
 
