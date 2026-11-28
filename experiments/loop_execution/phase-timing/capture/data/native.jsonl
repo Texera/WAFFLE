@@ -1,0 +1,12 @@
+{"warmup":true,"execution_ns":21434598000,"strategy":"copies","sample":0,"pair":-1,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":74658600,"execution_id":417953047}
+{"warmup":true,"execution_ns":31438985300,"strategy":"loop","sample":1,"pair":-1,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":37658800,"execution_id":417953048}
+{"warmup":false,"execution_ns":30763522500,"strategy":"loop","sample":2,"pair":0,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":3564000,"execution_id":417953049}
+{"warmup":false,"execution_ns":18179812000,"strategy":"copies","sample":3,"pair":0,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":1171900,"execution_id":417953050}
+{"warmup":false,"execution_ns":17939599100,"strategy":"copies","sample":4,"pair":1,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":1149800,"execution_id":417953051}
+{"warmup":false,"execution_ns":30787780000,"strategy":"loop","sample":5,"pair":1,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":3358100,"execution_id":417953052}
+{"warmup":false,"execution_ns":29399418300,"strategy":"loop","sample":6,"pair":2,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":3474600,"execution_id":417953053}
+{"warmup":false,"execution_ns":16770519400,"strategy":"copies","sample":7,"pair":2,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":1037000,"execution_id":417953054}
+{"warmup":false,"execution_ns":16636792200,"strategy":"copies","sample":8,"pair":3,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":909000,"execution_id":417953055}
+{"warmup":false,"execution_ns":31466977400,"strategy":"loop","sample":9,"pair":3,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":2728900,"execution_id":417953056}
+{"warmup":false,"execution_ns":30837165700,"strategy":"loop","sample":10,"pair":4,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":2499400,"execution_id":417953057}
+{"warmup":false,"execution_ns":18081254700,"strategy":"copies","sample":11,"pair":4,"case":"n20000-i1","rows":[{"K":2,"score":-345545.1404924168}],"compilation_ns":1077100,"execution_id":417953058}

@@ -1,0 +1,23 @@
+{
+  "loop": {
+    "wall_s": 30.78778,
+    "startup_s": 8.6925074,
+    "materialization_s": 2.4652682,
+    "overlap_s": 0.0313312,
+    "outside_s": 19.4132173
+  },
+  "copies": {
+    "wall_s": 17.9395991,
+    "startup_s": 5.2703728,
+    "materialization_s": 1.3908296,
+    "overlap_s": 0.0184825,
+    "outside_s": 11.1192184
+  },
+  "median_paired_difference": {
+    "wall_s": 12.755911000000001,
+    "startup_s": 3.344689,
+    "materialization_s": 1.0709744,
+    "overlap_s": 0.013069900000000002,
+    "outside_s": 8.277752199999998
+  }
+}
